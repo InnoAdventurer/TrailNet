@@ -11,3 +11,8 @@ The following are the members of InnoAdventurer:
 4. Shihua DONG
 5. Tsz Leuk Darren LAM
 6. Wai Chun TSANG
+
+
+npm install
+
+npm run dev
