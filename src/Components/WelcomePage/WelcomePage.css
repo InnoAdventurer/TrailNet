@@ -1,0 +1,28 @@
+.welcomepage-container {
+    background-image: url('src/assets/Picture/homepage_1.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 675px; /* Adjust as needed */
+    width: 352px; /* Adjust as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.welcomepage-title {
+    color: #052122;
+    font-weight: bold;
+    font-style: italic;
+    font-family: Helvetica;
+    font-size: 30px;
+}
+
+.welcomepage-button {
+    background-color: #052122;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}

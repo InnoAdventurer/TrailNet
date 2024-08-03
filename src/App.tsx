@@ -1,7 +1,7 @@
-import Message from './Message';
+import WelcomePage from './Components/WelcomePage/WelcomePage';
 
 function App(){
-  return <div><Message></Message></div>
+  return <div><WelcomePage></WelcomePage></div>
 }
 
 export default App;
