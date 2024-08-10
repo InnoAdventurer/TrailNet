@@ -12,6 +12,7 @@ The following are the members of InnoAdventurer:
 5. Tsz Leuk Darren LAM
 6. Wai Chun TSANG
 
+Install the project dependencies using npm:
 
 npm install
 
