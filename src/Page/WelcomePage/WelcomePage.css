@@ -1,9 +1,10 @@
 .welcomepage-container {
-    background-image: url('src/assets/Picture/homepage_1.jpg');
+    background-color: lightgray; /* Fallback color */
+    background-image: url('../../assets/Picture/homepage_1.jpg');
     background-size: cover;
     background-position: center;
-    height: 675px; /* Adjust as needed */
-    width: 352px; /* Adjust as needed */
+    height: 675px; 
+    width: 352px; 
     display: flex;
     justify-content: center;
     align-items: center;

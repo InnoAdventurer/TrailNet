@@ -1,7 +1,10 @@
 import './WelcomePage.css';
+import { Route, useNavigate } from 'react-router-dom';
 
 function WelcomePage(){
-    return <div className="welcomepage-container flex">
+    const navigate = useNavigate()
+
+    return <div><div className="welcomepage-container flex">
             <p className="welcomepage-title">Ride Together
             <br />&nbsp;&nbsp;&nbsp; Climb Higher</p>
         <br />
@@ -17,9 +20,10 @@ function WelcomePage(){
         <br />
         <br />
         <br />
-        <button className="welcomepage-button">
+        <button className="welcomepage-button" onClick={() => navigate("/WelcomeSubpage")}>
             Get Started!
         </button>
+    </div>
     </div>;
 }
 
