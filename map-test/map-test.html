@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wollongong Map</title>
+    <title>Wollongong Map with Route</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
@@ -39,6 +39,20 @@
         var marker = L.marker([-34.4278, 150.8931]).addTo(map)
             .bindPopup('Wollongong, NSW')
             .openPopup();
+
+        // Define a route using an array of latitude and longitude points
+        var route = [
+            [-34.4278, 150.8931], // Start at Wollongong
+            [-34.4271, 150.8905], // Example point 1
+            [-34.4260, 150.8890], // Example point 2
+            [-34.4248, 150.8878]  // Example point 3
+        ];
+
+        // Create a polyline to represent the route and add it to the map
+        var polyline = L.polyline(route, {color: 'blue'}).addTo(map);
+
+        // Zoom the map to fit the route
+        map.fitBounds(polyline.getBounds());
     </script>
 </body>
 </html>
