@@ -20,7 +20,7 @@ function WelcomePage(){
         <br />
         <br />
         <br />
-        <button className="welcomepage-button" onClick={() => navigate("/WelcomeSubpage")}>
+        <button className="welcomepage-button" onClick={() => navigate("/welcomesubpage")}>
             Get Started!
         </button>
     </div>

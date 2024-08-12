@@ -1,0 +1,50 @@
+.welcomesubpage-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.welcomesubpage-slogan {
+    color: #052122;
+    font-weight: bold;
+    font-style: italic;
+    font-family: Helvetica;
+    font-size: 26px;
+}
+
+.welcomesubpage-slogan2 {
+    color: #052122;
+    font-style: italic;
+    font-family: Helvetica;
+    font-size: 18px;
+}
+
+.welcomesubpage-button {
+    background-color: #052122;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 60px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.welcomesubpage-button2 {
+    border: none;
+    padding: 10px 60px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.welcomesubpage-images {
+    display: flex;
+    flex-direction: row; /* This arranges the images horizontally */
+    justify-content: center;
+    gap: 20px; /* Adjust spacing between images as needed */
+    margin: 20px 0; /* Optional: Add margin around the image group */
+}
+
+.welcomesubpage-image {
+    max-width: 100%;
+    height: auto;
+}
