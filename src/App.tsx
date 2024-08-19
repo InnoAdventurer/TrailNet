@@ -6,6 +6,8 @@ import SignUpPage from './Page/SignUpPage/SignUpPage'
 import LoginPage from './Page/LoginPage/LoginPage'
 import PasswordPage from './Page/PasswordPage/PasswordPage';
 import MapScreen from './Page/MapScreen/MapScreen';
+import HomePage from './Page/HomePage/HomePage';
+
 
 
 function App() {
@@ -19,6 +21,7 @@ function App() {
           <Route path="/loginpage" element={<LoginPage />}/>
           <Route path="/passwordpage" element={<PasswordPage />}/>
           <Route path="/mapscreen" element={<MapScreen />}/>
+          <Route path="/homepage" element={<HomePage />}/>
         </Routes>
       </BrowserRouter>
     </div>
