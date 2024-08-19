@@ -1,0 +1,64 @@
+.mapscreen-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+}
+
+.mapscreen-container .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.mapscreen-container .back {
+    position: absolute;
+    left: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #000;
+}
+
+.mapscreen-container h2 {
+    margin: 0;
+}
+
+.mapscreen-container .search-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 280px; /* Ensures the container takes full width */
+    padding: 0 10px; /* Adds padding to the sides of the container */
+    box-sizing: border-box; /* Ensures padding doesn't affect the width */
+}
+
+.mapscreen-container .search {
+    width: 100%; /* Makes the input take full width of its container */
+    height: 30px;
+    padding: 5px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    background-color: rgba(165, 161, 161, 0.15);
+    border-radius: 10px;
+    margin-right: 5px;
+    color: #000;
+}
+
+.mapscreen-container .search::placeholder {
+    color: #000;
+    opacity: 1;
+}
+
+.mapscreen-container .search-icon {
+    font-size: 25px;
+}
+
+.mapscreen-container .table {
+    font-size: 13px; /* Sets the font size */
+    color: #A7A2A2; /* Sets the text color */
+    padding: 10px; /* Adds padding around the content */
+}
