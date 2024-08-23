@@ -4,7 +4,7 @@
     align-items: center;
     min-height: 100vh;
     position: relative;
-    padding: 20px; /* Optional: Adds padding around the content */
+    padding: 5px; /* Optional: Adds padding around the content */
 }
 
 .eventpage-container .search-container {
@@ -105,7 +105,7 @@
     width: 100%;
     max-width: 350px; /* Limit the width to the fixed container */
     margin-top: 5px; /* Space above the browse section */
-    padding-bottom: 10px; /* Padding to ensure content is not cut off */
+    padding-bottom: 30px; /* Padding to ensure content is not cut off */
     position: relative; /* Makes it a reference point for absolute positioning */
 }
 

@@ -6,13 +6,14 @@ import { MdEventAvailable } from "react-icons/md";
 import { IoPartlySunnyOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import './BottomNavBar.css';
+import { Link } from 'react-router-dom';
 
 const BottomNavBar: React.FC = () => {
   return (
     <div className="bottomNavBar">
-      <div><IoHomeOutline />Home</div>
+      <Link to="/homepage"><div><IoHomeOutline />Home</div></Link>
       <div><PiMapPinArea />Map</div>
-      <div><MdEventAvailable />Event</div>
+      <Link to="/eventpage"><div><MdEventAvailable />Event</div></Link>
       <div><IoPartlySunnyOutline />Weather</div>
       <div><CgProfile />Profile</div>
     </div>
