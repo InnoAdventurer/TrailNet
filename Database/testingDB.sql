@@ -5,7 +5,7 @@ CREATE DATABASE testingDB;
 USE testingDB;
 
 CREATE TABLE customer (
-  id INT,
+  id INT PRIMARY KEY,
   custname VARCHAR(100)
 );
 
