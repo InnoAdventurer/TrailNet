@@ -3,6 +3,7 @@ import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdPersonSearch } from "react-icons/md";
 import { IoCreateOutline } from "react-icons/io5";
+import BottomNavBar from '../../Components/BottomNavBar/BottomNavBar';
 
 
 function EventPage(){
@@ -54,7 +55,7 @@ function EventPage(){
                 <div>Event 3</div>
             </div>
         </div>
-
+        <BottomNavBar />
       </div>
     )
 }
