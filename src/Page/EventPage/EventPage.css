@@ -4,4 +4,127 @@
     align-items: center;
     min-height: 100vh;
     position: relative;
+    padding: 20px; /* Optional: Adds padding around the content */
+}
+
+.eventpage-container .search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the container */
+    width: 100%;
+    max-width: 350px; /* Limit the width to the fixed container */
+    margin-bottom: 20px; /* Space below the search bar */
+}
+
+.eventpage-container .back {
+    font-size: 24px;
+    color: #000;
+    margin-right: 10px; /* Space between the arrow and search input */
+}
+
+.eventpage-container .search {
+    width: 220px;
+    height: 40px; /* Adjust the height as needed */
+    padding: 0 15px; /* Add padding inside the input */
+    font-size: 14px;
+    border: 1px solid #ccc;
+    background-color: rgba(165, 161, 161, 0.15); /* Background with some transparency */
+    border-radius: 20px; /* Makes the input more rounded */
+    outline: none; /* Remove default outline */
+}
+
+.eventpage-container .search-icon {
+    font-size: 28px; /* Adjust the size of the search icon */
+    margin-left: 10px; /* Space between the search input and search icon */
+}
+
+.eventpage-container .join {
+    display: flex;
+    flex-direction: row; /* Align items in a row */
+    align-items: center; /* Vertically center align items */
+    justify-content: center; /* Center the items horizontally */
+    text-align: center; /* Center text inside the div */
+    margin-top: 20px;
+}
+
+.eventpage-container .join p {
+    font-size: 16px;
+    margin-right: 10px; /* Space between the text and the button */
+}
+
+.eventpage-container .join button {
+    padding: 10px 20px;
+    background-color: #48AEE1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px; /* Space between the button and the icon */
+}
+
+.eventpage-container .join .person-search {
+    font-size: 50px; /* Adjust size of the icon as needed */
+    margin-left: 30px; /* Space between the button and the icon */
+}
+
+.eventpage-container .create {
+    display: flex;
+    flex-direction: row; /* Align items in a row */
+    align-items: center; /* Vertically center align items */
+    justify-content: center; /* Center the items horizontally */
+    width: 100%;
+    max-width: 350px; /* Limit the width to the fixed container */
+    margin-top: 30px; /* Space above the create section */
+    margin-bottom: 30px;
+}
+
+.eventpage-container .create-event {
+    font-size: 50px; /* Adjust size of the icon as needed */
+    margin-right: 20px; /* Space between the icon and the text */
+}
+
+.eventpage-container .create p {
+    font-size: 16px;
+    margin-bottom: 10px; /* Space between the text and the button */
+}
+
+.eventpage-container .create button {
+    padding: 10px 20px;
+    background-color: #48AEE1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.eventpage-container .browse {
+    display: flex;
+    flex-direction: row; /* Align items in a row */
+    align-items: center; /* Vertically center align items */
+    overflow-x: auto; /* Allows horizontal scrolling */
+    width: 100%;
+    max-width: 350px; /* Limit the width to the fixed container */
+    margin-top: 5px; /* Space above the browse section */
+    padding-bottom: 10px; /* Padding to ensure content is not cut off */
+    position: relative; /* Makes it a reference point for absolute positioning */
+}
+
+.eventpage-container .browse p {
+    position: sticky; /* Keeps the text fixed in place while scrolling */
+    top: 0; /* Position it at the top of the container */
+    left: 0; /* Align text to the left */
+    right: 0; /* Stretch text to the right */
+    text-align: center; /* Center align text horizontally */
+    font-size: 16px;
+    margin: 10px; /* Space around the text */
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background for visibility */
+    padding: 5px; /* Padding inside the text container */
+    z-index: 1; /* Ensure text is on top of the images */
+}
+
+.eventpage-container .browse .eventpic {
+    width: 147px; /* Adjust the width of the images */
+    height: 88px; /* Adjust the height of the images */
+    margin-right: 20px; /* Space between the images */
+    object-fit: cover; /* Ensures images fit within their container */
 }
