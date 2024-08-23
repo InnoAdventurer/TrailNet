@@ -6,11 +6,11 @@ import axios from 'axios';
 
 function MapScreen() {
   const [weather, setWeather] = useState<any>(null);
-
+  const [searchQuery, setSearchQuery] = useState(''); // State to hold the search query
   // --------- Temporary usage for testing purpose --------
   // Define GPS coordinates as variables
-  const latitude = -34.41966; // Latitude for Wollongong
-  const longitude = 150.90676; // Longitude for Wollongong
+  const [latitude, setLatitude] = useState(-34.41966); // Latitude for Wollongong
+  const [longitude, setLongitude] = useState(150.90676); // Longitude for Wollongong
 
   // Calculate the bounding box for the map (just an example for a small area around the coordinates)
   const bbox = `${longitude - 0.0015},${latitude - 0.0015},${longitude + 0.0015},${latitude + 0.0015}`;
@@ -38,6 +38,24 @@ function MapScreen() {
     fetchWeather();
   }, []);
 
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Fetch location data using the Nominatim API
+    try {
+      const response = await axios.get(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1`);
+      if (response.data && response.data.length > 0) {
+        const location = response.data[0];
+        setLatitude(parseFloat(location.lat));
+        setLongitude(parseFloat(location.lon));
+      } else {
+        alert("Location not found.");
+      }
+    } catch (error) {
+      console.error('Error fetching location data:', error);
+    }
+  };
+
   return (
     <div className="mapscreen-container flex">
       <div className="header">
@@ -45,8 +63,18 @@ function MapScreen() {
         <h2>Map</h2>
       </div>
       <div className="search-container">
-        <input type="text" placeholder="Search" className="search" />
-        <FiSearch className="search-icon" />
+      <form onSubmit={handleSearch}>
+          <input
+            type="text"
+            placeholder="Search"
+            className="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="submit" className="search-button">
+            <FiSearch className="search-icon" />
+          </button>
+        </form>
       </div>
       <div className="map" style={{ height: "250px", width: "100%" }}>
         <iframe
