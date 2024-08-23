@@ -9,6 +9,8 @@ import MapScreen from './Page/MapScreen/MapScreen';
 import HomePage from './Page/HomePage/HomePage';
 import EventPage from './Page/EventPage/EventPage';
 import './App.css'; 
+import JoinEventPage1 from './Page/JoinEventPage1/JoinEventPage1';
+
 
 
 
@@ -27,6 +29,7 @@ function App() {
           <Route path="/mapscreen" element={<MapScreen />}/>
           <Route path="/homepage" element={<HomePage />}/>
           <Route path="/eventpage" element={<EventPage />}/>
+          <Route path="/joineventpage1" element={<JoinEventPage1 />}/>
         </Routes>
       </BrowserRouter>
     </div>
