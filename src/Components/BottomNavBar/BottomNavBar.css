@@ -1,0 +1,24 @@
+/* src/Components/BottomNavBar/BottomNavBar.css */
+.bottomNavBar {
+    display: flex;
+    flex-direction: row; /* Arrange items in a row */
+    justify-content: space-around; /* Space items evenly */
+    width: 100%;
+    padding: 10px; /* Adds some padding */
+    background-color: #fff; /* Background color */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+  }
+  
+  .bottomNavBar div {
+    display: flex;
+    flex-direction: column; /* Stack icon and caption vertically */
+    align-items: center;
+    font-size: 12px; /* Smaller font size for nav bar text */
+    color: #2C425A; /* Font color for the nav bar text */
+  }
+  
+  .bottomNavBar div svg {
+    font-size: 30px; /* Adjust the size of the icons */
+    margin-bottom: 2px; /* Adds space between icon and caption */
+  }
+  

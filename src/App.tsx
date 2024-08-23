@@ -7,12 +7,18 @@ import LoginPage from './Page/LoginPage/LoginPage'
 import PasswordPage from './Page/PasswordPage/PasswordPage';
 import MapScreen from './Page/MapScreen/MapScreen';
 import HomePage from './Page/HomePage/HomePage';
+import EventPage from './Page/EventPage/EventPage';
+import './App.css'; 
+import JoinEventPage1 from './Page/JoinEventPage1/JoinEventPage1';
+
+
+
 
 
 
 function App() {
   return (
-    <div>
+    <div className="app-container">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<WelcomePage />}/>
@@ -22,6 +28,8 @@ function App() {
           <Route path="/passwordpage" element={<PasswordPage />}/>
           <Route path="/mapscreen" element={<MapScreen />}/>
           <Route path="/homepage" element={<HomePage />}/>
+          <Route path="/eventpage" element={<EventPage />}/>
+          <Route path="/joineventpage1" element={<JoinEventPage1 />}/>
         </Routes>
       </BrowserRouter>
     </div>
