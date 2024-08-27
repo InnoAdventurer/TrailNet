@@ -22,4 +22,4 @@ npm run dev
 
 # To host backend server:
 
-nodemon src/server.js
+npx nodemon src/server.js

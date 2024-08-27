@@ -20,6 +20,7 @@ export const register = async (req, res) => {
             [username, email, hashedPassword, profile_picture || null, bio || null]
         );
 
+        console.log('User registered successfully:', username, email); // Log the successful registration
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error('Error during registration:', error); // Log the error to the console
@@ -31,19 +32,26 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        console.log('Login attempt:', email);  // Log login attempt
+
         const [user] = await db.query('SELECT * FROM Users WHERE email = ?', [email]);
         if (user.length === 0) {
+            console.log('Invalid credentials: User not found');
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
         const isMatch = await compare(password, user[0].password_hash);
         if (!isMatch) {
+            console.log('Invalid credentials: Password mismatch');
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        const token = sign({ id: user[0].user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user[0].user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        console.log('Login successful:', email);  // Log successful login
 
         res.status(200).json({
+            message: 'Login successful',  // Clear success message
             token,
             user: {
                 id: user[0].user_id,
@@ -58,4 +66,3 @@ export const login = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
-
