@@ -16,6 +16,12 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/osm/, ''),
       },
+      // Proxy for the backend server
+      '/api': {
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:50000',  // Use environment variable or fallback to localhost
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
   },
 })
