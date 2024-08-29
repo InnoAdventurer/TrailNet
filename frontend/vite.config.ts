@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  root: 'frontend',  // Point Vite to the frontend folder
   server: {
     proxy: {
       '/weather_api': {

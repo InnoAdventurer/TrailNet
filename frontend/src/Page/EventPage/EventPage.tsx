@@ -4,6 +4,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { MdPersonSearch } from "react-icons/md";
 import { IoCreateOutline } from "react-icons/io5";
 import BottomNavBar from '../../Components/BottomNavBar/BottomNavBar';
+import React from 'react';
 
 
 function EventPage(){

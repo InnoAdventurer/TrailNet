@@ -16,6 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["frontend/src", "frontend/App.tsx", "frontend/main.tsx", "frontend/vite-env.d.ts", "frontend/Page", "frontend/Components"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

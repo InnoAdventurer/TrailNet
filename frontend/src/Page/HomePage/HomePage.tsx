@@ -6,6 +6,7 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import { GoBell } from "react-icons/go";
 import TopNavBar from "../../Components/TopNavBar/TopNavBar";
 import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
+import React from 'react';
 
 function HomePage() {
   return (
