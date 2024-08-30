@@ -1,4 +1,4 @@
-import app from '../frontend/src/App.js';  // Import the default export from app.js
+import app from './app.js';  // Import the default export from app.js
 
 const PORT = process.env.PORT || 50000;
 
