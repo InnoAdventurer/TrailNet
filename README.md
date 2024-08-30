@@ -16,10 +16,14 @@ The following are the members of InnoAdventurer:
 
 npm install
 
-# To run frontend testing:
+# To host both frontend and backend at the same time
 
 npm run dev
 
+# To run frontend testing:
+
+npm run dev:frontend
+
 # To host backend server:
 
-npx nodemon src/server.js
+npm run dev:backend
