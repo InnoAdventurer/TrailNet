@@ -37,13 +37,13 @@ export const login = async (req, res) => {
         const [user] = await db.query('SELECT * FROM Users WHERE email = ?', [email]);
         if (user.length === 0) {
             console.log('Invalid credentials: User not found');
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         const isMatch = await compare(password, user[0].password_hash);
         if (!isMatch) {
             console.log('Invalid credentials: Password mismatch');
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         const token = jwt.sign({ id: user[0].user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -51,6 +51,7 @@ export const login = async (req, res) => {
         console.log('Login successful:', email);  // Log successful login
 
         res.status(200).json({
+            success: true,
             message: 'Login successful',  // Clear success message
             token,
             user: {
@@ -63,6 +64,6 @@ export const login = async (req, res) => {
         });
     } catch (error) {
         console.error('Error during login:', error); // Log the error to the console
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 };
