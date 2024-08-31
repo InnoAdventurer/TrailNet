@@ -12,8 +12,18 @@ The following are the members of InnoAdventurer:
 5. Tsz Leuk Darren LAM
 6. Wai Chun TSANG
 
-Install the project dependencies using npm:
+# Before starting the servers, install the project dependencies using npm:
 
 npm install
 
+# To host both frontend and backend at the same time
+
 npm run dev
+
+# To run frontend testing:
+
+npm run dev:frontend
+
+# To host backend server:
+
+npm run dev:backend

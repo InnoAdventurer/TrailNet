@@ -8,13 +8,9 @@ import PasswordPage from './Page/PasswordPage/PasswordPage';
 import MapScreen from './Page/MapScreen/MapScreen';
 import HomePage from './Page/HomePage/HomePage';
 import EventPage from './Page/EventPage/EventPage';
-import './App.css'; 
 import JoinEventPage1 from './Page/JoinEventPage1/JoinEventPage1';
-
-
-
-
-
+import NotFoundPage from './Page/NotFoundPage/NotFoundPage';
+import './App.css'; 
 
 function App() {
   return (
@@ -30,6 +26,8 @@ function App() {
           <Route path="/homepage" element={<HomePage />}/>
           <Route path="/eventpage" element={<EventPage />}/>
           <Route path="/joineventpage1" element={<JoinEventPage1 />}/>
+          
+          <Route path="*" element={<NotFoundPage />} />  {/* Catch-all route for 404 */}
         </Routes>
       </BrowserRouter>
     </div>

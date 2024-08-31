@@ -5,8 +5,8 @@ function WelcomePage(){
     const navigate = useNavigate()
 
     return <div><div className="welcomepage-container flex">
-            <p className="welcomepage-title">Ride Together
-            <br />&nbsp;&nbsp;&nbsp; Climb Higher</p>
+        <p className="welcomepage-title">Ride Together
+        <br />&nbsp;&nbsp;&nbsp; Climb Higher</p>
         <br />
         <br />
         <br />
