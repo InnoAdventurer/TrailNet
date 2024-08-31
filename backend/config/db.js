@@ -15,7 +15,8 @@ const db = createPool({
     port: process.env.DB_PORT,
     ssl: {
         rejectUnauthorized: true,
-        ca: fs.readFileSync("./ca.pem").toString(),
+        ca: sslCert,
+        // ca: fs.readFileSync("./ca.pem").toString(),
     },
 });
 

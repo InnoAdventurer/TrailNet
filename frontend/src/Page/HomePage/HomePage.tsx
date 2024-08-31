@@ -6,7 +6,9 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import { GoBell } from "react-icons/go";
 import TopNavBar from "../../Components/TopNavBar/TopNavBar";
 import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
-import React from 'react';
+import homepage_1 from './homepage_1.png'
+import homepage_2 from './homepage_2.png'
+import homepage_3 from './homepage_3.png'
 
 function HomePage() {
   return (
@@ -19,14 +21,14 @@ function HomePage() {
         <GoBell className="icon"/>
       </div>
       <div className="content">
-        <img src="src/Page/HomePage/homepage_2.png" alt="profilepic" className="profilepicture" />
+        <img src={homepage_2} alt="profilepic" className="profilepicture" />
         <div>
           <div>Emma</div>
           <div>Date</div>
         </div>
         <button>Follow</button>
       </div>
-      <img src="src/Page/HomePage/homepage_1.png" alt="profilepic" className="event" />
+      <img src={homepage_1} alt="profilepic" className="event" />
       <BottomNavBar />
     </div>
   );
