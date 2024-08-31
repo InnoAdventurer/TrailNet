@@ -2,7 +2,7 @@ import React from 'react';
 import './LoginPage.css';
 import { useState } from 'react';
 import { Route, useNavigate } from 'react-router-dom';
-
+import logo from '../../assets/Picture/Logo.jpeg'
 
 function LoginPage(){
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ function LoginPage(){
 
     return (
       <div className="loginpage-container flex">
-        <img src="src/Page/LoginPage/loginpage_1.png" alt="icon" className="icon" />
+        <img src={logo} alt="icon" className="icon" />
 
         <div className="table flex">
             <div className="table-title">Welcome back to TrailNet!</div>

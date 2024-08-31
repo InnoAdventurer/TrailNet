@@ -4,7 +4,8 @@ import { IoIosArrowBack } from "react-icons/io";
 import { MdPersonSearch } from "react-icons/md";
 import { IoCreateOutline } from "react-icons/io5";
 import BottomNavBar from '../../Components/BottomNavBar/BottomNavBar';
-import React from 'react';
+import eventpage_1 from './eventpage_1.png';
+import eventpage_2 from './eventpage_2.png';
 
 
 function EventPage(){
@@ -33,25 +34,25 @@ function EventPage(){
         <div className="browse">
             <div>
                 <img
-                src="src/Page/EventPage/eventpage_2.png"
-                alt="event1"
-                className="eventpic"
+                    src={eventpage_2}
+                    alt="event1"
+                    className="eventpic"
                 />
                 <div>Event 1</div>
             </div>
             <div>
                 <img
-                src="src/Page/EventPage/eventpage_2.png"
-                alt="event2"
-                className="eventpic"
+                    src={eventpage_2}
+                    alt="event2"
+                    className="eventpic"
                 />
                 <div>Event 2</div>
             </div>
             <div>
                 <img
-                src="src/Page/EventPage/eventpage_2.png"
-                alt="event3"
-                className="eventpic"
+                    src={eventpage_2}
+                    alt="event3"
+                    className="eventpic"
                 />
                 <div>Event 3</div>
             </div>

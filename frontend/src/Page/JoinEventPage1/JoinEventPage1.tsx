@@ -2,6 +2,9 @@ import './JoinEventPage1.css';
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
+import joineventpage1_1 from './joineventpage1_1.png';
+import joineventpage1_2 from './joineventpage1_2.png';
+import joineventpage1_3 from './joineventpage1_3.png';
 
 
 function JoinEventPage1(){
@@ -14,7 +17,7 @@ function JoinEventPage1(){
         </div>
         <div>
             <div>Discover event near Wollongong</div>
-            <img src="src/Page/JoinEventPage1/joineventpage1_1.png" alt="nearby" className="nearby" />
+            <img src={joineventpage1_1} alt="nearby" className="nearby" />
         </div>
         <div>
             <div>Discover event by activity &nbsp;
@@ -24,7 +27,7 @@ function JoinEventPage1(){
                     <option value="Hiking">Hiking</option>
                 </select>
             </div>
-            <img src="src/Page/JoinEventPage1/joineventpage1_2.png" alt="nearby" className="nearby" />
+            <img src={joineventpage1_2} alt="nearby" className="nearby" />
         </div>
         <div>
             <div>Discover event by date &nbsp;
@@ -34,7 +37,7 @@ function JoinEventPage1(){
                     <option value="Over7days">Over 7 days</option>
                 </select>
                 </div>
-            <img src="src/Page/JoinEventPage1/joineventpage1_3.png" alt="nearby" className="nearby" />
+            <img src={joineventpage1_3} alt="nearby" className="nearby" />
         </div>
       </div>
     )

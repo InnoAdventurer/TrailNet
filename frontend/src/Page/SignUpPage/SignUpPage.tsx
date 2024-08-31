@@ -1,5 +1,6 @@
 import './SignUpPage.css';
 import { useState } from 'react';
+import signuppage_1 from './signuppage_1.png';
 
 function SignUpPage() {
   // State to manage the input fields
@@ -9,7 +10,7 @@ function SignUpPage() {
 
   return (
     <div className="signuppage-container flex">
-      <img src="src/Page/SignUpPage/signuppage_1.png" alt="icon" className="icon" />
+      <img src={signuppage_1} alt="icon" className="icon" />
 
       <div className="table flex">
         <div className="table-title">Create an Account</div>
