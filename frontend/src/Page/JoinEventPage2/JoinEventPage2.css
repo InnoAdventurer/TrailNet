@@ -1,0 +1,88 @@
+.joineventpage2-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+    padding: 20px;
+    background-color: #f9f9f9; /* Optional: Add a background color */
+  }
+  
+  .joineventpage2-container .search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 350px;
+    margin-bottom: 20px;
+  }
+  
+  .joineventpage2-container .search-container .back {
+    font-size: 24px;
+    color: #000;
+    margin-right: 10px; /* Space between the back arrow and search input */
+  }
+  
+  .joineventpage2-container .search-container .search {
+    width: 220px;
+    height: 40px;
+    padding: 0 15px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    background-color: rgba(165, 161, 161, 0.15);
+    border-radius: 20px;
+    outline: none;
+  }
+  
+  .joineventpage2-container .search-container .search-icon {
+    font-size: 28px;
+    margin-left: 10px; /* Space between the search input and search icon */
+  }
+  
+  .events-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 350px;
+  }
+  
+  .event-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 100%;
+  }
+  
+  .event-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  
+  .event-details {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .event-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .event-date,
+  .event-location {
+    font-size: 14px;
+    color: #555;
+  }
+  

@@ -6,7 +6,7 @@ import { IoCreateOutline } from "react-icons/io5";
 import BottomNavBar from '../../Components/BottomNavBar/BottomNavBar';
 import eventpage_1 from './eventpage_1.png';
 import eventpage_2 from './eventpage_2.png';
-
+import { Link } from 'react-router-dom';
 
 function EventPage(){
     return (
@@ -19,7 +19,7 @@ function EventPage(){
         <div className="join">
             <div>
                 <p>Discover Events to<br /> meet new people!</p>
-                <button>Join Events</button>
+                <Link to="/joineventpage1"><button>Join Events</button></Link>
             </div>
             <MdPersonSearch className="person-search" />
         </div>
@@ -31,7 +31,7 @@ function EventPage(){
             </div>
         </div>
         <p>Browse events</p>
-        <div className="browse">
+        <Link to="/joineventpage2"><div className="browse">
             <div>
                 <img
                     src={eventpage_2}
@@ -56,7 +56,7 @@ function EventPage(){
                 />
                 <div>Event 3</div>
             </div>
-        </div>
+        </div></Link>
         <BottomNavBar />
       </div>
     )
