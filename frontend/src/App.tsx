@@ -13,6 +13,7 @@ import JoinEventPage2 from './Page/JoinEventPage2/JoinEventPage2';
 import NotFoundPage from './Page/NotFoundPage/NotFoundPage';
 import JoinEventPage3 from './Page/JoinEventPage3/JoinEventPage3';
 import './App.css'; 
+import CreateEventPage from './Page/CreateEventPage/CreateEventPage';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/joineventpage1" element={<JoinEventPage1 />}/>
           <Route path="/joineventpage2" element={<JoinEventPage2 />}/>
           <Route path="/joineventpage3/:id" element={<JoinEventPage3 />} />
+          <Route path="/createeventpage" element={<CreateEventPage />}/>
           <Route path="*" element={<NotFoundPage />} />  {/* Catch-all route for 404 */}
         </Routes>
       </BrowserRouter>

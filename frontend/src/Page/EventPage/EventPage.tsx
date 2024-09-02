@@ -27,7 +27,7 @@ function EventPage(){
             <IoCreateOutline className="create-event"/>
             <div>
                 <p>Create Events to<br />invite your friends!</p>
-                <button>Create Events</button>
+                <Link to="/createeventpage"><button>Create Events</button></Link>
             </div>
         </div>
         <p>Browse events</p>

@@ -74,7 +74,7 @@
     justify-content: center; /* Center the items horizontally */
     width: 100%;
     max-width: 350px; /* Limit the width to the fixed container */
-    margin-top: 30px; /* Space above the create section */
+    margin-top: 20px; /* Space above the create section */
     margin-bottom: 30px;
 }
 
@@ -104,8 +104,8 @@
     overflow-x: auto; /* Allows horizontal scrolling */
     width: 100%;
     max-width: 350px; /* Limit the width to the fixed container */
-    margin-top: 5px; /* Space above the browse section */
-    padding-bottom: 30px; /* Padding to ensure content is not cut off */
+    margin-top: 1px; /* Space above the browse section */
+    padding-bottom: 20px; /* Padding to ensure content is not cut off */
     position: relative; /* Makes it a reference point for absolute positioning */
 }
 
