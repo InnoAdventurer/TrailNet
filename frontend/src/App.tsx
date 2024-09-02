@@ -9,8 +9,11 @@ import MapScreen from './Page/MapScreen/MapScreen';
 import HomePage from './Page/HomePage/HomePage';
 import EventPage from './Page/EventPage/EventPage';
 import JoinEventPage1 from './Page/JoinEventPage1/JoinEventPage1';
+import JoinEventPage2 from './Page/JoinEventPage2/JoinEventPage2';
 import NotFoundPage from './Page/NotFoundPage/NotFoundPage';
+import JoinEventPage3 from './Page/JoinEventPage3/JoinEventPage3';
 import './App.css'; 
+import CreateEventPage from './Page/CreateEventPage/CreateEventPage';
 
 function App() {
   return (
@@ -26,7 +29,9 @@ function App() {
           <Route path="/homepage" element={<HomePage />}/>
           <Route path="/eventpage" element={<EventPage />}/>
           <Route path="/joineventpage1" element={<JoinEventPage1 />}/>
-          
+          <Route path="/joineventpage2" element={<JoinEventPage2 />}/>
+          <Route path="/joineventpage3/:id" element={<JoinEventPage3 />} />
+          <Route path="/createeventpage" element={<CreateEventPage />}/>
           <Route path="*" element={<NotFoundPage />} />  {/* Catch-all route for 404 */}
         </Routes>
       </BrowserRouter>
