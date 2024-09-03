@@ -12,19 +12,22 @@ function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(''); // State to handle errors
   const [success, setSuccess] = useState(''); // State to handle success message
+  const [loading, setLoading] = useState(false); // State to handle loading message
 
   const navigate = useNavigate();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the form from submitting the traditional way
 
-    // Clear previous error
+    // Clear previous error and success messages
     setError('');
     setSuccess('');
+    setLoading(true); // Set loading state to true
 
     // Basic validation
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      setLoading(false); // Reset loading state
       return;
     }
 
@@ -49,6 +52,8 @@ function SignUpPage() {
       } else {
         setError('Something went wrong. Please try again.');
       }
+    } finally {
+      setLoading(false); // Reset loading state after request completes
     }
   };
 
@@ -59,6 +64,7 @@ function SignUpPage() {
       <div className="table flex">
         <div className="table-title">Create an Account</div>
 
+        {loading && <div className="loading-message">Loading...</div>} {/* Display loading message */}
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
           
@@ -69,6 +75,7 @@ function SignUpPage() {
               type="text" 
               value={username} 
               onChange={(e) => setUsername(e.target.value)} // Update state on input change
+              placeholder="Enter your name" // Placeholder for name field
               required
             />
           </div>
@@ -79,6 +86,7 @@ function SignUpPage() {
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} // Update state on input change
+              placeholder="Enter your email" // Placeholder for email field
               required
             />
           </div>
@@ -101,11 +109,12 @@ function SignUpPage() {
               type="password" 
               value={confirmPassword} 
               onChange={(e) => setConfirmPassword(e.target.value)} // Update state on input change
+              placeholder="Re-enter your password" // Placeholder for confirm password field
               required
             />
           </div>
 
-          <button className="btn">Sign up</button>
+          <button className="btn" disabled={loading}>Sign up</button> {/* Disable button while loading */}
         </form>
       </div>
       
