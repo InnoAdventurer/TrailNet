@@ -18,7 +18,7 @@ import CreateEventPage from './Page/CreateEventPage/CreateEventPage';
 function App() {
   return (
     <div className="app-container">
-      <BrowserRouter>
+      <BrowserRouter basename={process.env.NODE_ENV === 'production' ? '/TrailNet' : '/'}>
         <Routes>
           <Route path="/" element={<WelcomePage />}/>
           <Route path="/welcomesubpage" element={<WelcomeSubpage />}/>
