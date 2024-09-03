@@ -30,8 +30,8 @@ function SignUpPage() {
 
     try {
       // Make a POST request to the backend to create a new account
-      const response = await axios.post('http://localhost:50000/api/auth/register', {
-      // const response = await axios.post('/backend_api/api/auth/register', {
+      // const response = await axios.post('http://localhost:50000/api/auth/register', {
+      const response = await axios.post('/backend_api/api/auth/register', {
         username,
         email,
         password,

@@ -11,8 +11,8 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/backend_api': {
-          // target: env.VITE_BACKEND_URL,
-          target: 'http://localhost:50000', // Your backend server
+          target: env.VITE_BACKEND_URL,
+          // target: 'http://localhost:50000', // Your backend server
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/backend_api/, ''),
           logLevel: 'debug', // Enable debug logging for troubleshooting

@@ -19,8 +19,8 @@ function LoginPage(){
 
         try {
             // Make a POST request to the backend server
-            const response = await axios.post('http://localhost:50000/api/auth/login', {
-            // const response = await axios.post('/backend_api/api/auth/login', {
+            // const response = await axios.post('http://localhost:50000/api/auth/login', {
+            const response = await axios.post('/backend_api/api/auth/login', {
                 email,
                 password,
             });
