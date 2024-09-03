@@ -1,12 +1,7 @@
 import { createPool } from 'mysql2/promise';
 import dotenv from 'dotenv';
-import fs from 'fs';
 
 dotenv.config();
-
-// Temp testing
-console.log(process.env.DB_SSL_CERT);
-console.log(process.env);
 
 // Decode the certificate by replacing the `\n` with actual newlines
 const sslCert = process.env.DB_SSL_CERT ? process.env.DB_SSL_CERT.replace(/\\n/g, '\n') : null;
@@ -25,7 +20,6 @@ const db = createPool({
     ssl: {
         rejectUnauthorized: true,
         ca: sslCert,
-        // ca: fs.readFileSync("./ca.pem").toString(),
     },
 });
 
