@@ -1,3 +1,5 @@
+// frontend\src\Page\NotFoundPage\NotFoundPage.tsx
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NotFoundPage.css';  // Assuming you might want to style the 404 page separately

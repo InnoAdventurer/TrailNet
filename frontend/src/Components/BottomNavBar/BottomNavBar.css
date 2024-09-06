@@ -1,4 +1,5 @@
-/* src/Components/BottomNavBar/BottomNavBar.css */
+/* frontend\src\Components\BottomNavBar\BottomNavBar.css */
+
 .bottomNavBar {
     display: flex;
     flex-direction: row; /* Arrange items in a row */

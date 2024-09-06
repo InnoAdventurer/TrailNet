@@ -1,3 +1,5 @@
+// frontend\src\Page\LoginPage\LoginPage.tsx
+
 import './LoginPage.css';
 import { useState } from 'react';
 import { Route, useNavigate } from 'react-router-dom';
@@ -13,14 +15,19 @@ function LoginPage(){
 
     // State for handling errors
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false); // State for handling loading state
+
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault(); // Prevent form from submitting the traditional way
 
+        setError(''); // Clear previous errors
+        setLoading(true); // Set loading state to true
+
         try {
             // Make a POST request to the backend server
-            const response = await axios.post('http://localhost:50000/api/auth/login', {
-            // const response = await axios.post('/backend_api/api/auth/login', {
+            // const response = await axios.post('http://localhost:50000/api/auth/login', {
+            const response = await axios.post('/backend_api/api/auth/login', {
                 email,
                 password,
             });
@@ -33,6 +40,8 @@ function LoginPage(){
         } catch (err) {
             // Handle errors (e.g., invalid credentials)
             setError('Invalid email or password');
+        } finally {
+            setLoading(false); // Reset loading state after request completes
         }
     };
 
@@ -42,6 +51,7 @@ function LoginPage(){
 
         <div className="table flex">
             <div className="table-title">Welcome back to TrailNet!</div>
+            {loading && <div className="loading-message">Loading...</div>} {/* Display loading message */}
             {error && <div className="error-message">{error}</div>} {/* Display error message if there's an error */}
             <form onSubmit={handleLogin}>
                 <div className="lable">Email</div>
@@ -50,6 +60,8 @@ function LoginPage(){
                         type="text" 
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)} // Update state on input change
+                        placeholder="Enter your email" // Placeholder for email field
+                        required
                     />
                 </div>
                 <div className="lable">Password</div>
@@ -58,9 +70,11 @@ function LoginPage(){
                         type="password" 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} // Update state on input change
+                        placeholder="Enter your password" // Placeholder for password field
+                        required
                     />
                 </div>
-                <button className="btn">Log in</button>
+                <button className="btn" disabled={loading}>Log in</button> {/* Disable button while loading */}
             </form>
             <br />
             <button className="forgot" onClick={() => navigate("/passwordpage")}>Forgot password</button>

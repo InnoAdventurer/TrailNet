@@ -1,3 +1,5 @@
+// frontend\src\Page\JoinEventPage3\JoinEventPage3.tsx
+
 import './JoinEventPage3.css';
 import { useParams, Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";

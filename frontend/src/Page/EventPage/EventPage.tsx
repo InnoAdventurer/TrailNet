@@ -1,3 +1,5 @@
+// frontend\src\Page\EventPage\EventPage.tsx
+
 import './EventPage.css';
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";

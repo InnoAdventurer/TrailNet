@@ -1,6 +1,11 @@
+// backend\app.js
+
 import express, { json } from 'express';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
+import { handleOAuth2Callback } from './utils/oauth2.js';
+import sendEmail from './utils/mailer.js';
+
 const app = express();
 
 const corsOptions = {
@@ -9,10 +14,28 @@ const corsOptions = {
 };
 
 // Enable CORS for all routes
-app.use(cors(corsOptions)); // Enable CORS
+app.use(cors(corsOptions));
 
-app.use(json()); // Middleware to parse JSON requests
+app.use(json());
 
-app.use('/api/auth', authRoutes); // Use the auth routes
+app.use('/api/auth', authRoutes);
+
+// Route to handle OAuth2 callback
+app.get('/oauth2callback', handleOAuth2Callback);
+
+// Test email route
+app.get('/test-email', async (req, res) => {
+    try {
+        const result = await sendEmail(
+            'waichun_2009@hotmail.com', // Replace with the recipient's email
+            'Test Email',
+            'This is a test email to verify the email functionality.'
+        );
+        res.send('Email sent successfully!');
+    } catch (error) {
+        console.error('Error sending test email:', error);
+        res.status(500).send('Failed to send email.');
+    }
+});
 
 export default app;
