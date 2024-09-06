@@ -1,4 +1,4 @@
-// app.js
+// backend\app.js
 
 import express, { json } from 'express';
 import cors from 'cors';

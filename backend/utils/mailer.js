@@ -1,4 +1,4 @@
-// utils/mailer.js
+// backend\utils\mailer.js
 
 import nodemailer from 'nodemailer';
 import { oAuth2Client } from './oauth2.js';

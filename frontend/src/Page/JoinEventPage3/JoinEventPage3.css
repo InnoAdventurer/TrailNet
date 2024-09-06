@@ -1,81 +1,82 @@
+/* frontend\src\Page\JoinEventPage3\JoinEventPage3.css */
+
 /* Container for the entire page */
 .joineventpage3-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    min-height: 100vh;
-  }
-  
-  /* Styling for the search container and back button */
-  .joineventpage3-container .search-container {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .joineventpage3-container .back {
-    display: flex;
-    align-items: center;
-    margin-right: auto;
-    font-size: 24px;
-    color: #333;
-    cursor: pointer;
-  }
-  
-  .joineventpage3-container .back a {
-    text-decoration: none;
-    color: inherit;
-  }
-  
-  /* Container for the event details */
-  .joineventpage3-container .event-details-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 600px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-  
-  /* Styling for the event image */
-  .event-detail-image {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-  
-  /* Container for event info text */
-  .event-detail-info {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  /* Styling for the event name */
-  .event-detail-name {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2C425A;
-    margin-bottom: 10px;
-  }
-  
-  /* Styling for the event date */
-  .event-detail-date {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 5px;
-  }
-  
-  /* Styling for the event location */
-  .event-detail-location {
-    font-size: 16px;
-    color: #2C425A;
-    margin-bottom: 10px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* Styling for the search container and back button */
+.joineventpage3-container .search-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.joineventpage3-container .back {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+}
+
+.joineventpage3-container .back a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Container for the event details */
+.joineventpage3-container .event-details-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Styling for the event image */
+.event-detail-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Container for event info text */
+.event-detail-info {
+  padding: 20px;
+  text-align: center;
+}
+
+/* Styling for the event name */
+.event-detail-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2C425A;
+  margin-bottom: 10px;
+}
+
+/* Styling for the event date */
+.event-detail-date {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+/* Styling for the event location */
+.event-detail-location {
+  font-size: 16px;
+  color: #2C425A;
+  margin-bottom: 10px;
+}

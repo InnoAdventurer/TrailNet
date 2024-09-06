@@ -1,4 +1,5 @@
-// src/Components/BottomNavBar/BottomNavBar.tsx
+// frontend\src\Components\BottomNavBar\BottomNavBar.tsx
+
 import React from 'react';
 import { IoHomeOutline } from "react-icons/io5";
 import { PiMapPinArea } from "react-icons/pi";

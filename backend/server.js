@@ -1,4 +1,4 @@
-// server.js
+// backend\server.js
 
 import app from './app.js';  // Import the default export from app.js
 

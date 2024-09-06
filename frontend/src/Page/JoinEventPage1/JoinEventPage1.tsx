@@ -1,3 +1,5 @@
+// frontend\src\Page\JoinEventPage1\JoinEventPage1.tsx
+
 import './JoinEventPage1.css';
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";

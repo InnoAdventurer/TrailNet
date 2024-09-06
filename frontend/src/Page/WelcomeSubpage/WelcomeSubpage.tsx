@@ -1,3 +1,5 @@
+// frontend\src\Page\WelcomeSubpage\WelcomeSubpage.tsx
+
 import './WelcomeSubpage.css';
 import welcomesubpage_1 from './welcomesubpage_1.png'
 import welcomesubpage_2 from './welcomesubpage_2.png'

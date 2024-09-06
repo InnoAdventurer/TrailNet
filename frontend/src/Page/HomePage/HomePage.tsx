@@ -1,4 +1,5 @@
-// src/Page/HomePage/HomePage.tsx
+// frontend\src\Page\HomePage\HomePage.tsx
+
 import './HomePage.css';
 import { IoIosWarning } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";

@@ -1,4 +1,4 @@
-// middlewares/authMiddleware.js
+// backend\middlewares\authMiddleware.js
 
 import { verify } from 'jsonwebtoken';
 

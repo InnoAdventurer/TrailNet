@@ -1,3 +1,5 @@
+// frontend\src\Page\WelcomePage\WelcomePage.tsx
+
 import './WelcomePage.css';
 import { Route, useNavigate } from 'react-router-dom';
 
