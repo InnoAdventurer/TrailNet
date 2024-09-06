@@ -1,3 +1,5 @@
+// middlewares/authMiddleware.js
+
 import { verify } from 'jsonwebtoken';
 
 const authMiddleware = (req, res, next) => {

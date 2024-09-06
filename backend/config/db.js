@@ -1,3 +1,5 @@
+// config/db.js
+
 import { createPool } from 'mysql2/promise';
 import dotenv from 'dotenv';
 
