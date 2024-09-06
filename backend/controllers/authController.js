@@ -3,6 +3,8 @@
 import bcrypt from 'bcryptjs';  // Import the entire bcryptjs module
 import jwt from 'jsonwebtoken';  // Import the entire jsonwebtoken module
 import db from '../config/db.js';
+import sendEmail from '../utils/mailer.js';
+import { generateResetToken } from '../utils/resetToken.js';
 
 // Destructure the methods you need from bcrypt
 const { hash, compare } = bcrypt;
@@ -67,5 +69,27 @@ export const login = async (req, res) => {
     } catch (error) {
         console.error('Error during login:', error); // Log the error to the console
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+};
+
+export const sendPasswordResetEmail = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const [user] = await db.query('SELECT * FROM Users WHERE email = ?', [email]);
+
+        if (user.length > 0) {
+        const token = await generateResetToken(email);
+
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
+        const message = `Please use the following link to reset your password: ${resetUrl}`;
+
+        await sendEmail(email, 'Password Reset', message);
+        }
+
+        // Always respond with a generic message
+        res.status(200).json({ message: 'If the email is found in our records, a password reset email will be sent.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error. Please try again later.' });
     }
 };

@@ -20,10 +20,11 @@ function PasswordPage() {
       // Send a POST request to the backend to initiate the password reset
       const response = await axios.post('/backend_api/api/auth/forgot-password', { email });
 
-      // If successful, show a success message
-      if (response.status === 200) {
-        setMessage('Password reset email sent successfully. Please check your inbox.');
-      }
+      // Log the response for debugging
+      console.log(response.data);
+
+      // Show a success message
+      setMessage(response.data.message); // Display the message from the backend
     } catch (err: any) {
       // Handle errors
       if (err.response && err.response.data && err.response.data.message) {
