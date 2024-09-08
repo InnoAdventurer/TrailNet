@@ -79,17 +79,21 @@ export const sendPasswordResetEmail = async (req, res) => {
         const [user] = await db.query('SELECT * FROM Users WHERE email = ?', [email]);
 
         if (user.length > 0) {
-        const token = await generateResetToken(email);
+            const token = await generateResetToken(email);
 
-        const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
-        const message = `Please use the following link to reset your password: ${resetUrl}`;
+            const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
+            const message = `Please use the following link to reset your password: ${resetUrl}`;
 
-        await sendEmail(email, 'Password Reset', message);
+            await sendEmail(email, 'Password Reset', message);
+
+            console.log('Password Reset email sent successful:', email);
         }
 
         // Always respond with a generic message
         res.status(200).json({ message: 'If the email is found in our records, a password reset email will be sent.' });
     } catch (error) {
         res.status(500).json({ message: 'Server error. Please try again later.' });
+
+        console.log('Password Reset email sent failed:', email);
     }
 };
