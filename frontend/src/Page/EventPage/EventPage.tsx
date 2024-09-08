@@ -14,7 +14,7 @@ function EventPage(){
     return (
       <div className="eventpage-container flex">
         <div className="search-container">
-            <div className="back"><IoIosArrowBack /></div>
+            <Link to="/homepage"><div className="back"><IoIosArrowBack /></div></Link>
             <input type="text" placeholder="Search" className="search" />
             <FiSearch className="search-icon" />
         </div>

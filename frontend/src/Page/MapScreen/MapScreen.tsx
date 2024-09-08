@@ -5,6 +5,7 @@ import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function MapScreen() {
   const [weather, setWeather] = useState<any>(null);
@@ -62,7 +63,7 @@ function MapScreen() {
   return (
     <div className="mapscreen-container flex">
       <div className="header">
-        <div className="back"><IoIosArrowBack /></div>
+        <Link to="/homepage"><div className="back"><IoIosArrowBack /></div></Link>
         <h2>Map</h2>
       </div>
       <div className="search-container">
