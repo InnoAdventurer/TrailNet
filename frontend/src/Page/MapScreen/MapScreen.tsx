@@ -14,31 +14,32 @@ function MapScreen() {
   const [latitude, setLatitude] = useState(-34.41966); // Latitude for Wollongong
   const [longitude, setLongitude] = useState(150.90676); // Longitude for Wollongong
 
-  // Calculate the bounding box for the map (just an example for a small area around the coordinates)
+  // Calculate the bounding box for the map
   const bbox = `${longitude - 0.0015},${latitude - 0.0015},${longitude + 0.0015},${latitude + 0.0015}`;
   // --------- Temporary usage for testing purpose --------
 
   useEffect(() => {
-    // Fetch weather data from the provided BOM JSON file
+    // Fetch weather data based on GPS coordinates from the backend
     const fetchWeather = async () => {
       try {
-        const response = await axios.get('/weather_api/fwo/IDN60801/IDN60801.95745.json');
-        const observations = response.data.observations;
-        if (observations && observations.data && observations.data.length > 0) {
-          // Extract the most recent observation
-          const latestObservation = observations.data[0];
-          setWeather({
-            temperature: latestObservation.air_temp,
-            condition: latestObservation.weather,
-          });
-        }
+        const response = await axios.get('/backend_api/api/weather', {
+          params: {
+            lat: latitude,
+            lon: longitude,
+          },
+        });
+        const data = response.data;
+        setWeather({
+          temperature: data.main.temp,
+          condition: data.weather[0].description,
+        });
       } catch (error) {
         console.error('Error fetching weather data:', error);
       }
     };
 
     fetchWeather();
-  }, []);
+  }, [latitude, longitude]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +66,7 @@ function MapScreen() {
         <h2>Map</h2>
       </div>
       <div className="search-container">
-      <form onSubmit={handleSearch}>
+        <form onSubmit={handleSearch}>
           <input
             type="text"
             placeholder="Search"
@@ -91,9 +92,9 @@ function MapScreen() {
         />
       </div>
       <div className="table flex">
-          <div><b>Activity:</b> Hiking</div>
-          <div><b>Distance:</b> 25km</div>
-          <div><b>Event:</b> Birthday Hiking Camp</div>
+        <div><b>Activity:</b> Hiking</div>
+        <div><b>Distance:</b> 25km</div>
+        <div><b>Event:</b> Birthday Hiking Camp</div>
       </div>
       <div>
         <h3>Weather Information</h3>
