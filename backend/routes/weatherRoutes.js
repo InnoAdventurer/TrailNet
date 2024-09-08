@@ -35,4 +35,29 @@ router.get('/weather', async (req, res) => {
   }
 });
 
+router.get('/forecast', async (req, res) => {
+  const { lat, lon } = req.query; // Expecting latitude and longitude as query parameters
+
+  try {
+      const response = await axios.get(`https://api.openweathermap.org/data/2.5/forecast`, {
+          params: {
+              lat,
+              lon,
+              units: 'metric', // Get temperature in Celsius
+              appid: OPENWEATHERMAP_API_KEY,
+          }
+      });
+
+      // Extract data for 5 days at 12:00 PM (noon) to simulate daily forecast
+      const dailyForecast = response.data.list.filter((reading) =>
+        reading.dt_txt.includes("12:00:00")
+      );
+
+      res.json(dailyForecast);
+  } catch (error) {
+      console.error('Error fetching weather forecast:', error);
+      res.status(500).json({ error: 'Failed to fetch weather data' });
+  }
+});
+
 export default router;
