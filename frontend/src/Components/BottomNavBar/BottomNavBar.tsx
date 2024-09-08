@@ -13,9 +13,9 @@ const BottomNavBar: React.FC = () => {
   return (
     <div className="bottomNavBar">
       <Link to="/homepage"><div><IoHomeOutline />Home</div></Link>
-      <div><PiMapPinArea />Map</div>
+      <Link to="/mapscreen"><div><PiMapPinArea />Map</div></Link>
       <Link to="/eventpage"><div><MdEventAvailable />Event</div></Link>
-      <div><IoPartlySunnyOutline />Weather</div>
+      <Link to="/weatherpage"><div><IoPartlySunnyOutline />Weather</div></Link>
       <div><CgProfile />Profile</div>
     </div>
   );
