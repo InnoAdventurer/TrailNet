@@ -1,12 +1,12 @@
 // backend/routes/weatherRoutes.js
 
-import express from 'express';
+import { Router } from 'express';
 import axios from 'axios';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const router = express.Router();
+const router = Router();
 
 const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
 

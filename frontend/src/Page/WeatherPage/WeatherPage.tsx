@@ -1,3 +1,5 @@
+// frontend\src\Page\WeatherPage\WeatherPage.tsx
+
 import './WeatherPage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
