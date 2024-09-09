@@ -1,3 +1,5 @@
+-- Database\testingDB.sql
+
 DROP DATABASE testingDB;
 
 CREATE DATABASE testingDB;

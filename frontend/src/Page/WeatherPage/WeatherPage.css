@@ -58,3 +58,38 @@ h2 {
 .weather-container p {
     margin: 5px 0;
 }
+
+.weather-info {
+  display: flex;
+  align-items: center;
+  margin-top: 4px; /* Optional: Add space between temperature and condition */
+}
+
+.weather-info img {
+  height: 24px; /* Adjust the height to match your design */
+  width: 24px;  /* Ensure the icon has a fixed width and height */
+  margin-left: 8px; /* Add some space between the text and the icon */
+}
+
+.forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px; /* Add space between forecast days */
+}
+
+.attribution {
+  font-size: 8px; /* Small font size for subtle appearance */
+  text-align: center;
+  margin-top: 20px;
+  color: #aaa; /* Light gray color to blend into the background */
+}
+
+.attribution a {
+  color: #aaa; /* Match the link color with the text for subtlety */
+  text-decoration: none;
+}
+
+.attribution a:hover {
+  text-decoration: underline; /* Only underline on hover */
+}

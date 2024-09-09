@@ -1,3 +1,5 @@
+-- Database\trailNetDB.sql
+
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -39,6 +41,9 @@ CREATE TABLE Events (
     start_time TIME NOT NULL,
     end_time TIME,
     location VARCHAR(255),
+    privacy ENUM('all_users', 'followers', 'only_me') NOT NULL DEFAULT 'all_users',
+    latitude DECIMAL(9,6) NULL,
+    longitude DECIMAL(9,6) NULL,
     trail_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (trail_id) REFERENCES Trails(trail_id)
@@ -128,6 +133,3 @@ CREATE TABLE Activity_Tag_Map (
     FOREIGN KEY (activity_id) REFERENCES Activities(activity_id),
     FOREIGN KEY (tag_id) REFERENCES Activity_Tags(tag_id)
 );
-
-
-
