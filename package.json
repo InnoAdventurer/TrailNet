@@ -9,7 +9,7 @@
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "build:frontend": "vite build --mode production --config frontend/vite.config.ts",
     "build:backend": "echo \"No build step for backend\"",
-    "start:frontend": "serve -s frontend/dist",
+    "start:frontend": "serve -s dist",
     "start:backend": "node backend/server.js"
   },
   "dependencies": {
