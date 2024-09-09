@@ -1,12 +1,39 @@
+// frontend\src\Page\WeatherPage\WeatherPage.tsx
+
 import './WeatherPage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 function WeatherPage() {
   const daysOfWeek = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
   const today = new Date();
   const todayDate = today.getDate();
   
+  const [forecast, setForecast] = useState<any[]>([]); // State to store the weather forecast data
+  const [latitude, setLatitude] = useState(-34.41966); // Default latitude (e.g., Wollongong)
+  const [longitude, setLongitude] = useState(150.90676); // Default longitude (e.g., Wollongong)
+
+  // Fetch the weekly weather forecast from the backend
+  useEffect(() => {
+    const fetchForecast = async () => {
+      try {
+        const response = await axios.get('/backend_api/api/weather/forecast', {
+          params: {
+            lat: latitude,
+            lon: longitude,
+          },
+        });
+        setForecast(response.data);
+      } catch (error) {
+        console.error('Error fetching weather forecast:', error);
+      }
+    };
+
+    fetchForecast();
+  }, [latitude, longitude]);
+
   // Generate dates for the week starting from Monday
   const getWeekDates = () => {
     // Clone today's date to avoid modifying the original `today` object
@@ -55,7 +82,19 @@ function WeatherPage() {
       </div>
 
       <div className="weather-container">
-        <div>Weather API here</div>
+        {forecast.length > 0 ? (
+          <div className="forecast-table">
+            {forecast.slice(0, 7).map((day, index) => (
+              <div key={index} className="forecast-day">
+                <div><b>{daysOfWeek[index]}</b></div>
+                <div>{Math.round(day.main.temp)}°C</div>
+                <div>{day.weather[0].description}</div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div>Loading weather data...</div>
+        )}
       </div>
     </div>
   );

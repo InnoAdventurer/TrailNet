@@ -5,6 +5,7 @@ import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import { handleOAuth2Callback } from './utils/oauth2.js';
 import sendEmail from './utils/mailer.js';
+import weatherRoutes from './routes/weatherRoutes.js';
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use(cors(corsOptions));
 app.use(json());
 
 app.use('/api/auth', authRoutes);
+
+app.use('/api/weather', weatherRoutes); // Mount the weather routes
 
 // Route to handle OAuth2 callback
 app.get('/oauth2callback', handleOAuth2Callback);
