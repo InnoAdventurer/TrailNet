@@ -23,7 +23,7 @@ import SettingScreen from './Page/SettingScreen/SettingScreen';
 function App() {
   return (
     <div className="app-container">
-      <BrowserRouter basename={process.env.NODE_ENV === 'production' ? '/TrailNet' : '/'}>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<WelcomePage />}/>
           <Route path="/welcomesubpage" element={<WelcomeSubpage />}/>

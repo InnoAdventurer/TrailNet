@@ -7,9 +7,12 @@
     "dev:frontend": "vite --config frontend/vite.config.ts",
     "dev:backend": "nodemon backend/server.js",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
-    "build": "vite build --mode production",
-    "preview": "vite preview",
-    "start": "node backend/server.js"
+    
+    "build:frontend": "vite build --mode production --config frontend/vite.config.ts",
+    "build:backend": "echo \"No build step for backend\"",
+    
+    "start:frontend": "serve -s frontend/dist",
+    "start:backend": "node backend/server.js"
   },
   "dependencies": {
     "axios": "^1.7.4",
