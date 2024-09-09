@@ -9,11 +9,11 @@ import { Link } from 'react-router-dom';
 function TopNavBar() {
   return (
     <div className="topnavbar-container">
-      <IoIosWarning className="icon"/>
-      <IoSettingsOutline className="icon"/>
+      <Link to="/emergencyscreen"><IoIosWarning className="icon"/></Link>
+      <Link to="/settingscreen"><IoSettingsOutline className="icon"/></Link>
       <h2>Home</h2>
       <IoPersonAddOutline className="icon"/>
-      <Link to="/emergencyscreen"><GoBell className="icon"/></Link>
+      <GoBell className="icon"/>
     </div>
   );
 }

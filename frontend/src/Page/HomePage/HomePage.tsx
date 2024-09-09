@@ -10,15 +10,17 @@ function HomePage() {
   return (
     <div className="homepage-container flex">
       <TopNavBar />
-      <div className="content">
-        <img src={homepage_2} alt="profilepic" className="profilepicture" />
-        <div>
-          <div>Emma</div>
-          <div>Date</div>
+      <div className="main-content">
+        <div className="content">
+          <img src={homepage_2} alt="profilepic" className="profilepicture" />
+          <div className="text-content">
+            <div>Emma</div>
+            <div>Date</div>
+          </div>
+          <button>Follow</button>
         </div>
-        <button>Follow</button>
+        <img src={homepage_1} alt="event" className="event" />
       </div>
-      <img src={homepage_1} alt="profilepic" className="event" />
       <BottomNavBar />
     </div>
   );
