@@ -1,6 +1,6 @@
 // frontend\src\Page\CreateEventPage\CreateEventPage.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './CreateEventPage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
@@ -12,10 +12,15 @@ function CreateEventPage() {
   const [date, setDate] = useState<string>('');
   const [time, setTime] = useState<string>('');
   const [address, setAddress] = useState<string>('');
-  const [participants, setParticipants] = useState<string>('');
+  const [privacy, setPrivacy] = useState<string>('all_users'); // Privacy state
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false); // For managing the loading state
   const [error, setError] = useState(''); // For managing errors
   const [success, setSuccess] = useState(''); // For managing success messages
+
+  const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Function to round minutes to the next closest 15-minute interval
   const roundMinutes = (date: Date) => {
@@ -40,6 +45,42 @@ function CreateEventPage() {
     setTime(currentTime);
   }, []);
 
+  // Fetch address suggestions
+  const fetchSuggestions = async (query: string) => {
+    if (query.length > 2) {
+      try {
+        const response = await axios.get('/backend_api/api/map/search', {
+          params: { query }
+        });
+        setSuggestions(response.data);
+      } catch (error) {
+        console.error('Error fetching suggestions:', error);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setAddress(query);
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current); // Clear the previous timeout
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      fetchSuggestions(query); // Fetch suggestions after 0.5s delay
+    }, 500);
+  };
+
+  const handleSuggestionClick = (suggestion: any) => {
+    setAddress(suggestion.display_name); // Set the selected suggestion to the input
+    setLatitude(parseFloat(suggestion.lat));
+    setLongitude(parseFloat(suggestion.lon));
+    setSuggestions([]); // Clear suggestions after selection
+  };
+
   // Function to handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,8 +88,19 @@ function CreateEventPage() {
     setError('');
     setSuccess('');
 
+    // Check if latitude and longitude are set
+    if (latitude === null || longitude === null) {
+      setError('Please select a valid address from the suggestions.');
+      setLoading(false);
+      return;
+    }
+    
     const eventDateTimeString = `${date}T${time}:00`;
     const eventDateTime = new Date(eventDateTimeString);
+
+    // Calculate end time as 4 hours later
+    const endDateTime = new Date(eventDateTime);
+    endDateTime.setHours(eventDateTime.getHours() + 4);
 
     // Get the current time from the server for comparison
     const response = await axios.get('/backend_api/api/time/current');
@@ -69,15 +121,18 @@ function CreateEventPage() {
       description: `Event for ${activity}`,
       event_date: date, // Format the date as YYYY-MM-DD
       start_time: time,
-      end_time: null, // If you have an end_time, you can set it here
+      end_time: endDateTime.toTimeString().substring(0, 5), // Format as HH:MM
       location: address,
+      latitude: latitude,
+      longitude: longitude,
+      privacy: privacy,
       trail_id: null, // Assuming trail_id is optional; otherwise, set it accordingly
     };
 
     try {
-      const response = await axios.post('/backend_api/api/events/create', eventDetails);
+      const createResponse = await axios.post('/backend_api/api/events/create', eventDetails);
 
-      if (response.status === 201) {
+      if (createResponse.status === 201) {
         setSuccess('Event Created Successfully!');
       } else {
         setError('Failed to create event.');
@@ -158,22 +213,30 @@ function CreateEventPage() {
             type="text" 
             id="address" 
             value={address} 
-            onChange={(e) => setAddress(e.target.value)} 
+            onChange={handleSearchChange} 
             placeholder="Enter the event address" 
             required
-            // TODO: MODIFY THIS FIELD TO WORK WITH ADDRESS SEARCH FUNCTION
           />
+          {suggestions.length > 0 && (
+            <ul className="suggestions-list">
+              {suggestions.map((suggestion, index) => (
+                <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
+                  {suggestion.display_name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="form-group">
-          <label htmlFor="participants">Who Can Join?</label>
+          <label htmlFor="privacy">Who Can Join?</label>
           <div className="activity-options">
             <label>
               <input 
                 type="radio" 
                 value="all_users" 
-                checked={participants === 'all_users'} 
-                onChange={(e) => setParticipants(e.target.value)} 
+                checked={privacy === 'all_users'} 
+                onChange={(e) => setPrivacy(e.target.value)} 
               />
               All Users
             </label>
@@ -181,8 +244,8 @@ function CreateEventPage() {
               <input 
                 type="radio" 
                 value="followers" 
-                checked={participants === 'followers'} 
-                onChange={(e) => setParticipants(e.target.value)} 
+                checked={privacy === 'followers'} 
+                onChange={(e) => setPrivacy(e.target.value)} 
               />
               Only Followers
             </label>
@@ -190,8 +253,8 @@ function CreateEventPage() {
               <input 
                 type="radio" 
                 value="only_me" 
-                checked={participants === 'only_me'} 
-                onChange={(e) => setParticipants(e.target.value)} 
+                checked={privacy === 'only_me'} 
+                onChange={(e) => setPrivacy(e.target.value)} 
               />
               Only Me
             </label>
@@ -199,7 +262,7 @@ function CreateEventPage() {
         </div>
 
         <button type="submit" className="submit-button" disabled={loading}>
-          {loading ? 'Creating...' : 'Create Event'}
+          {loading ? 'Creating...' : 'Done'}
         </button>
       </form>
       {success && <div className="success-message">{success}</div>}

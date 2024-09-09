@@ -1,5 +1,3 @@
-/* frontend\src\Page\CreateEventPage\CreateEventPage.css */
-
 /* Container for the entire page */
 .createeventpage-container {
   display: flex;
@@ -31,11 +29,13 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 500px;
+  position: relative; /* Added to create a positioning context for suggestions */
 }
 
 /* Form group styling */
 .form-group {
   margin-bottom: 20px;
+  position: relative; /* Ensure each form group is positioned relative to the parent */
 }
 
 /* Label styling */
@@ -52,15 +52,42 @@
   justify-content: space-between;
 }
 
-/* Date and time field styling */
+/* Input field styling */
+input[type="text"],
 input[type="date"],
-input[type="time"],
-input[type="text"] {
+input[type="time"] {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+/* Suggestions list styling */
+.suggestions-list {
+  list-style-type: none;
+  margin: 5px 0 0 0;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  max-height: 150px; /* Adjust the height as needed */
+  overflow-y: auto;
+  position: absolute; /* This ensures it appears directly below the input */
+  width: 100%; /* Ensures the width matches the input field */
+  z-index: 1000;
+  top: 100%; /* Place directly below the input */
+  left: 0;
+}
+
+/* Suggestion item styling */
+.suggestions-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions-list li:hover {
+  background-color: #f0f0f0;
 }
 
 /* Submit button styling */
@@ -78,4 +105,3 @@ input[type="text"] {
 .submit-button:hover {
   background-color: #2C425A;
 }
-  
