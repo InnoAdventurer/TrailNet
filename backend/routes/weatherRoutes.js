@@ -11,7 +11,7 @@ const router = Router();
 const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
 
 // Route to get weather by GPS coordinates
-router.get('/weather', async (req, res) => {
+router.get('/current', async (req, res) => {
   const { lat, lon } = req.query; // Expecting latitude and longitude as query parameters
 
   if (!lat || !lon) {

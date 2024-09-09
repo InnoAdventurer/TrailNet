@@ -23,7 +23,7 @@ function MapScreen() {
     // Fetch weather data based on GPS coordinates from the backend
     const fetchWeather = async () => {
       try {
-        const response = await axios.get('/backend_api/api/weather', {
+        const response = await axios.get('/backend_api/api/weather/current', {
           params: {
             lat: latitude,
             lon: longitude,
