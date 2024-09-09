@@ -64,3 +64,44 @@
     color: #A7A2A2; /* Sets the text color */
     padding: 10px; /* Adds padding around the content */
 }
+
+.suggestions-list {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    max-height: none; /* Remove the fixed height to avoid the scroll bar */
+    position: absolute;
+    z-index: 1000;
+    width: calc(100% - 16px);
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    top: 38px;
+}
+  
+.suggestions-list li {
+    padding: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+  
+.suggestions-list li:hover {
+    background-color: #f0f0f0;
+}
+  
+.search-container {
+    position: relative;
+}
+
+.weather-info {
+  display: flex;
+  align-items: center;
+}
+
+.weather-info img {
+  height: 24px; /* Set a fixed height */
+  width: 24px; /* Set a fixed width */
+  margin-left: 8px; /* Add some spacing between text and icon */
+}

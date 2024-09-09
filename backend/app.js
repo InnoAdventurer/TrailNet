@@ -8,6 +8,7 @@ import sendEmail from './utils/mailer.js';
 import weatherRoutes from './routes/weatherRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import timeRoutes from './routes/timeRoutes.js';
+import mapRoutes from './routes/mapRoutes.js';
 
 const app = express();
 
@@ -31,6 +32,9 @@ app.use('/api/events', eventRoutes);
 
 // Time-related routes (e.g., for current time)
 app.use('/api/time', timeRoutes);
+
+// Map-related routes
+app.use('/api/map', mapRoutes); 
 
 // Route to handle OAuth2 callback
 app.get('/oauth2callback', handleOAuth2Callback);

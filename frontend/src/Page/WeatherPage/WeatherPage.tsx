@@ -1,5 +1,3 @@
-// frontend\src\Page\WeatherPage\WeatherPage.tsx
-
 import './WeatherPage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
@@ -36,10 +34,7 @@ function WeatherPage() {
 
   // Generate dates for the week starting from Monday
   const getWeekDates = () => {
-    // Clone today's date to avoid modifying the original `today` object
     const todayClone = new Date(today);
-    
-    // Calculate the start of the week (Monday)
     const dayIndex = todayClone.getDay(); // 0 for Sunday, 6 for Saturday
     const startOfWeek = new Date(todayClone);
     startOfWeek.setDate(todayClone.getDate() - (dayIndex === 0 ? 6 : dayIndex - 1)); // Adjust so Monday is the start
@@ -87,8 +82,14 @@ function WeatherPage() {
             {forecast.slice(0, 7).map((day, index) => (
               <div key={index} className="forecast-day">
                 <div><b>{daysOfWeek[index]}</b></div>
-                <div>{Math.round(day.main.temp)}°C</div>
-                <div>{day.weather[0].description}</div>
+                <div>{day.temperature}°C</div> {/* Adjusted to match new structure */}
+                <div className="weather-info">
+                  <span>{day.condition}</span> {/* Adjusted to match new structure */}
+                  <img 
+                    src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`} 
+                    alt={day.condition} 
+                  /> {/* Adjusted to match new structure */}
+                </div>
               </div>
             ))}
           </div>

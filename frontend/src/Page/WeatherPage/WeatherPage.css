@@ -58,3 +58,23 @@ h2 {
 .weather-container p {
     margin: 5px 0;
 }
+
+.weather-info {
+  display: flex;
+  align-items: center;
+  margin-top: 4px; /* Optional: Add space between temperature and condition */
+}
+
+.weather-info img {
+  height: 24px; /* Adjust the height to match your design */
+  width: 24px;  /* Ensure the icon has a fixed width and height */
+  margin-left: 8px; /* Add some space between the text and the icon */
+}
+
+.forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px; /* Add space between forecast days */
+}
+

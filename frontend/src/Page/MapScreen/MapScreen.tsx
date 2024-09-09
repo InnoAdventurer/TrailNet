@@ -1,38 +1,34 @@
 // frontend\src\Page\MapScreen\MapScreen.tsx
 
+import { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
 import './MapScreen.css';
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 function MapScreen() {
   const [weather, setWeather] = useState<any>(null);
-  const [searchQuery, setSearchQuery] = useState(''); // State to hold the search query
-  // --------- Temporary usage for testing purpose --------
-  // Define GPS coordinates as variables
+  const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState<any[]>([]);
   const [latitude, setLatitude] = useState(-34.41966); // Latitude for Wollongong
   const [longitude, setLongitude] = useState(150.90676); // Longitude for Wollongong
 
-  // Calculate the bounding box for the map
   const bbox = `${longitude - 0.0015},${latitude - 0.0015},${longitude + 0.0015},${latitude + 0.0015}`;
-  // --------- Temporary usage for testing purpose --------
+
+  const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Fetch weather data based on GPS coordinates from the backend
     const fetchWeather = async () => {
       try {
         const response = await axios.get('/backend_api/api/weather/current', {
-          params: {
-            lat: latitude,
-            lon: longitude,
-          },
+          params: { lat: latitude, lon: longitude },
         });
-        const data = response.data;
+
         setWeather({
-          temperature: data.main.temp,
-          condition: data.weather[0].description,
+          temperature: response.data.temperature,
+          condition: response.data.condition,
+          icon: response.data.icon, // Save the icon code
         });
       } catch (error) {
         console.error('Error fetching weather data:', error);
@@ -42,21 +38,45 @@ function MapScreen() {
     fetchWeather();
   }, [latitude, longitude]);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Fetch location data using the Nominatim API
-    try {
-      const response = await axios.get(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1`);
-      if (response.data && response.data.length > 0) {
-        const location = response.data[0];
-        setLatitude(parseFloat(location.lat));
-        setLongitude(parseFloat(location.lon));
-      } else {
-        alert("Location not found.");
+  const fetchSuggestions = async (query: string) => {
+    if (query.length > 2) {
+      try {
+        const response = await axios.get('/backend_api/api/map/search', {
+          params: { query }
+        });
+        setSuggestions(response.data);
+      } catch (error) {
+        console.error('Error fetching suggestions:', error);
       }
-    } catch (error) {
-      console.error('Error fetching location data:', error);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current); // Clear the previous timeout
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      fetchSuggestions(query); // Fetch suggestions after 0.5s delay
+    }, 500);
+  };
+
+  const handleSuggestionClick = (suggestion: any) => {
+    setSearchQuery(suggestion.display_name); // Set the selected suggestion to the input
+    setLatitude(parseFloat(suggestion.lat));
+    setLongitude(parseFloat(suggestion.lon));
+    setSuggestions([]); // Clear suggestions after selection
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (suggestions.length > 0) {
+      handleSuggestionClick(suggestions[0]); // Automatically select the first suggestion if available
     }
   };
 
@@ -73,12 +93,21 @@ function MapScreen() {
             placeholder="Search"
             className="search"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchChange}
           />
           <button type="submit" className="search-button">
             <FiSearch className="search-icon" />
           </button>
         </form>
+        {suggestions.length > 0 && (
+          <ul className="suggestions-list">
+            {suggestions.map((suggestion, index) => (
+              <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
+                {suggestion.display_name}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <div className="map" style={{ height: "250px", width: "100%" }}>
         <iframe
@@ -101,8 +130,11 @@ function MapScreen() {
         <h3>Weather Information</h3>
         {weather ? (
           <div>
-            <div><b>Temperature:</b> {weather.temperature}°C</div>
-            <div><b>Condition:</b> {weather.condition}</div>
+            <div><b>Temperature: </b> {weather.temperature}°C</div>
+            <div className="weather-info">
+              <b>Condition: &nbsp;</b> {weather.condition} 
+              <img src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt={weather.condition} />
+            </div>
           </div>
         ) : (
           <div>Loading weather data...</div>

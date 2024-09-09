@@ -10,6 +10,13 @@ const router = Router();
 
 const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
 
+// Utility function to capitalize weather condition
+const capitalizeCondition = (condition) => {
+  return condition.split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
 // Route to get weather by GPS coordinates
 router.get('/current', async (req, res) => {
   const { lat, lon } = req.query; // Expecting latitude and longitude as query parameters
@@ -28,13 +35,20 @@ router.get('/current', async (req, res) => {
       },
     });
 
-    res.json(response.data);
+    const weatherData = {
+      temperature: response.data.main.temp,
+      condition: capitalizeCondition(response.data.weather[0].description), // Capitalize condition
+      icon: response.data.weather[0].icon, // Add icon code here
+    };
+
+    res.json(weatherData);
   } catch (error) {
     console.error('Error fetching weather data:', error);
     res.status(500).json({ message: 'Failed to fetch weather data' });
   }
 });
 
+// Obtain future 5 days of weather forecast
 router.get('/forecast', async (req, res) => {
   const { lat, lon } = req.query; // Expecting latitude and longitude as query parameters
 
@@ -51,7 +65,12 @@ router.get('/forecast', async (req, res) => {
       // Extract data for 5 days at 12:00 PM (noon) to simulate daily forecast
       const dailyForecast = response.data.list.filter((reading) =>
         reading.dt_txt.includes("12:00:00")
-      );
+      ).map(day => ({
+          date: day.dt_txt,
+          temperature: Math.round(day.main.temp),
+          condition: capitalizeCondition(day.weather[0].description),
+          icon: day.weather[0].icon
+      }));
 
       res.json(dailyForecast);
   } catch (error) {
