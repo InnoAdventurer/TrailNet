@@ -2,15 +2,24 @@
 
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig(({ mode }) => {
   console.log(`Current mode: ${mode}`);  // This should output 'production' during build
   const env = loadEnv(mode, process.cwd());
   
   return {
-    base: mode === 'production' ? '/TrailNet/' : '/', // Use the correct base path
     plugins: [react()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
+    },
+    build: {
+      outDir: 'dist',
+    },
     server: {
+      port: 5173,
       proxy: {
         '/backend_api': {
           target: env.VITE_BACKEND_URL,
@@ -19,17 +28,14 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/backend_api/, ''),
           logLevel: 'debug', // Enable debug logging for troubleshooting
         },
-        '/weather_api': {
-          target: 'http://www.bom.gov.au',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/weather_api/, ''),
-        },
         '/osm': {
           target: 'https://www.openstreetmap.org',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/osm/, ''),
         },
-        
+      },
+      preview: {
+        port: 5000,
       },
     },
   };
