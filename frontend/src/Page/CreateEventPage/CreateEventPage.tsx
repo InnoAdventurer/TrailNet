@@ -161,6 +161,7 @@ function CreateEventPage() {
             onChange={(e) => setAddress(e.target.value)} 
             placeholder="Enter the event address" 
             required
+            // TODO: MODIFY THIS FIELD TO WORK WITH ADDRESS SEARCH FUNCTION
           />
         </div>
 
