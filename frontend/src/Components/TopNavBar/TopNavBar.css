@@ -1,1 +1,30 @@
-/* frontend\src\Components\TopNavBar\TopNavBar.css */
+/* frontend/src/Components/TopNavBar/TopNavBar.css */
+.topnavbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #ffffff; /* Adjust as needed */
+    border-bottom: 1px solid #ddd; /* Light border line */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Shadow for the bottom line */
+    position: relative; /* Allows positioning for shadow */
+  }
+  
+  .topnavbar-container .icon {
+    font-size: 24px;
+    margin: 0 10px;
+    color: #000; /* Specify the desired color */
+  }
+  
+  .topnavbar-container a {
+    color: inherit; /* Ensures that the link inherits the color from its parent */
+    text-decoration: none; /* Removes the default underline from the link */
+    display: flex;
+    align-items: center; /* Ensures the icon is vertically centered */
+  }
+  
+  .topnavbar-container h2 {
+    font-size: 24px;
+    margin: 0;
+  }
+  
