@@ -1,4 +1,4 @@
-/* frontend\src\App.css */
+/* frontend/src/App.css */
 
 .app-container {
   width: 350px;
@@ -9,4 +9,9 @@
   overflow-x: hidden; /* Prevent horizontal scrolling */
   position: relative; /* Ensure positioned child elements stay within bounds */
   background-color: #fff; /* Optional: Set a background color */
+}
+
+/* Ensure default text color is black */
+* {
+  color: black;
 }
