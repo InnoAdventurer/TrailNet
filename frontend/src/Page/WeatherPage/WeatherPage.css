@@ -78,3 +78,18 @@ h2 {
   margin-bottom: 16px; /* Add space between forecast days */
 }
 
+.attribution {
+  font-size: 8px; /* Small font size for subtle appearance */
+  text-align: center;
+  margin-top: 20px;
+  color: #aaa; /* Light gray color to blend into the background */
+}
+
+.attribution a {
+  color: #aaa; /* Match the link color with the text for subtlety */
+  text-decoration: none;
+}
+
+.attribution a:hover {
+  text-decoration: underline; /* Only underline on hover */
+}

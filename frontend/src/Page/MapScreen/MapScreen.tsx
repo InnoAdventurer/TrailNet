@@ -140,6 +140,9 @@ function MapScreen() {
           <div>Loading weather data...</div>
         )}
       </div>
+      <div className="attribution">
+        <p>Weather data provided by <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a>.</p>
+      </div>
     </div>
   );
 }
