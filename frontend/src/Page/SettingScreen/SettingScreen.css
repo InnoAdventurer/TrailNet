@@ -1,0 +1,64 @@
+/* frontend/src/Page/SettingScreen/SettingScreen.css */
+
+.settingscreen-container {
+    padding: 20px;
+}
+
+.settingscreen-container .header-container {
+    position: relative; /* Allows centering the h2 */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers the h2 */
+    margin-bottom: 100px; /* Adjust this as needed for spacing */
+}
+
+.settingscreen-container .back {
+    position: absolute;
+    left: 0;
+    margin-right: 10px;
+    color: black !important; /* Force the color to black */
+}
+
+.settingscreen-container h2 {
+    font-size: 24px;
+    margin: 0;
+    text-align: center; /* Center h2 text */
+}
+
+.settingscreen-container button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    background-color: #ffffff; /* White background */
+    border: 1px solid #ddd; /* Light border for separation */
+    border-radius: 8px;
+    cursor: pointer;
+    box-sizing: border-box; /* Includes padding in height calculation */
+}
+
+.settingscreen-container button svg {
+    font-size: 30px; /* Enlarges the icons */
+    margin-right: 15px;
+}
+
+.settingscreen-container button .text-container {
+    display: flex;
+    flex-direction: column; /* Stack text vertically */
+    justify-content: center; /* Center text vertically */
+    align-items: center; /* Center text horizontally */
+    flex: 1; /* Allow text-container to take up remaining space */
+}
+
+.settingscreen-container .subheader {
+    font-weight: bold; /* Makes the font bold */
+    margin: 0;
+}
+
+.settingscreen-container .discription {
+    font-size: 14px; /* Smaller font size */
+    color: grey; /* Grey color for description text */
+    margin: 0;
+}

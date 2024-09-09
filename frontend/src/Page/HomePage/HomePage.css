@@ -1,121 +1,93 @@
-/* frontend\src\Page\HomePage\HomePage.css */
+/* frontend/src/Page/HomePage/HomePage.css */
 
 /* Main container for the entire page with fixed width and height */
 .homepage-container {
-    display: flex;
-    flex-direction: column;
-    width: 350px; /* Fixed width */
-    height: 681px; /* Fixed height */
-    position: relative; /* For positioning of header and footer */
-    overflow: hidden; /* Prevents scroll on the container */
-    box-sizing: border-box; /* Includes padding and border in the width and height */
-  }
-  
-  /* Header at the top of the container */
-  .homepage-container .header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 10px;
-    position: absolute; /* Position header at the top */
-    top: 0;
-    left: 0;
-    background-color: white; /* Background color for visibility */
-    z-index: 10; /* Keeps header above other content */
-    border-bottom: 1px solid #ddd; /* Optional: Adds a bottom border */
-    box-sizing: border-box; /* Includes padding in height calculation */
-  }
-  
-  /* Title styling in the header */
-  .homepage-container .header h2 {
-    margin: 0 10px;
-  }
-  
-  /* Header icons styling */
-  .homepage-container .header .icon {
-    font-size: 30px; /* Enlarges the icons */
-  }
-  
-  /* Main content area where scrolling will occur */
-  .homepage-container .main-content {
-    display: flex;
-    flex-direction: column; /* Stack items vertically */
-    width: 100%;
-    height: calc(100% - 120px); /* Adjust height to leave space for header and bottomNavBar */
-    padding: 10px; /* Adds padding */
-    overflow-y: auto; /* Enables vertical scrolling */
-    box-sizing: border-box; /* Ensures padding is included in height */
-    margin-top: 60px; /* Adjust margin to account for header height */
-    margin-bottom: 60px; /* Adjust margin to account for bottomNavBar height */
-  }
-  
-  /* Content section styling */
-  .homepage-container .content {
-    display: flex;
-    flex-direction: row; /* Keep image, text, and button in a row */
-    align-items: center;
-    justify-content: space-between; /* Space items evenly */
-    width: 100%; /* Full width of the container */
-    margin-bottom: 10px; /* Adds spacing between repeated content */
-  }
-  
-  /* Profile picture styling */
-  .homepage-container .profilepicture {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-  
-  /* Text content styling */
-  .homepage-container .text-content {
-    display: flex;
-    flex-direction: column; /* Stack "Emma" and "Date" vertically */
-    font-size: 12px; /* Smaller font size */
-    color: #030303;
-    margin-right: 120px; /* Adds spacing between text and button */
-  }
-  
-  /* Button styling */
-  .homepage-container button {
-    padding: 5px 10px;
-    background-color: #EFF5F7; /* Background color */
-    color: #2C425A; /* Font color */
-    border: 2px solid #48AEE1; /* Border color */
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  /* Fixed bottom navigation bar within the container */
-  .homepage-container .bottomNavBar {
-    display: flex;
-    flex-direction: row; /* Arrange items in a row */
-    justify-content: space-around; /* Space items evenly */
-    width: 100%;
-    padding: 10px; /* Adds padding */
-    position: absolute; /* Position bottomNavBar at the bottom */
-    bottom: 0;
-    left: 0;
-    background-color: white; /* Background color for visibility */
-    z-index: 10; /* Keeps nav bar above other content */
-    border-top: 1px solid #ddd; /* Optional: Adds a top border */
-    box-sizing: border-box; /* Includes padding in height calculation */
-  }
-  
-  /* NavBar item styling */
-  .homepage-container .bottomNavBar div {
-    display: flex;
-    flex-direction: column; /* Stack icon and caption vertically */
-    align-items: center;
-    font-size: 12px; /* Smaller font size for nav bar text */
-    color: #2C425A; /* Font color for the nav bar text */
-  }
-  
-  /* NavBar icon styling */
-  .homepage-container .bottomNavBar div svg {
-    font-size: 30px; /* Adjusts the size of the icons */
-    margin-bottom: 2px; /* Adds space between icon and caption */
-  }
-  
+  display: flex;
+  flex-direction: column;
+  width: 350px; /* Fixed width */
+  height: 681px; /* Fixed height */
+  position: relative; /* For positioning of header and footer */
+  overflow: hidden; /* Prevents scroll on the container */
+  box-sizing: border-box; /* Includes padding and border in the width and height */
+}
+
+/* Content area where scrolling will occur */
+.homepage-container .main-content {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  width: 100%;
+  height: calc(100% - 120px); /* Adjust height to leave space for header and bottomNavBar */
+  padding: 10px; /* Adds padding */
+  overflow-y: auto; /* Enables vertical scrolling */
+  box-sizing: border-box; /* Ensures padding is included in height */
+  margin-bottom: 60px; /* Adjust margin to account for bottomNavBar height */
+}
+
+/* Content section styling */
+.homepage-container .content {
+  display: flex;
+  flex-direction: row; /* Keep image, text, and button in a row */
+  align-items: center;
+  width: 100%; /* Full width of the container */
+  margin-bottom: 10px; /* Adds spacing between repeated content */
+}
+
+/* Profile picture styling */
+.homepage-container .profilepicture {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+/* Text content styling */
+.homepage-container .text-content {
+  display: flex;
+  flex-direction: column; /* Stack "Emma" and "Date" vertically */
+  font-size: 12px; /* Smaller font size */
+  color: #030303;
+  margin-right: 10px; /* Reduce margin to bring text closer to the button */
+  /* Align text to the left */
+  flex: 1; /* Allow text-container to take up remaining space */
+}
+
+/* Button styling */
+.homepage-container button {
+  padding: 5px 10px;
+  background-color: #EFF5F7; /* Background color */
+  color: #2C425A; /* Font color */
+  border: 2px solid #48AEE1; /* Border color */
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Fixed bottom navigation bar within the container */
+.homepage-container .bottomNavBar {
+  display: flex;
+  flex-direction: row; /* Arrange items in a row */
+  justify-content: space-around; /* Space items evenly */
+  width: 100%;
+  padding: 10px; /* Adds padding */
+  position: absolute; /* Position bottomNavBar at the bottom */
+  bottom: 0;
+  left: 0;
+  background-color: white; /* Background color for visibility */
+  z-index: 10; /* Keeps nav bar above other content */
+  border-top: 1px solid #ddd; /* Optional: Adds a top border */
+  box-sizing: border-box; /* Includes padding in height calculation */
+}
+
+/* NavBar item styling */
+.homepage-container .bottomNavBar div {
+  display: flex;
+  flex-direction: column; /* Stack icon and caption vertically */
+  align-items: center;
+  font-size: 12px; /* Smaller font size for nav bar text */
+  color: #2C425A; /* Font color for the nav bar text */
+}
+
+/* NavBar icon styling */
+.homepage-container .bottomNavBar div svg {
+  font-size: 30px; /* Adjusts the size of the icons */
+  margin-bottom: 2px; /* Adds space between icon and caption */
+}

@@ -1,0 +1,62 @@
+.emergencyscreen-container {
+    padding: 20px;
+  }
+  
+  .emergencyscreen-container .header-container {
+    position: relative; /* Allows centering the h2 */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers the h2 */
+    margin-bottom: 100px;
+  }
+  
+  .emergencyscreen-container .back {
+    position: absolute;
+    left: 0;
+    margin-right: 10px;
+  }
+  
+  .emergencyscreen-container h2 {
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  .emergencyscreen-container button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    font-size: 15px;
+    background-color: #f0f0f0; /* Grey background */
+    border: 1px solid #dcdcdc; /* Grey border */
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+    margin-bottom: 30px;
+  }
+  
+  .emergencyscreen-container button.active {
+    border-color: #48AEE1; /* Blue border when active */
+    background-color: #e6f7ff; /* Light blue background when active */
+  }
+  
+  .emergencyscreen-container button:hover {
+    border-color: #b3d9ff; /* Slight blue border on hover */
+  }
+  
+  .emergencyscreen-container button:active {
+    border-color: #48AEE1; /* Strong blue border when clicked */
+    background-color: #e6f7ff; /* Maintain light blue background when clicked */
+  }
+  
+  .emergencyscreen-container button svg {
+    margin-right: 10px;
+    font-size: 30px;
+  }
+  
+  .emergencyscreen-container button:focus {
+    outline: none;
+  }
+  
