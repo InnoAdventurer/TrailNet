@@ -7,10 +7,8 @@
     "dev:frontend": "vite --config frontend/vite.config.ts",
     "dev:backend": "nodemon backend/server.js",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
-    
     "build:frontend": "vite build --mode production --config frontend/vite.config.ts",
     "build:backend": "echo \"No build step for backend\"",
-    
     "start:frontend": "serve -s frontend/dist",
     "start:backend": "node backend/server.js"
   },
@@ -28,7 +26,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.3.0",
-    "react-router-dom": "^6.26.0"
+    "react-router-dom": "^6.26.0",
+    "serve": "^14.2.3"
   },
   "devDependencies": {
     "@types/node": "^22.5.1",
