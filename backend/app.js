@@ -12,8 +12,19 @@ import mapRoutes from './routes/mapRoutes.js';
 
 const app = express();
 
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://trailnet.onrender.com'];
+
 const corsOptions = {
-    origin: 'http://localhost:5173', // Adjust this to your frontend's address
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, curl, etc.)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     optionsSuccessStatus: 200
 };
 
