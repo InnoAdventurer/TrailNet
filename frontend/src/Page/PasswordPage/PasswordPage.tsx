@@ -4,6 +4,8 @@ import './PasswordPage.css';
 import { useState } from 'react';
 import axios from 'axios';
 
+const apiUrl = process.env.VITE_BACKEND_URL
+
 function PasswordPage() {
   const [email, setEmail] = useState(''); // State to manage email input
   const [message, setMessage] = useState(''); // State to manage success/error messages
@@ -18,7 +20,7 @@ function PasswordPage() {
 
     try {
       // Send a POST request to the backend to initiate the password reset
-      const response = await axios.post('/backend_api/api/auth/forgot-password', { email });
+      const response = await axios.post(`${apiUrl}/api/auth/forgot-password`, { email });
 
       // Log the response for debugging
       console.log(response.data);

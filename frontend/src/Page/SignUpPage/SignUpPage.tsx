@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import signuppage_1 from './signuppage_1.png';
 
+const apiUrl = process.env.VITE_BACKEND_URL
+
 function SignUpPage() {
   // State to manage the input fields
   const [username, setUsername] = useState('');
@@ -36,7 +38,7 @@ function SignUpPage() {
     try {
       // Make a POST request to the backend to create a new account
       // const response = await axios.post('http://localhost:50000/api/auth/register', {
-      const response = await axios.post('/backend_api/api/auth/register', {
+      const response = await axios.post(`${apiUrl}/api/auth/register`, {
         username,
         email,
         password,

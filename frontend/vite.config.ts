@@ -18,22 +18,11 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
     },
+    define: {
+      'process.env.VITE_BACKEND_URL': JSON.stringify(env.VITE_BACKEND_URL)
+    },
     server: {
       port: 5173,
-      proxy: {
-        '/backend_api': {
-          target: env.VITE_BACKEND_URL,
-          // target: 'http://localhost:50000', // Your backend server
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/backend_api/, ''),
-          logLevel: 'debug', // Enable debug logging for troubleshooting
-        },
-        '/osm': {
-          target: 'https://www.openstreetmap.org',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/osm/, ''),
-        },
-      },
       preview: {
         port: 5000,
       },
