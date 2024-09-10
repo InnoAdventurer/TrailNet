@@ -6,6 +6,9 @@ import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+const apiUrl = process.env.VITE_BACKEND_URL
+console.log (apiUrl)
+
 function CreateEventPage() {
   // State to manage form inputs
   const [activity, setActivity] = useState<string>('hiking');
@@ -49,7 +52,7 @@ function CreateEventPage() {
   const fetchSuggestions = async (query: string) => {
     if (query.length > 2) {
       try {
-        const response = await axios.get('/backend_api/api/map/search', {
+        const response = await axios.get(`${apiUrl}/api/map/search`, {
           params: { query }
         });
         setSuggestions(response.data);
@@ -103,7 +106,7 @@ function CreateEventPage() {
     endDateTime.setHours(eventDateTime.getHours() + 4);
 
     // Get the current time from the server for comparison
-    const response = await axios.get('/backend_api/api/time/current');
+    const response = await axios.get('${apiUrl}/api/time/current');
     const serverTime = new Date(response.data.currentTime);
 
     if (isNaN(eventDateTime.getTime())) {
@@ -130,7 +133,7 @@ function CreateEventPage() {
     };
 
     try {
-      const createResponse = await axios.post('/backend_api/api/events/create', eventDetails);
+      const createResponse = await axios.post('${apiUrl}/api/events/create', eventDetails);
 
       if (createResponse.status === 201) {
         setSuccess('Event Created Successfully!');

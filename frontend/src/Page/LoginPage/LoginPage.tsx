@@ -6,6 +6,8 @@ import { Route, useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import axios for making HTTP requests
 import logo from '../../assets/Picture/Logo.jpeg'
 
+const apiUrl = process.env.VITE_BACKEND_URL
+
 function LoginPage(){
     const navigate = useNavigate();
 
@@ -27,7 +29,7 @@ function LoginPage(){
         try {
             // Make a POST request to the backend server
             // const response = await axios.post('http://localhost:50000/api/auth/login', {
-            const response = await axios.post('/backend_api/api/auth/login', {
+            const response = await axios.post(`${apiUrl}/api/auth/login`, {
                 email,
                 password,
             });

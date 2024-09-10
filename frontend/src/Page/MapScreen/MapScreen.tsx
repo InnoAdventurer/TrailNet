@@ -7,6 +7,8 @@ import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
 
+const apiUrl = process.env.VITE_BACKEND_URL
+
 function MapScreen() {
   const [weather, setWeather] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,7 +23,7 @@ function MapScreen() {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const response = await axios.get('/backend_api/api/weather/current', {
+        const response = await axios.get(`${apiUrl}/api/weather/current`, {
           params: { lat: latitude, lon: longitude },
         });
 
@@ -41,7 +43,7 @@ function MapScreen() {
   const fetchSuggestions = async (query: string) => {
     if (query.length > 2) {
       try {
-        const response = await axios.get('/backend_api/api/map/search', {
+        const response = await axios.get('${apiUrl}/api/map/search', {
           params: { query }
         });
         setSuggestions(response.data);

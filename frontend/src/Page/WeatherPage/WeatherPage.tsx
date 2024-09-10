@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const apiUrl = process.env.VITE_BACKEND_URL
+
 function WeatherPage() {
   const daysOfWeek = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
   const today = new Date();
@@ -17,7 +19,7 @@ function WeatherPage() {
   useEffect(() => {
     const fetchForecast = async () => {
       try {
-        const response = await axios.get('/backend_api/api/weather/forecast', {
+        const response = await axios.get(`${apiUrl}/api/weather/forecast`, {
           params: {
             lat: latitude,
             lon: longitude,
