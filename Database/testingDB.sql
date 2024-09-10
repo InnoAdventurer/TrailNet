@@ -27,6 +27,6 @@ CREATE TABLE events (
 );
 
 INSERT INTO events (event_name, event_date, customer_id) VALUES
-('Product Launch', '2024-09-15', 1),
-('Annual Conference', '2024-10-05', 2),
-('Maintenance Seminar', '2024-11-20', 3);
+('hiking at Mount Keira', '2024-09-15', 1),
+('Cycling at Stuart Park', '2024-10-05', 2),
+('Walking at North Touragdi Beach', '2024-11-20', 3);
