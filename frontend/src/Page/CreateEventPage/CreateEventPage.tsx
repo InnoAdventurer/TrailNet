@@ -264,7 +264,7 @@ function CreateEventPage() {
           </div>
         </div>
 
-        <button type="submit" className="submit-button" disabled={loading}>
+        <button type="submit" className="submit-button" disabled={loading || latitude === null || longitude === null}>
           {loading ? 'Creating...' : 'Done'}
         </button>
       </form>
