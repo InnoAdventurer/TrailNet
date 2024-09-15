@@ -1,3 +1,5 @@
+// frontend/src/Page/EmergencyScreen/EmergencyScreen.tsx
+
 import './EmergencyScreen.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
