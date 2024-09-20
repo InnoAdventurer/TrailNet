@@ -1,7 +1,7 @@
 // frontend/src/Page/HomePage/HomePage.tsx
 import './HomePage.css';
-import TopNavBar from "../../Components/TopNavBar/TopNavBar";
-import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
+import TopNavBar from "../../components/TopNavBar/TopNavBar";
+import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import homepage_1 from './homepage_1.png';
 import homepage_2 from './homepage_2.png';
 import homepage_3 from './homepage_3.png';

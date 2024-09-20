@@ -1,20 +1,22 @@
 // frontend/src/Page/EmergencyScreen/EmergencyScreen.tsx
 
-
 import './EmergencyScreen.css';
 import { IoIosArrowBack } from "react-icons/io";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PiPhoneCallFill } from "react-icons/pi";
 import { TbHeartHandshake } from "react-icons/tb";
 import { MdSos } from "react-icons/md";
 import { MdPhonelinkRing } from "react-icons/md";
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { ErrorContext } from '../../contexts/ErrorContext'; // Import ErrorContext
 
 function EmergencyScreen() {
+  const { setError } = useContext(ErrorContext); // Use the setError function from context
   const [activeButton, setActiveButton] = useState<string | null>(null);
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const navigate = useNavigate(); // Use useNavigate hook for navigation
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -25,6 +27,7 @@ function EmergencyScreen() {
         },
         (error) => {
           console.error('Error getting location', error);
+          setError('Error getting location. Please check your GPS settings.');
         },
         { enableHighAccuracy: true }
       );
@@ -33,6 +36,7 @@ function EmergencyScreen() {
       return () => navigator.geolocation.clearWatch(watchId);
     } else {
       console.error('Geolocation is not supported by this browser.');
+      setError('Geolocation is not supported by this browser.');
     }
   }, []);
 
@@ -44,32 +48,29 @@ function EmergencyScreen() {
     try {
       const response = await axios.post('/backend_api/api/emergency/help', {
         location: { latitude, longitude },
-        user_id: 1, // Replace with the current user's ID
+        user_id: 1, // TODO: Change to current logged on user id.
       });
       if (response.status === 200) {
         alert('Help request sent to nearby users!');
       }
     } catch (error) {
       console.error('Error sending help request:', error);
+      setError('Error sending help request. Please try again.');
     }
   };
 
   const handleSendSOS = async () => {
     try {
-      const response = await axios.post('/backend_api/api/emergency/sos', {
-        location: { latitude, longitude },
-        user_id: 1, // Replace with the current user's ID
-      });
-      if (response.status === 200) {
-        alert('SOS signal sent!');
-      }
+      console.log('Navigating to SOS screen'); // Add this to check if function is being called
+      navigate('/sosscreen'); // Navigate to the SOS screen
     } catch (error) {
-      console.error('Error sending SOS signal:', error);
+      console.error('Error in navigating:', error);
+      setError('Error navigating to SOS screen. Please try again.');
     }
   };
 
   const handleContactHelp = () => {
-    const contactPhoneNumber = '1234567890'; // Replace with the actual contact number
+    const contactPhoneNumber = '1234567890'; // TODO: retrieve emergency contact from db.
     window.location.href = `tel:${contactPhoneNumber}`;
   };
 
@@ -81,10 +82,14 @@ function EmergencyScreen() {
         handleCall000();
         break;
       case 'help':
-        handleAskForHelp();
+        if (latitude && longitude) {
+          handleAskForHelp();
+        } else {
+          setError('Location is not available. Please check your GPS settings.');
+        }
         break;
       case 'sos':
-        handleSendSOS();
+        handleSendSOS(); // Navigate to SOS screen
         break;
       case 'contact':
         handleContactHelp();
@@ -118,7 +123,6 @@ function EmergencyScreen() {
       <button
         onClick={() => handleButtonClick('sos')}
         className={activeButton === 'sos' ? 'active' : ''}
-        disabled={!latitude || !longitude}
       >
         <MdSos /> Send an SOS Signal
       </button>

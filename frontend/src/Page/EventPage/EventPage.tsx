@@ -5,7 +5,7 @@ import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdPersonSearch } from "react-icons/md";
 import { IoCreateOutline } from "react-icons/io5";
-import BottomNavBar from '../../Components/BottomNavBar/BottomNavBar';
+import BottomNavBar from '../../components/BottomNavBar/BottomNavBar';
 import eventpage_1 from './eventpage_1.png';
 import eventpage_2 from './eventpage_2.png';
 import { Link } from 'react-router-dom';

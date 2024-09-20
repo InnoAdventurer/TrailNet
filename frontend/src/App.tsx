@@ -18,32 +18,40 @@ import './App.css';
 import CreateEventPage from './Page/CreateEventPage/CreateEventPage';
 import WeatherPage from './Page/WeatherPage/WeatherPage';
 import EmergencyScreen from './Page/EmergencyScreen/EmergencyScreen';
+import SOSScreen from './Page/SOSScreen/SOSScreen';
 import SettingScreen from './Page/SettingScreen/SettingScreen';
+
+import { ErrorProvider } from './contexts/ErrorContext';
+import ErrorPrompt from './components/ErrorPrompt/ErrorPrompt';
 
 function App() {
   return (
-    <div className="app-container">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<WelcomePage />}/>
-          <Route path="/welcomesubpage" element={<WelcomeSubpage />}/>
-          <Route path="/signuppage" element={<SignUpPage />}/>
-          <Route path="/loginpage" element={<LoginPage />}/>
-          <Route path="/passwordpage" element={<PasswordPage />}/>
-          <Route path="/mapscreen" element={<MapScreen />}/>
-          <Route path="/homepage" element={<HomePage />}/>
-          <Route path="/eventpage" element={<EventPage />}/>
-          <Route path="/joineventpage1" element={<JoinEventPage1 />}/>
-          <Route path="/joineventpage2" element={<JoinEventPage2 />}/>
-          <Route path="/joineventpage3/:id" element={<JoinEventPage3 />} />
-          <Route path="/createeventpage" element={<CreateEventPage />}/>
-          <Route path="/weatherpage" element={<WeatherPage />} />
-          <Route path="/emergencyscreen" element={<EmergencyScreen />} />
-          <Route path="/settingscreen" element={<SettingScreen />} />
-          <Route path="*" element={<NotFoundPage />} />  {/* Catch-all route for 404 */}
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <ErrorProvider>
+      <div className="app-container">
+        <ErrorPrompt />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<WelcomePage />}/>
+            <Route path="/welcomesubpage" element={<WelcomeSubpage />}/>
+            <Route path="/signuppage" element={<SignUpPage />}/>
+            <Route path="/loginpage" element={<LoginPage />}/>
+            <Route path="/passwordpage" element={<PasswordPage />}/>
+            <Route path="/mapscreen" element={<MapScreen />}/>
+            <Route path="/homepage" element={<HomePage />}/>
+            <Route path="/eventpage" element={<EventPage />}/>
+            <Route path="/joineventpage1" element={<JoinEventPage1 />}/>
+            <Route path="/joineventpage2" element={<JoinEventPage2 />}/>
+            <Route path="/joineventpage3/:id" element={<JoinEventPage3 />} />
+            <Route path="/createeventpage" element={<CreateEventPage />}/>
+            <Route path="/weatherpage" element={<WeatherPage />} />
+            <Route path="/emergencyscreen" element={<EmergencyScreen />} />
+            <Route path="/sosscreen" element={<SOSScreen />} />
+            <Route path="/settingscreen" element={<SettingScreen />} />
+            <Route path="*" element={<NotFoundPage />} />  {/* Catch-all route for 404 */}
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </ErrorProvider>
   );
 }
 

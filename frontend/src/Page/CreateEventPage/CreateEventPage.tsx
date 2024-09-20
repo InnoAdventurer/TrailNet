@@ -1,15 +1,17 @@
-// frontend\src\Page\CreateEventPage\CreateEventPage.tsx
+// frontend/src/Page/CreateEventPage/CreateEventPage.tsx
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import './CreateEventPage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { ErrorContext } from '../../contexts/ErrorContext'; // Import ErrorContext
 
-const apiUrl = process.env.VITE_BACKEND_URL
-console.log (apiUrl)
+const apiUrl = process.env.VITE_BACKEND_URL;
 
 function CreateEventPage() {
+  const { error, setError } = useContext(ErrorContext); // Use both error and setError from context
+
   // State to manage form inputs
   const [activity, setActivity] = useState<string>('hiking');
   const [date, setDate] = useState<string>('');
@@ -20,7 +22,6 @@ function CreateEventPage() {
   const [longitude, setLongitude] = useState<number | null>(null);
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false); // For managing the loading state
-  const [error, setError] = useState(''); // For managing errors
   const [success, setSuccess] = useState(''); // For managing success messages
 
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -58,6 +59,7 @@ function CreateEventPage() {
         setSuggestions(response.data);
       } catch (error) {
         console.error('Error fetching suggestions:', error);
+        setError('Error fetching suggestions. Please try again.');
       }
     } else {
       setSuggestions([]);
@@ -67,6 +69,10 @@ function CreateEventPage() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setAddress(query);
+
+    // Clear GPS coordinates when the address changes
+    setLatitude(null);
+    setLongitude(null);
 
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current); // Clear the previous timeout
@@ -88,64 +94,66 @@ function CreateEventPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError(null);  // Reset error state before submitting
     setSuccess('');
-
+  
     // Check if latitude and longitude are set
     if (latitude === null || longitude === null) {
       setError('Please select a valid address from the suggestions.');
       setLoading(false);
       return;
     }
-    
+  
     const eventDateTimeString = `${date}T${time}:00`;
     const eventDateTime = new Date(eventDateTimeString);
-
+  
     // Calculate end time as 4 hours later
     const endDateTime = new Date(eventDateTime);
     endDateTime.setHours(eventDateTime.getHours() + 4);
-
-    // Get the current time from the server for comparison
-    const response = await axios.get('${apiUrl}/api/time/current');
-    const serverTime = new Date(response.data.currentTime);
-
-    if (isNaN(eventDateTime.getTime())) {
-      setError('Invalid event date or time.');
-      setLoading(false);
-      return;
-    } else if (eventDateTime < serverTime) {
-      setError('Event date and time must be in the future.');
-      setLoading(false);
-      return;
-    }
-
-    const eventDetails = {
-      event_name: activity,
-      description: `Event for ${activity}`,
-      event_date: date, // Format the date as YYYY-MM-DD
-      start_time: time,
-      end_time: endDateTime.toTimeString().substring(0, 5), // Format as HH:MM
-      location: address,
-      latitude: latitude,
-      longitude: longitude,
-      privacy: privacy,
-      trail_id: null, // Assuming trail_id is optional; otherwise, set it accordingly
-    };
-
+  
     try {
-      const createResponse = await axios.post('${apiUrl}/api/events/create', eventDetails);
-
+      // Get the current time from the server for comparison
+      const response = await axios.get(`${apiUrl}/api/time/current`);
+      const serverTime = new Date(response.data.currentTime);
+  
+      if (isNaN(eventDateTime.getTime())) {
+        setError('Invalid event date or time.');
+        setLoading(false);
+        return;
+      } else if (eventDateTime < serverTime) {
+        setError('Event date and time must be in the future.');
+        setLoading(false);
+        return;
+      }
+  
+      const eventDetails = {
+        event_name: activity,
+        description: `Event for ${activity}`,
+        event_date: date, // Format the date as YYYY-MM-DD
+        start_time: time,
+        end_time: endDateTime.toTimeString().substring(0, 5), // Format as HH:MM
+        location: address,
+        latitude: latitude,
+        longitude: longitude,
+        privacy: privacy,
+        trail_id: null, // Assuming trail_id is optional; otherwise, set it accordingly
+      };
+  
+      const createResponse = await axios.post(`${apiUrl}/api/events/create`, eventDetails);
+  
       if (createResponse.status === 201) {
         setSuccess('Event Created Successfully!');
       } else {
         setError('Failed to create event.');
       }
     } catch (err: any) {
+      console.error('Error creating event:', err);
       setError('An error occurred while creating the event. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="createeventpage-container">
@@ -264,12 +272,14 @@ function CreateEventPage() {
           </div>
         </div>
 
-        <button type="submit" className="submit-button" disabled={loading || latitude === null || longitude === null}>
-          {loading ? 'Creating...' : 'Done'}
+        <button type="submit" className="submit-button" disabled={loading}>
+          {loading ? 'Creating...' : 'Create Event'}
         </button>
+
+        {success && <div className="success-message">{success}</div>}
+        {/* Error prompt should appear above 
+        TODO: Jump to respective Event page */}
       </form>
-      {success && <div className="success-message">{success}</div>}
-      {error && <div className="error-message">{error}</div>}
     </div>
   );
 }

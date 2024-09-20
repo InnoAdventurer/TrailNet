@@ -1,21 +1,24 @@
+// frontend/src/Page/WeatherPage/WeatherPage.tsx
+
 import './WeatherPage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
+import { ErrorContext } from '../../contexts/ErrorContext'; // Import ErrorContext for error handling
 
-const apiUrl = process.env.VITE_BACKEND_URL
+const apiUrl = process.env.VITE_BACKEND_URL;
 
 function WeatherPage() {
-  const daysOfWeek = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  const today = new Date();
-  const todayDate = today.getDate();
-  
+  const { setError } = useContext(ErrorContext); // Use error handling context
   const [forecast, setForecast] = useState<any[]>([]); // State to store the weather forecast data
   const [latitude, setLatitude] = useState(-34.41966); // Default latitude (e.g., Wollongong)
   const [longitude, setLongitude] = useState(150.90676); // Default longitude (e.g., Wollongong)
 
-  // Fetch the weekly weather forecast from the backend
+  const today = new Date();
+  const todayDate = today.getDate();
+
+  // Fetch the 5-day weather forecast from the backend
   useEffect(() => {
     const fetchForecast = async () => {
       try {
@@ -25,31 +28,40 @@ function WeatherPage() {
             lon: longitude,
           },
         });
-        setForecast(response.data);
+        setForecast(response.data.slice(0, 5)); // Get only 5 days forecast
       } catch (error) {
         console.error('Error fetching weather forecast:', error);
+        setError('Error fetching weather forecast. Please try again.'); // Set error message
       }
     };
 
     fetchForecast();
-  }, [latitude, longitude]);
+  }, [latitude, longitude, setError]);
 
-  // Generate dates for the week starting from Monday
+  // Generate days of the week starting from today
+  const getDaysOfWeek = () => {
+    const weekDays = [];
+    const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Use Sunday as the start day
+    for (let i = 0; i < 5; i++) {
+      const nextDay = new Date(today);
+      nextDay.setDate(today.getDate() + i); // Add i days to the current day
+      weekDays.push(dayNames[nextDay.getDay()]); // Get the day name (0 = Sunday, 6 = Saturday)
+    }
+    return weekDays;
+  };
+
+  // Generate dates for the next 5 days
   const getWeekDates = () => {
-    const todayClone = new Date(today);
-    const dayIndex = todayClone.getDay(); // 0 for Sunday, 6 for Saturday
-    const startOfWeek = new Date(todayClone);
-    startOfWeek.setDate(todayClone.getDate() - (dayIndex === 0 ? 6 : dayIndex - 1)); // Adjust so Monday is the start
-    
     const weekDates = [];
-    for (let i = 0; i < 7; i++) {
-      const currentDay = new Date(startOfWeek);
-      currentDay.setDate(startOfWeek.getDate() + i);
-      weekDates.push(currentDay.getDate());
+    for (let i = 0; i < 5; i++) {
+      const nextDay = new Date(today);
+      nextDay.setDate(today.getDate() + i); // Add i days to the current day
+      weekDates.push(nextDay.getDate());
     }
     return weekDates;
   };
 
+  const weekDays = getDaysOfWeek();
   const weekDates = getWeekDates();
 
   return (
@@ -61,44 +73,37 @@ function WeatherPage() {
         <h2>Weather Conditions</h2>
       </div>
 
-      <div className="week-table">
-        <div className="week-days">
-          {daysOfWeek.map((day, index) => (
-            <div key={index} className="day">
-              {day}
-            </div>
-          ))}
-        </div>
-        <div className="week-dates">
-          {weekDates.map((date, index) => (
-            <div key={index} className={`date ${date === todayDate ? 'active' : ''}`}>
-              {date}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="weather-container">
+      <div className="vertical-weather-table">
         {forecast.length > 0 ? (
-          <div className="forecast-table">
-            {forecast.slice(0, 7).map((day, index) => (
-              <div key={index} className="forecast-day">
-                <div><b>{daysOfWeek[index]}</b></div>
-                <div>{day.temperature}°C</div> {/* Adjusted to match new structure */}
+          forecast.map((day, index) => (
+            <div key={index} className="forecast-row">
+              <div className="forecast-column">
+                <div className={`day ${weekDates[index] === todayDate ? 'active' : ''}`}>
+                  {weekDays[index]}
+                </div>
+                <div className={`date ${weekDates[index] === todayDate ? 'active' : ''}`}>
+                  {weekDates[index]}
+                </div>
+              </div>
+              <div className="forecast-column">
+                <div className="temperature">
+                  {day.temperature}°C
+                </div>
                 <div className="weather-info">
-                  <span>{day.condition}</span> {/* Adjusted to match new structure */}
+                  <span>{day.condition}</span>
                   <img 
                     src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`} 
                     alt={day.condition} 
-                  /> {/* Adjusted to match new structure */}
+                  />
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))
         ) : (
           <div>Loading weather data...</div>
         )}
       </div>
+
       <div className="attribution">
         <p>Weather data provided by <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a>.</p>
       </div>

@@ -31,11 +31,9 @@
 
 .mapscreen-container .search-container {
     display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    width: 280px; /* Ensures the container takes full width */
-    padding: 0 10px; /* Adds padding to the sides of the container */
-    box-sizing: border-box; /* Ensures padding doesn't affect the width */
+    justify-content: center;
+    position: relative; /* Ensure the search container is the positioning context */
+    width: 100%;
 }
 
 .mapscreen-container .search {
@@ -65,35 +63,143 @@
     padding: 10px; /* Adds padding around the content */
 }
 
+/* Ensure the search bar and button are side by side */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-button {
+  background-color: #48AEE1;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #2C425A;
+}
+
+.search-icon {
+  color: white;
+  font-size: 20px;
+}
+
+/* Adjust suggestions dropdown styling */
 .suggestions-list {
+    position: absolute; /* Position the suggestions relative to the container */
+    top: 100%; /* Place the suggestions just below the search input */
+    left: 0;
+    z-index: 1000; /* Ensure the suggestions appear above other elements */
+    width: 100%;
+    max-width: 400px;
+    background-color: white;
     border: 1px solid #ccc;
-    background-color: #fff;
-    max-height: none; /* Remove the fixed height to avoid the scroll bar */
-    position: absolute;
-    z-index: 1000;
-    width: calc(100% - 16px);
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    top: 38px;
+    border-radius: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-  
+
 .suggestions-list li {
-    padding: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  padding: 10px;
+  cursor: pointer;
 }
-  
+
 .suggestions-list li:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
   
 .search-container {
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
+
+.search-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 16px;
+  height: 40px; /* Ensure input height matches the button */
+  outline: none;
+}
+
+.search-button {
+  background-color: #48AEE1;
+  border: none;
+  padding: 0 16px; /* Adjust padding for better alignment */
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  height: 40px; /* Make the button's height match the input */
+  display: flex;
+  align-items: center; /* Vertically center the search icon */
+}
+
+.search-button:hover {
+  background-color: #2C425A;
+}
+
+.search-icon {
+  color: white;
+  font-size: 20px;
+}
+
+/* Style suggestions dropdown */
+.suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 400px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.suggestions-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions-list li:hover {
+  background-color: #f0f0f0;
+}
+
 
 .weather-info {
   display: flex;
@@ -121,3 +227,29 @@
 .attribution a:hover {
   text-decoration: underline; /* Only underline on hover */
 }
+
+.map {
+    position: relative;
+}
+
+.center-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #fff;
+    border: 2px solid #48AEE1;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.center-button:hover {
+    background-color: #f0f0f0;
+}
+
+.center-button svg {
+    color: #48AEE1;
+}
+  
