@@ -5,14 +5,14 @@ function ConfirmPassword() {
   return (
     <div className="confirmpassword-container flex">
       <div className="table flex">
-        <div className="table-title">Reset Your Password</div>
+        <div className="table-title">Confirm Your Password</div>
         <div>
-            Input your new password
+            Input new password
         </div>
         <input>
         </input>
         <div>
-            Input your new password
+            Confirm password
         </div>
         <input>
         </input>
