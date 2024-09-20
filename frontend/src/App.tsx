@@ -19,6 +19,7 @@ import CreateEventPage from './Page/CreateEventPage/CreateEventPage';
 import WeatherPage from './Page/WeatherPage/WeatherPage';
 import EmergencyScreen from './Page/EmergencyScreen/EmergencyScreen';
 import SettingScreen from './Page/SettingScreen/SettingScreen';
+import SettingProfile from './Page/SettingProfile/SettingProfile';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/weatherpage" element={<WeatherPage />} />
           <Route path="/emergencyscreen" element={<EmergencyScreen />} />
           <Route path="/settingscreen" element={<SettingScreen />} />
+          <Route path="/settingprofile" element={<SettingProfile />} />
           <Route path="*" element={<NotFoundPage />} />  {/* Catch-all route for 404 */}
         </Routes>
       </BrowserRouter>
