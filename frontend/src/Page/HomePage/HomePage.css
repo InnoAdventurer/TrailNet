@@ -1,5 +1,3 @@
-/* frontend/src/Page/HomePage/HomePage.css */
-
 /* Main container for the entire page with fixed width and height */
 .homepage-container {
   display: flex;
@@ -26,10 +24,19 @@
 /* Content section styling */
 .homepage-container .content {
   display: flex;
+  flex-direction: column; /* Stack the sections vertically */
+  width: 100%; /* Full width of the container */
+  margin-bottom: 20px; /* Adds spacing between repeated content */
+  padding-bottom: 10px; /* Padding for each post */
+}
+
+/* Profile section with profile picture, name, and follow button */
+.homepage-container .profile-section {
+  display: flex;
   flex-direction: row; /* Keep image, text, and button in a row */
   align-items: center;
-  width: 100%; /* Full width of the container */
-  margin-bottom: 10px; /* Adds spacing between repeated content */
+  width: 100%;
+  margin-bottom: 10px; /* Adds spacing between profile and post content */
 }
 
 /* Profile picture styling */
@@ -40,14 +47,13 @@
   margin-right: 20px;
 }
 
-/* Text content styling */
+/* Text content styling for account name and date */
 .homepage-container .text-content {
   display: flex;
   flex-direction: column; /* Stack "Emma" and "Date" vertically */
   font-size: 12px; /* Smaller font size */
   color: #030303;
   margin-right: 10px; /* Reduce margin to bring text closer to the button */
-  /* Align text to the left */
   flex: 1; /* Allow text-container to take up remaining space */
 }
 
@@ -59,6 +65,21 @@
   border: 2px solid #48AEE1; /* Border color */
   border-radius: 5px;
   cursor: pointer;
+}
+
+/* Styling for the post image */
+.homepage-container .event-picture {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px; /* Space between postPic and caption */
+}
+
+/* Styling for the caption */
+.homepage-container .caption {
+  font-size: 14px;
+  color: #030303;
+  text-align: left;
+  padding-left: 5px;
 }
 
 /* Fixed bottom navigation bar within the container */
@@ -75,19 +96,4 @@
   z-index: 10; /* Keeps nav bar above other content */
   border-top: 1px solid #ddd; /* Optional: Adds a top border */
   box-sizing: border-box; /* Includes padding in height calculation */
-}
-
-/* NavBar item styling */
-.homepage-container .bottomNavBar div {
-  display: flex;
-  flex-direction: column; /* Stack icon and caption vertically */
-  align-items: center;
-  font-size: 12px; /* Smaller font size for nav bar text */
-  color: #2C425A; /* Font color for the nav bar text */
-}
-
-/* NavBar icon styling */
-.homepage-container .bottomNavBar div svg {
-  font-size: 30px; /* Adjusts the size of the icons */
-  margin-bottom: 2px; /* Adds space between icon and caption */
 }

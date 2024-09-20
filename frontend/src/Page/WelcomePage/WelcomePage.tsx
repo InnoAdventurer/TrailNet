@@ -9,19 +9,6 @@ function WelcomePage(){
     return <div><div className="welcomepage-container flex">
         <p className="welcomepage-title">Ride Together
         <br />&nbsp;&nbsp;&nbsp; Climb Higher</p>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
         <button className="welcomepage-button" onClick={() => navigate("/welcomesubpage")}>
             Get Started!
         </button>

@@ -1,12 +1,18 @@
-/* frontend\src\Page\EventPage\EventPage.css */
+/* frontend/src/Page/EventPage/EventPage.css */
 
 .eventpage-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    min-height: 100vh; /* Ensure it takes at least the full viewport height */
     position: relative;
     padding: 5px; /* Optional: Adds padding around the content */
+    box-sizing: border-box; /* Include padding in height calculation */
+}
+
+.eventpage-container .main-content {
+    flex: 1; /* Allow this section to take available space */
+    display: flex;
+    flex-direction: column; /* Stack search and content vertically */
 }
 
 .eventpage-container .search-container {
@@ -101,32 +107,34 @@
 
 .eventpage-container .browse {
     display: flex;
-    flex-direction: row; /* Align items in a row */
-    align-items: center; /* Vertically center align items */
-    overflow-x: auto; /* Allows horizontal scrolling */
-    width: 100%;
-    max-width: 350px; /* Limit the width to the fixed container */
+    flex-direction: column; /* Keep the browse text and event cards stacked */
+    align-items: center; /* Center align items */
     margin-top: 1px; /* Space above the browse section */
-    padding-bottom: 20px; /* Padding to ensure content is not cut off */
-    position: relative; /* Makes it a reference point for absolute positioning */
 }
 
 .eventpage-container .browse p {
-    position: sticky; /* Keeps the text fixed in place while scrolling */
-    top: 0; /* Position it at the top of the container */
-    left: 0; /* Align text to the left */
-    right: 0; /* Stretch text to the right */
-    text-align: center; /* Center align text horizontally */
     font-size: 16px;
     margin: 10px; /* Space around the text */
-    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background for visibility */
-    padding: 5px; /* Padding inside the text container */
-    z-index: 1; /* Ensure text is on top of the images */
 }
 
-.eventpage-container .browse .eventpic {
+.eventpage-container .events-container {
+    display: flex;
+    overflow-x: auto; /* Allows horizontal scrolling */
+    width: 100%;
+    max-width: 350px; /* Limit the width to the fixed container */
+}
+
+.eventpage-container .event-card {
+    display: flex;
+    flex-direction: column; /* Stack image and event name vertically */
+    align-items: center; /* Center align items */
+    margin-right: 20px; /* Space between cards */
+    box-shadow: none; /* Ensure no shadow */
+    border: none; /* Ensure no border */
+}
+
+.eventpage-container .eventpic {
     width: 147px; /* Adjust the width of the images */
     height: 88px; /* Adjust the height of the images */
-    margin-right: 20px; /* Space between the images */
     object-fit: cover; /* Ensures images fit within their container */
 }

@@ -78,7 +78,6 @@ function LoginPage(){
                 </div>
                 <button className="btn" disabled={loading}>Log in</button> {/* Disable button while loading */}
             </form>
-            <br />
             <button className="forgot" onClick={() => navigate("/passwordpage")}>Forgot password</button>
         </div>
         <div>
