@@ -1,4 +1,4 @@
-// frontend\src\components\ErrorPrompt\ErrorPrompt.tsx
+// frontend\src\Components\ErrorPrompt\ErrorPrompt.tsx
 
 import React, { useContext } from 'react';
 import './ErrorPrompt.css';

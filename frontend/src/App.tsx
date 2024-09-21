@@ -24,7 +24,7 @@ import SettingProfile from './Page/SettingProfile/SettingProfile';
 import ConfirmPassword from './Page/ConfirmPassword/ConfirmPassword';
 import ProfilePage from './Page/ProfilePage/ProfilePage';
 import { ErrorProvider } from './contexts/ErrorContext';
-import ErrorPrompt from './components/ErrorPrompt/ErrorPrompt';
+import ErrorPrompt from './Components/ErrorPrompt/ErrorPrompt';
 
 function App() {
   return (
