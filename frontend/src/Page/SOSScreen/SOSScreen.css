@@ -1,0 +1,24 @@
+/* frontend/src/Page/SOSScreen/SOSScreen.css */
+
+.sos-screen-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #ffdddd; /* Red background to signify an emergency */
+    color: #333;
+    padding: 20px;
+    cursor: pointer; /* Indicate that clicking will cancel the SOS */
+  }
+  
+  h2 {
+    font-size: 48px; /* Large font for countdown */
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 18px;
+  }
+  

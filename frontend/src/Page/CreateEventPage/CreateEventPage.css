@@ -1,4 +1,5 @@
-/* Container for the entire page */
+/* frontend/src/Page/CreateEventPage/CreateEventPage.css
+Container for the entire page */
 .createeventpage-container {
   display: flex;
   flex-direction: column;

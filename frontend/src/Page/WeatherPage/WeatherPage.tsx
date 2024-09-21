@@ -1,56 +1,98 @@
+// frontend/src/Page/WeatherPage/WeatherPage.tsx
+
 import './WeatherPage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
+import { ErrorContext } from '../../contexts/ErrorContext'; // Assuming you're using ErrorContext for error handling
 
-const apiUrl = process.env.VITE_BACKEND_URL
+const apiUrl = process.env.VITE_BACKEND_URL;
 
 function WeatherPage() {
-  const daysOfWeek = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Corrected to start from Sunday
   const today = new Date();
   const todayDate = today.getDate();
-  
-  const [forecast, setForecast] = useState<any[]>([]); // State to store the weather forecast data
-  const [latitude, setLatitude] = useState(-34.41966); // Default latitude (e.g., Wollongong)
-  const [longitude, setLongitude] = useState(150.90676); // Default longitude (e.g., Wollongong)
+  const todayDayIndex = today.getDay(); // Get the index of the current day (0-6, Sunday-Saturday)
 
-  // Fetch the weekly weather forecast from the backend
+  const { setError } = useContext(ErrorContext); // Use the error context
+
+  const [forecast, setForecast] = useState<any[]>([]); // State to store the weather forecast data
+  const [latitude, setLatitude] = useState<number | null>(null); // State for latitude
+  const [longitude, setLongitude] = useState<number | null>(null); // State for longitude
+
+  // Function to get the user's current GPS coordinates
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          // Handle the specific geolocation error types
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              setError('Permission denied. Please enable location services.');
+              break;
+            case error.POSITION_UNAVAILABLE:
+              setError('Position unavailable. Please check your GPS settings.');
+              break;
+            case error.TIMEOUT:
+              setError('Location request timed out. Please try again.');
+              break;
+            default:
+              setError('An unknown error occurred. Please try again.');
+              break;
+          }
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+      setError('Geolocation is not supported by this browser.');
+    }
+  };
+
   useEffect(() => {
+    // Fetch the user's live GPS coordinates
+    getUserLocation();
+
     const fetchForecast = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/weather/forecast`, {
-          params: {
-            lat: latitude,
-            lon: longitude,
-          },
-        });
-        setForecast(response.data);
+        if (latitude !== null && longitude !== null) {
+          const response = await axios.get(`${apiUrl}/api/weather/forecast`, {
+            params: {
+              lat: latitude,
+              lon: longitude,
+            },
+          });
+          setForecast(response.data);
+        }
       } catch (error) {
         console.error('Error fetching weather forecast:', error);
+        setError('Error fetching weather forecast. Please try again.');
       }
     };
 
-    fetchForecast();
-  }, [latitude, longitude]);
-
-  // Generate dates for the week starting from Monday
-  const getWeekDates = () => {
-    const todayClone = new Date(today);
-    const dayIndex = todayClone.getDay(); // 0 for Sunday, 6 for Saturday
-    const startOfWeek = new Date(todayClone);
-    startOfWeek.setDate(todayClone.getDate() - (dayIndex === 0 ? 6 : dayIndex - 1)); // Adjust so Monday is the start
-    
-    const weekDates = [];
-    for (let i = 0; i < 7; i++) {
-      const currentDay = new Date(startOfWeek);
-      currentDay.setDate(startOfWeek.getDate() + i);
-      weekDates.push(currentDay.getDate());
+    if (latitude !== null && longitude !== null) {
+      fetchForecast();
     }
-    return weekDates;
+  }, [latitude, longitude, setError]); // Fetch weather data whenever the coordinates change
+
+  // Generate dates starting from today and the next 4 days
+  const getUpcomingDates = () => {
+    const upcomingDates = [];
+    for (let i = 0; i < 5; i++) {
+      const futureDate = new Date(today);
+      futureDate.setDate(today.getDate() + i); // Increment the date by i days
+      upcomingDates.push(futureDate);
+    }
+    return upcomingDates;
   };
 
-  const weekDates = getWeekDates();
+  const upcomingDates = getUpcomingDates();
 
   return (
     <div className="weatherpage-container">
@@ -58,47 +100,35 @@ function WeatherPage() {
         <div className="back">
           <Link to="/homepage"><IoIosArrowBack /></Link>
         </div>
-        <h2>Weather Conditions</h2>
+        <h2>Weather Forecast</h2>
       </div>
 
-      <div className="week-table">
-        <div className="week-days">
-          {daysOfWeek.map((day, index) => (
-            <div key={index} className="day">
-              {day}
-            </div>
-          ))}
-        </div>
-        <div className="week-dates">
-          {weekDates.map((date, index) => (
-            <div key={index} className={`date ${date === todayDate ? 'active' : ''}`}>
-              {date}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="weather-container">
+      <div className="vertical-weather-table">
         {forecast.length > 0 ? (
-          <div className="forecast-table">
-            {forecast.slice(0, 7).map((day, index) => (
-              <div key={index} className="forecast-day">
-                <div><b>{daysOfWeek[index]}</b></div>
-                <div>{day.temperature}°C</div> {/* Adjusted to match new structure */}
-                <div className="weather-info">
-                  <span>{day.condition}</span> {/* Adjusted to match new structure */}
-                  <img 
-                    src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`} 
-                    alt={day.condition} 
-                  /> {/* Adjusted to match new structure */}
+          forecast.slice(0, 5).map((day, index) => (
+            <div key={index} className="forecast-row">
+              <div className="day-column">
+                {/* Show the day of the week, ensuring today is included */}
+                <div className="day">{daysOfWeek[(todayDayIndex + index) % 7]}</div>
+                {/* Show the corresponding date, with a blue circle around today's date */}
+                <div className={`date ${upcomingDates[index].getDate() === todayDate ? 'active' : ''}`}>
+                  {upcomingDates[index].getDate()}
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="forecast-column">
+                <div className="temperature">{day.temperature}°C</div>
+                <div className="weather-info">
+                  <span>{day.condition}</span>
+                  <img src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`} alt={day.condition} />
+                </div>
+              </div>
+            </div>
+          ))
         ) : (
           <div>Loading weather data...</div>
         )}
       </div>
+
       <div className="attribution">
         <p>Weather data provided by <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a>.</p>
       </div>
