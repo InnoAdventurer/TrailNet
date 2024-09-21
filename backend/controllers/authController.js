@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';  // Import the entire bcryptjs module
 import jwt from 'jsonwebtoken';  // Import the entire jsonwebtoken module
 import db from '../config/db.js';
 import sendEmail from '../utils/mailer.js';
-import { generateResetToken } from '../utils/resetToken.js';
+import { generateResetToken, verifyResetToken } from '../utils/resetToken.js';
 
 // Destructure the methods you need from bcrypt
 const { hash, compare } = bcrypt;
@@ -79,21 +79,56 @@ export const sendPasswordResetEmail = async (req, res) => {
         const [user] = await db.query('SELECT * FROM Users WHERE email = ?', [email]);
 
         if (user.length > 0) {
-            const token = await generateResetToken(email);
+            const { token, expiration } = await generateResetToken(email); // Get token and expiration
+
+            // Convert expiration to a human-readable date and time
+            const expiryDate = new Date(expiration).toLocaleString(); // Converts to local time
 
             const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
-            const message = `Please use the following link to reset your password: ${resetUrl}`;
+            const message = `
+                You requested a password reset. Please use the following link to reset your password:
+                
+                ${resetUrl}
+                
+                This link will expire on ${expiryDate}.
+                
+                If you did not request this, please ignore this email.
+            `;
 
-            await sendEmail(email, 'Password Reset', message);
+            await sendEmail(email, 'Password Reset', message); // Send the email with expiry info
 
-            console.log('Password Reset email sent successful:', email);
+            console.log('Password Reset email sent successfully:', email);
         }
 
-        // Always respond with a generic message
+        // Always respond with a generic message to prevent exposing information
         res.status(200).json({ message: 'If the email is found in our records, a password reset email will be sent.' });
     } catch (error) {
         res.status(500).json({ message: 'Server error. Please try again later.' });
+        console.error('Password Reset email failed to send:', error);
+    }
+};
 
-        console.log('Password Reset email sent failed:', email);
+// Verify the password reset token and update the password
+export const resetPassword = async (req, res) => {
+    const { token, email, newPassword } = req.body;
+
+    try {
+        // Verify the token and email
+        const isValidToken = await verifyResetToken(email, token);
+        if (!isValidToken) {
+            return res.status(400).json({ message: 'Invalid or expired token' });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the password in the database
+        await db.query('UPDATE Users SET password_hash = ? WHERE email = ?', [hashedPassword, email]);
+
+        res.status(200).json({ message: 'Password reset successful' });
+        console.log('Password reset successful for:', email); // Log success
+    } catch (error) {
+        console.error('Error resetting password:', error); // Log error
+        res.status(500).json({ message: 'Server error. Please try again later.' });
     }
 };
