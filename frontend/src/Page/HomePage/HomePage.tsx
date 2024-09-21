@@ -1,3 +1,5 @@
+// frontend/src/Page/HomePage/HomePage.tsx
+
 import './HomePage.css';
 import TopNavBar from "../../Components/TopNavBar/TopNavBar";
 import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
