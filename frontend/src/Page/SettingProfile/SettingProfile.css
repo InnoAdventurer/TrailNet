@@ -1,0 +1,43 @@
+/* frontend/src/Page/SettingProfile/SettingProfile.css */
+
+.settingprofile-container {
+    padding: 20px;
+}
+
+.settingprofile-container .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers the h2 */
+    margin-bottom: 50px; /* Adjust this for spacing below the header */
+}
+
+.settingprofile-container .back {
+    position: absolute;
+    left: 10px; /* Add space from the left */
+    font-size: 24px; /* Adjust size as needed */
+    color: black; /* Force the color to black */
+}
+
+.settingprofile-container h2 {
+    font-size: 24px;
+    margin: 0;
+    text-align: center; /* Center h2 text */
+}
+
+.settingprofile-container .setting {
+    display: flex;
+    align-items: center; /* Vertically center icons and text */
+    padding: 15px 0; /* Vertical padding for each setting item */
+    margin-left: 20px;
+}
+
+.settingprofile-container .setting div {
+    margin-left: 10px; /* Space between icon and text */
+    font-size: 20px; /* Adjust font size for the setting labels */
+    color: #333; /* Set a default color for text */
+}
+
+.settingprofile-container .setting .icon {
+    font-size: 26px; /* Adjust font size for the setting labels */
+}
+

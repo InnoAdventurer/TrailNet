@@ -19,13 +19,13 @@ function SettingScreen() {
         </div>
         <h2>Setting</h2>
       </div>
-        <button>
+        <Link to="/settingprofile"><button>
             <IoPersonOutline />
             <div className="text-container">
                 <div className="subheader">Account</div>
                 <div className="discription">Profile settings, security notifications</div>
             </div>
-        </button>
+        </button></Link>
         <button>
             <MdOutlinePrivacyTip />
             <div className="text-container">
