@@ -20,7 +20,9 @@ import WeatherPage from './Page/WeatherPage/WeatherPage';
 import EmergencyScreen from './Page/EmergencyScreen/EmergencyScreen';
 import SOSScreen from './Page/SOSScreen/SOSScreen';
 import SettingScreen from './Page/SettingScreen/SettingScreen';
-
+import SettingProfile from './Page/SettingProfile/SettingProfile';
+import ConfirmPassword from './Page/ConfirmPassword/ConfirmPassword';
+import ProfilePage from './Page/ProfilePage/ProfilePage';
 import { ErrorProvider } from './contexts/ErrorContext';
 import ErrorPrompt from './components/ErrorPrompt/ErrorPrompt';
 
@@ -28,7 +30,7 @@ function App() {
   return (
     <ErrorProvider>
       <div className="app-container">
-        <ErrorPrompt />
+      <ErrorPrompt />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<WelcomePage />}/>
@@ -47,6 +49,9 @@ function App() {
             <Route path="/emergencyscreen" element={<EmergencyScreen />} />
             <Route path="/sosscreen" element={<SOSScreen />} />
             <Route path="/settingscreen" element={<SettingScreen />} />
+            <Route path="/settingprofile" element={<SettingProfile />} />
+            <Route path="/confirmpassword" element={<ConfirmPassword />} />
+            <Route path="/profilepage" element={<ProfilePage />} />
             <Route path="*" element={<NotFoundPage />} />  {/* Catch-all route for 404 */}
           </Routes>
         </BrowserRouter>

@@ -16,7 +16,7 @@ const BottomNavBar: React.FC = () => {
       <Link to="/mapscreen"><div><PiMapPinArea />Map</div></Link>
       <Link to="/eventpage"><div><MdEventAvailable />Event</div></Link>
       <Link to="/weatherpage"><div><IoPartlySunnyOutline />Weather</div></Link>
-      <div><CgProfile />Profile</div>
+      <Link to="/profilepage"><div><CgProfile />Profile</div></Link>
     </div>
   );
 }
