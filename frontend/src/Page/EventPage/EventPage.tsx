@@ -45,7 +45,7 @@ function EventPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.post(`${apiUrl}/api/events/upcoming`, {});
+        const response = await axios.post(`${apiUrl}/api/events/10events`, {});
         setEvents(response.data.events);
       } catch (error) {
         console.error('Error fetching events:', error);

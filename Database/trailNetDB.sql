@@ -54,7 +54,7 @@ CREATE TABLE Events (
     latitude DECIMAL(9,6) NULL,
     longitude DECIMAL(9,6) NULL,
     trail_id INT,
-    activity_type ENUM('Hiking', 'Running', 'Cycling') NOT NULL,
+    activity_type ENUM('Hiking', 'Jogging', 'Cycling') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (trail_id) REFERENCES Trails(trail_id)
 );

@@ -1,9 +1,9 @@
-// frontend\src\Page\JoinEventPage2\JoinEventPage2.tsx
+// frontend/src/Page/JoinEventPage2/JoinEventPage2.tsx
 
 import './JoinEventPage2.css';
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -36,11 +36,25 @@ interface Event {
 function JoinEventPage2() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
+  // Parse query parameters (includes latitude, longitude, activityType, dateRange)
+  const params = new URLSearchParams(location.search);
+  const latitude = params.get("latitude");
+  const longitude = params.get("longitude");
+  const activityType = params.get("activityType");
+  const dateRange = params.get("dateRange");
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.post(`${apiUrl}/api/events/more`, {});
+        // Send all filters (GPS coordinates, activity type, date range) to the backend
+        const response = await axios.post(`${apiUrl}/api/events/more`, {
+          latitude: latitude || null, // Send null if no GPS provided
+          longitude: longitude || null,
+          activityType: activityType || null, // Send null if no activity type provided
+          dateRange: dateRange || null, // Send null if no date range provided
+        });
         setEvents(response.data.events);
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -50,7 +64,7 @@ function JoinEventPage2() {
     };
 
     fetchEvents();
-  }, []);
+  }, [latitude, longitude, activityType, dateRange]);
 
   // Helper function to map activity type and event ID to an image
   const getEventPicture = (activityType: string, event_id: number) => {

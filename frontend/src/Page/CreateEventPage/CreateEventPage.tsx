@@ -178,11 +178,11 @@ function CreateEventPage() {
             <label>
               <input 
                 type="radio" 
-                value="Running" 
-                checked={activity === 'Running'} 
+                value="Jogging" 
+                checked={activity === 'Jogging'} 
                 onChange={(e) => setActivity(e.target.value)} 
               />
-              Running
+              Jogging
             </label>
             <label>
               <input 
