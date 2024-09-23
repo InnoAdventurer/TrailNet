@@ -81,6 +81,32 @@ function JoinEventPage2() {
     }
   };
 
+  const generateHeaderMessage = () => {
+    if (latitude && longitude) {
+      return `Events near your location (${latitude}, ${longitude})`;
+    } else if (activityType) {
+      return `Events for ${activityType}`;
+    } else if (dateRange) {
+      const readableDateRange = parseDateRange(dateRange);
+      return `Events happening ${readableDateRange}`;
+    } else {
+      return "Showing all upcoming events";
+    }
+  };
+
+  const parseDateRange = (dateRange: string | null) => {
+    switch (dateRange) {
+      case 'Today':
+        return 'today';
+      case 'Next7days':
+        return 'in the next 7 days';
+      case 'Over7days':
+        return 'after the next 7 days';
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className="joineventpage2-container">
       <div className="search-container">
@@ -91,22 +117,35 @@ function JoinEventPage2() {
         <FiSearch className="search-icon" />
       </div>
 
+      <h4>{generateHeaderMessage()}</h4> {/* Display the header message */}
+
       <div className="events-list">
         {loading ? (
           <div>Loading events...</div>
         ) : (
-          events.map(event => (
-            <Link to={`/joineventpage3/${event.event_id}`} key={event.event_id} className="event-card-link">
-              <div className="event-card">
-                <img src={getEventPicture(event.activity_type, event.event_id)} alt={event.event_name} className="event-image" />
-                <div className="event-details">
-                  <div className="event-date">{new Date(event.event_date).toLocaleDateString()}</div>
-                  <div className="event-name">{event.event_name}</div>
-                  <div className="event-location">{event.location}</div>
-                </div>
+          <>
+            {events.length > 0 ? (
+              events.map(event => (
+                <Link to={`/joineventpage3/${event.event_id}`} key={event.event_id} className="event-card-link">
+                  <div className="event-card">
+                    <img src={getEventPicture(event.activity_type, event.event_id)} alt={event.event_name} className="event-image" />
+                    <div className="event-details">
+                      <div className="event-date">{new Date(event.event_date).toLocaleDateString()}</div>
+                      <div className="event-name">{event.event_name}</div>
+                      <div className="event-location">{event.location}</div>
+                    </div>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div className="no-events-message">
+                <p>No events found for the selected filters.</p>
+                <Link to="/createeventpage">
+                  <button className="create-event-btn">Create an Event</button>
+                </Link>
               </div>
-            </Link>
-          ))
+            )}
+          </>
         )}
       </div>
     </div>

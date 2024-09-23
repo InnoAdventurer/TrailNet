@@ -86,3 +86,18 @@
   font-size: 14px;
   color: #555;
 }
+
+.no-events-message {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.create-event-btn {
+  background-color: #48AEE1;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
