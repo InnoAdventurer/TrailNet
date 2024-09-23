@@ -6,8 +6,22 @@ import { IoIosArrowBack } from "react-icons/io";
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import joineventpage1_1 from './joineventpage1_1.png';
-import joineventpage1_2 from './joineventpage1_2.png';
 import joineventpage1_3 from './joineventpage1_3.png';
+
+import Cycling_1 from '../../assets/Picture/Event/Cycling_1.webp';
+import Cycling_2 from '../../assets/Picture/Event/Cycling_2.webp';
+import Cycling_3 from '../../assets/Picture/Event/Cycling_3.webp';
+import Cycling_4 from '../../assets/Picture/Event/Cycling_4.webp';
+
+import Hiking_1 from '../../assets/Picture/Event/Hiking_1.webp';
+import Hiking_2 from '../../assets/Picture/Event/Hiking_2.webp';
+import Hiking_3 from '../../assets/Picture/Event/Hiking_3.webp';
+import Hiking_4 from '../../assets/Picture/Event/Hiking_4.webp';
+
+import Jogging_1 from '../../assets/Picture/Event/Jogging_1.webp';
+import Jogging_2 from '../../assets/Picture/Event/Jogging_2.webp';
+import Jogging_3 from '../../assets/Picture/Event/Jogging_3.webp';
+import Jogging_4 from '../../assets/Picture/Event/Jogging_4.webp';
 
 function JoinEventPage1() {
   const [activityType, setActivityType] = useState("Cycling");
@@ -16,6 +30,7 @@ function JoinEventPage1() {
 
   // Function to navigate to JoinEventPage2 with GPS coordinates (Wollongong's coordinates)
   const handleWollongongSearch = () => {
+    // TODO: Currently only hard coding to show event near Wollongong
     const wollongongLat = -34.4278;
     const wollongongLon = 150.8931;
     navigate(`/joineventpage2?latitude=${wollongongLat}&longitude=${wollongongLon}`);
@@ -29,6 +44,27 @@ function JoinEventPage1() {
   // Function to navigate to JoinEventPage2 with selected date range
   const handleDateRangeSearch = () => {
     navigate(`/joineventpage2?dateRange=${dateRange}`);
+  };
+
+  // Function to randomly select an image based on the event type
+  const getRandomActivityImage = () => {
+    let images: string[] = [];
+    switch (activityType) {
+      case 'Cycling':
+        images = [Cycling_1, Cycling_2, Cycling_3, Cycling_4];
+        break;
+      case 'Hiking':
+        images = [Hiking_1, Hiking_2, Hiking_3, Hiking_4];
+        break;
+      case 'Jogging':
+        images = [Jogging_1, Jogging_2, Jogging_3, Jogging_4];
+        break;
+      default:
+        images = [Cycling_1]; // Fallback in case of unexpected type
+        break;
+    }
+    const randomIndex = Math.floor(Math.random() * images.length);
+    return images[randomIndex];
   };
 
   return (
@@ -63,7 +99,7 @@ function JoinEventPage1() {
             <option value="Hiking">Hiking</option>
           </select>
         </div>
-        <img src={joineventpage1_2} alt="activity" className="nearby" onClick={handleActivityTypeSearch}/>
+        <img src={getRandomActivityImage()} alt="activity" className="nearby" onClick={handleActivityTypeSearch}/>
       </div>
 
       {/* Section for events filtered by date */}
