@@ -119,7 +119,7 @@ function WeatherPage() {
                 <div className="temperature">{day.temperature}°C</div>
                 <div className="weather-info">
                   <span>{day.condition}</span>
-                  <img src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`} alt={day.condition} />
+                  <img src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`} alt={day.condition} />
                 </div>
               </div>
             </div>
