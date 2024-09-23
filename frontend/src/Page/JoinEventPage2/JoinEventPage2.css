@@ -67,6 +67,7 @@
   border-radius: 8px;
   object-fit: cover;
   margin-right: 10px;
+  overflow: hidden; /* Hide the excess part of the image */
 }
 
 .event-details {

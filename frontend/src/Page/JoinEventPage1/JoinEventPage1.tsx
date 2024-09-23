@@ -28,12 +28,14 @@ function JoinEventPage1() {
   const [dateRange, setDateRange] = useState("Today");
   const navigate = useNavigate();
 
+  // Temporary hard coded location
+  const latitude = -34.4278;
+  const longitude = 150.8931;
+
   // Function to navigate to JoinEventPage2 with GPS coordinates (Wollongong's coordinates)
   const handleWollongongSearch = () => {
     // TODO: Currently only hard coding to show event near Wollongong
-    const wollongongLat = -34.4278;
-    const wollongongLon = 150.8931;
-    navigate(`/joineventpage2?latitude=${wollongongLat}&longitude=${wollongongLon}`);
+    navigate(`/joineventpage2?latitude=${latitude}&longitude=${longitude}`);
   };
 
   // Function to navigate to JoinEventPage2 with selected activity type
@@ -67,6 +69,12 @@ function JoinEventPage1() {
     return images[randomIndex];
   };
 
+  // Dynamically calculate the bounding box for the map
+  const bbox = `${longitude !== null ? longitude - 0.0015 : 0},${latitude !== null ? latitude - 0.0015 : 0},${longitude !== null ? longitude + 0.0015 : 0},${latitude !== null ? latitude + 0.0015 : 0}`;
+
+  // OpenStreetMap iframe URL with disabled interactions
+  const staticMapIframeUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${latitude},${longitude}`;
+
   return (
     <div className="joineventpage1-container flex">
       <div className="search-container">
@@ -82,7 +90,14 @@ function JoinEventPage1() {
       {/* Section for events near Wollongong */}
       <div className="discover-section" >
         <div className="discover-title">Discover event near Wollongong</div>
-        <img src={joineventpage1_1} alt="nearby" className="nearby" onClick={handleWollongongSearch}/>
+        <div className="iframe-container" onClick={handleWollongongSearch}>
+          <iframe className="nearby"
+            src={staticMapIframeUrl}
+            style={{ border: 'none' }}
+            title="Map"
+          ></iframe>
+          <div className="iframe-overlay"></div>
+        </div>
       </div>
 
       {/* Section for events filtered by activity type */}

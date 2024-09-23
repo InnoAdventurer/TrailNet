@@ -135,6 +135,8 @@
     cursor: pointer;
     margin-right: 10px; /* Space between cards */
     width: 150px; /* Ensure consistent width for cards */
+    object-fit: cover; /* Ensures the image fills the container while keeping aspect ratio */
+    overflow: hidden; /* Hide the excess part of the image */
 }
 
 .eventpage-container .eventpic {

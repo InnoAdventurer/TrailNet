@@ -43,11 +43,31 @@
 
 .joineventpage1-container .nearby {
   width: 100%;
-  max-width: 280px; /* Limit image width */
-  height: auto;
-  margin-top: 1px; /* Space above the image */
-  margin-bottom: 1px; /* Space below the image */
-  border-radius: 10px; /* Optional: Add rounded corners to images */
+  max-width: 280px;
+  height: 120px; /* Adjust the height to make it uniform */
+  border-radius: 10px;
+  object-fit: cover; /* Ensures the image fills the container while keeping aspect ratio */
+  overflow: hidden; /* Hide the excess part of the image */
+}
+
+.joineventpage1-container .iframe-container {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  height: 120px;
+  margin: 0 auto; /* Center the map */
+  border-radius: 10px;
+  overflow: hidden; /* This hides the overflow to prevent skewing */
+}
+
+.joineventpage1-container .iframe-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background-color: transparent;
 }
 
 .joineventpage1-container > div {
