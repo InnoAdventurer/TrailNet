@@ -50,7 +50,7 @@ function App() {
             <Route path="/sosscreen" element={<SOSScreen />} />
             <Route path="/settingscreen" element={<SettingScreen />} />
             <Route path="/settingprofile" element={<SettingProfile />} />
-            <Route path="/confirmpassword" element={<ConfirmPassword />} />
+            <Route path="/reset-password" element={<ConfirmPassword />} />
             <Route path="/profilepage" element={<ProfilePage />} />
             <Route path="*" element={<NotFoundPage />} />  {/* Catch-all route for 404 */}
           </Routes>

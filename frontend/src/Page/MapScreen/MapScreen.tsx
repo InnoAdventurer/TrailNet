@@ -207,7 +207,7 @@ function MapScreen() {
             <div><b>Temperature: </b> {weather.temperature}°C</div>
             <div className="weather-info">
               <b>Condition: &nbsp;</b> {weather.condition} 
-              <img src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt={weather.condition} />
+              <img src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt={weather.condition} />
             </div>
           </div>
         ) : (

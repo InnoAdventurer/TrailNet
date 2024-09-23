@@ -1,40 +1,136 @@
-// frontend\src\Page\JoinEventPage2\JoinEventPage2.tsx
+// frontend/src/Page/JoinEventPage2/JoinEventPage2.tsx
 
 import './JoinEventPage2.css';
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
-import { Link } from 'react-router-dom';
-import joineventpage2_1 from './joineventpage2_1.png';
-import joineventpage2_2 from './joineventpage2_2.png';
-import joineventpage2_3 from './joineventpage2_3.png';
+import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-// Simulated data (this would normally come from an API call)
-const events = [
-  {
-    id: 1,
-    eventName: '10KM NIGHT RUN',
-    eventDate: 'Sat, 20 Aug 6:00PM',
-    eventLocation: 'Wollongong Beach',
-    eventPicture: joineventpage2_1, // Use imported image
-  },
-  {
-    id: 2,
-    eventName: '20KM CYCLING',
-    eventDate: 'Fri, 16 Sep 2:00PM',
-    eventLocation: 'Stanwell Park',
-    eventPicture: joineventpage2_2, // Use imported image
-  },
-  {
-    id: 3,
-    eventName: '15KM RUNNING',
-    eventDate: 'Mon, 2 Oct 3:00PM',
-    eventLocation: 'Stuart Park',
-    eventPicture: joineventpage2_3, // Use imported image
-  },
-  // Add more events as needed
-];
+// Import event images
+import Cycling_1 from '../../assets/Picture/Event/Cycling_1.webp';
+import Cycling_2 from '../../assets/Picture/Event/Cycling_2.webp';
+import Cycling_3 from '../../assets/Picture/Event/Cycling_3.webp';
+import Cycling_4 from '../../assets/Picture/Event/Cycling_4.webp';
+
+import Hiking_1 from '../../assets/Picture/Event/Hiking_1.webp';
+import Hiking_2 from '../../assets/Picture/Event/Hiking_2.webp';
+import Hiking_3 from '../../assets/Picture/Event/Hiking_3.webp';
+import Hiking_4 from '../../assets/Picture/Event/Hiking_4.webp';
+
+import Jogging_1 from '../../assets/Picture/Event/Jogging_1.webp';
+import Jogging_2 from '../../assets/Picture/Event/Jogging_2.webp';
+import Jogging_3 from '../../assets/Picture/Event/Jogging_3.webp';
+import Jogging_4 from '../../assets/Picture/Event/Jogging_4.webp';
+
+const apiUrl = process.env.VITE_BACKEND_URL;
+
+interface Event {
+  event_id: number;
+  event_name: string;
+  event_date: string;
+  location: string;
+  activity_type: string;
+}
 
 function JoinEventPage2() {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [headerLocation, setHeaderLocation] = useState<string | null>(null); // New state for location name
+  const location = useLocation();
+
+  // Parse query parameters (includes latitude, longitude, activityType, dateRange)
+  const params = new URLSearchParams(location.search);
+  const latitude = params.get("latitude");
+  const longitude = params.get("longitude");
+  const activityType = params.get("activityType");
+  const dateRange = params.get("dateRange");
+
+  // Fetch location name based on latitude and longitude
+  useEffect(() => {
+    if (latitude && longitude) {
+      const fetchLocationName = async () => {
+        try {
+          const response = await axios.post(`${apiUrl}/api/map/reverse-geocode`, {
+            latitude,
+            longitude,
+          });
+          if (response.data.success) {
+            setHeaderLocation(response.data.location); // Set parsed location name
+          } else {
+            setHeaderLocation(null);
+          }
+        } catch (error) {
+          console.error('Error fetching location name:', error);
+        }
+      };
+
+      fetchLocationName();
+    }
+  }, [latitude, longitude]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        // Send all filters (GPS coordinates, activity type, date range) to the backend
+        const response = await axios.post(`${apiUrl}/api/events/more`, {
+          latitude: latitude || null, // Send null if no GPS provided
+          longitude: longitude || null,
+          activityType: activityType || null, // Send null if no activity type provided
+          dateRange: dateRange || null, // Send null if no date range provided
+        });
+        setEvents(response.data.events);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, [latitude, longitude, activityType, dateRange]);
+
+  // Helper function to map activity type and event ID to an image
+  const getEventPicture = (activityType: string, event_id: number) => {
+    const idMod = (event_id % 4) + 1;
+    switch (activityType) {
+      case 'Cycling':
+        return [Cycling_1, Cycling_2, Cycling_3, Cycling_4][idMod - 1];
+      case 'Hiking':
+        return [Hiking_1, Hiking_2, Hiking_3, Hiking_4][idMod - 1];
+      case 'Jogging':
+        return [Jogging_1, Jogging_2, Jogging_3, Jogging_4][idMod - 1];
+      default:
+        return Hiking_1; // Default fallback image
+    }
+  };
+
+  const generateHeaderMessage = () => {
+    if (latitude && longitude) {
+      return `Events near ${headerLocation || 'your location'}`; // Use location name if available
+    } else if (activityType) {
+      return `Events for ${activityType}`;
+    } else if (dateRange) {
+      const readableDateRange = parseDateRange(dateRange);
+      return `Events happening ${readableDateRange}`;
+    } else {
+      return "Showing all upcoming events";
+    }
+  };
+
+  const parseDateRange = (dateRange: string | null) => {
+    switch (dateRange) {
+      case 'Today':
+        return 'today';
+      case 'Next7days':
+        return 'in the next 7 days';
+      case 'Over7days':
+        return 'after the next 7 days';
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className="joineventpage2-container">
       <div className="search-container">
@@ -45,19 +141,36 @@ function JoinEventPage2() {
         <FiSearch className="search-icon" />
       </div>
 
+      <h4>{generateHeaderMessage()}</h4> {/* Display the header message */}
+
       <div className="events-list">
-        {events.map(event => (
-          <Link to={`/joineventpage3/${event.id}`} key={event.id} className="event-card-link">
-            <div className="event-card">
-              <img src={event.eventPicture} alt={event.eventName} className="event-image" />
-              <div className="event-details">
-                <div className="event-date">{event.eventDate}</div>
-                <div className="event-name">{event.eventName}</div>
-                <div className="event-location">{event.eventLocation}</div>
+        {loading ? (
+          <div>Loading events...</div>
+        ) : (
+          <>
+            {events.length > 0 ? (
+              events.map(event => (
+                <Link to={`/joineventpage3/${event.event_id}`} key={event.event_id} className="event-card-link">
+                  <div className="event-card">
+                    <img src={getEventPicture(event.activity_type, event.event_id)} alt={event.event_name} className="event-image" />
+                    <div className="event-details">
+                      <div className="event-date">{new Date(event.event_date).toLocaleDateString()}</div>
+                      <div className="event-name">{event.event_name}</div>
+                      <div className="event-location">{event.location}</div>
+                    </div>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div className="no-events-message">
+                <p>No events found for the selected filters.</p>
+                <Link to="/createeventpage">
+                  <button className="create-event-btn">Create an Event</button>
+                </Link>
               </div>
-            </div>
-          </Link>
-        ))}
+            )}
+          </>
+        )}
       </div>
     </div>
   );

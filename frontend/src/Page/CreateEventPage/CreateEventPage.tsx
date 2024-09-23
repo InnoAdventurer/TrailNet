@@ -136,6 +136,7 @@ function CreateEventPage() {
         latitude: latitude,
         longitude: longitude,
         privacy: privacy,
+        activity_type: activity, // Add activity type field
         trail_id: null, // Assuming trail_id is optional; otherwise, set it accordingly
       };
   
@@ -168,8 +169,8 @@ function CreateEventPage() {
             <label>
               <input 
                 type="radio" 
-                value="hiking" 
-                checked={activity === 'hiking'} 
+                value="Hiking" 
+                checked={activity === 'Hiking'} 
                 onChange={(e) => setActivity(e.target.value)} 
               />
               Hiking
@@ -177,17 +178,17 @@ function CreateEventPage() {
             <label>
               <input 
                 type="radio" 
-                value="running" 
-                checked={activity === 'running'} 
+                value="Jogging" 
+                checked={activity === 'Jogging'} 
                 onChange={(e) => setActivity(e.target.value)} 
               />
-              Running
+              Jogging
             </label>
             <label>
               <input 
                 type="radio" 
-                value="cycling" 
-                checked={activity === 'cycling'} 
+                value="Cycling" 
+                checked={activity === 'Cycling'} 
                 onChange={(e) => setActivity(e.target.value)} 
               />
               Cycling
