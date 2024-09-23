@@ -36,6 +36,7 @@ interface Event {
 function JoinEventPage2() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [headerLocation, setHeaderLocation] = useState<string | null>(null); // New state for location name
   const location = useLocation();
 
   // Parse query parameters (includes latitude, longitude, activityType, dateRange)
@@ -44,6 +45,29 @@ function JoinEventPage2() {
   const longitude = params.get("longitude");
   const activityType = params.get("activityType");
   const dateRange = params.get("dateRange");
+
+  // Fetch location name based on latitude and longitude
+  useEffect(() => {
+    if (latitude && longitude) {
+      const fetchLocationName = async () => {
+        try {
+          const response = await axios.post(`${apiUrl}/api/map/reverse-geocode`, {
+            latitude,
+            longitude,
+          });
+          if (response.data.success) {
+            setHeaderLocation(response.data.location); // Set parsed location name
+          } else {
+            setHeaderLocation(null);
+          }
+        } catch (error) {
+          console.error('Error fetching location name:', error);
+        }
+      };
+
+      fetchLocationName();
+    }
+  }, [latitude, longitude]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -83,7 +107,7 @@ function JoinEventPage2() {
 
   const generateHeaderMessage = () => {
     if (latitude && longitude) {
-      return `Events near your location (${latitude}, ${longitude})`;
+      return `Events near ${headerLocation || 'your location'}`; // Use location name if available
     } else if (activityType) {
       return `Events for ${activityType}`;
     } else if (dateRange) {
