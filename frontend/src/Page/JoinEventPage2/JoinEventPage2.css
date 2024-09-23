@@ -7,7 +7,7 @@
   min-height: 100vh;
   position: relative;
   padding: 20px;
-  background-color: #f9f9f9; /* Optional: Add a background color */
+  background-color: #f9f9f9;
 }
 
 .joineventpage2-container .search-container {
@@ -22,7 +22,7 @@
 .joineventpage2-container .search-container .back {
   font-size: 24px;
   color: #000;
-  margin-right: 10px; /* Space between the back arrow and search input */
+  margin-right: 10px;
 }
 
 .joineventpage2-container .search-container .search {
@@ -38,7 +38,7 @@
 
 .joineventpage2-container .search-container .search-icon {
   font-size: 28px;
-  margin-left: 10px; /* Space between the search input and search icon */
+  margin-left: 10px;
 }
 
 .events-list {
@@ -67,7 +67,6 @@
   border-radius: 8px;
   object-fit: cover;
   margin-right: 10px;
-  margin-left: 10px;
 }
 
 .event-details {

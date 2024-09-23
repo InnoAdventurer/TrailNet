@@ -119,22 +119,54 @@
 
 .eventpage-container .events-container {
     display: flex;
+    flex-direction: row; /* Keep event cards in a horizontal row */
     overflow-x: auto; /* Allows horizontal scrolling */
+    white-space: nowrap; /* Prevents event cards from breaking into new lines */
     width: 100%;
     max-width: 350px; /* Limit the width to the fixed container */
+    padding-bottom: 10px; /* Optional: Add padding for better appearance */
 }
 
 .eventpage-container .event-card {
-    display: flex;
-    flex-direction: column; /* Stack image and event name vertically */
+    display: inline-flex; /* Ensure cards align horizontally */
+    flex-direction: column; /* Stack image and event name vertically within each card */
     align-items: center; /* Center align items */
-    margin-right: 20px; /* Space between cards */
-    box-shadow: none; /* Ensure no shadow */
-    border: none; /* Ensure no border */
+    border: none; /* Remove border */
+    cursor: pointer;
+    margin-right: 10px; /* Space between cards */
+    width: 150px; /* Ensure consistent width for cards */
 }
 
 .eventpage-container .eventpic {
-    width: 147px; /* Adjust the width of the images */
-    height: 88px; /* Adjust the height of the images */
-    object-fit: cover; /* Ensures images fit within their container */
+    width: 150px; /* Set the width of the images to match the card */
+    height: 100px; /* Set the height of the images */
+    object-fit: cover; /* Ensure the image fits the container */
+    border-radius: 12px; /* Rounded corners for the images */
+    margin-bottom: 8px; /* Add space between the image and the event name */
+}
+
+.eventpage-container .event-card .event-name {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.eventpage-container .more-event {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 147px; /* Match the event card width */
+    height: 88px; /* Match the event card height */
+    border-radius: 12px; /* Rounded corners for consistency */
+    background-color: #f0f0f0; /* Light background color */
+    cursor: pointer;
+    margin-right: 10px; /* Match the space with event cards */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
+}
+
+.eventpage-container .more-event-text {
+    font-size: 16px; /* Match the font size of the event title */
+    color: #48AEE1; /* Set text color */
+    font-weight: bold;
+    text-align: center;
 }
