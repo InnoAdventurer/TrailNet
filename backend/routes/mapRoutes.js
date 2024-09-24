@@ -2,6 +2,8 @@
 
 import { Router } from 'express';
 import { searchAddress, getCoordinatesForLocation, getLocationForCoordinates } from '../controllers/mapController.js';
+import authMiddleware from '../middlewares/authMiddleware.js';
+
 const router = Router();
 
 router.get('/search', searchAddress);

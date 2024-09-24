@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import './CreateEventPage.css';
 import { IoIosArrowBack } from "react-icons/io";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ErrorContext } from '../../contexts/ErrorContext'; // Import ErrorContext
 
@@ -11,9 +11,10 @@ const apiUrl = process.env.VITE_BACKEND_URL;
 
 function CreateEventPage() {
   const { error, setError } = useContext(ErrorContext); // Use both error and setError from context
+  const navigate = useNavigate(); // Initialize navigate from react-router-dom
 
   // State to manage form inputs
-  const [activity, setActivity] = useState<string>('hiking');
+  const [activity, setActivity] = useState<string>('Hiking');
   const [date, setDate] = useState<string>('');
   const [time, setTime] = useState<string>('');
   const [address, setAddress] = useState<string>('');
@@ -143,7 +144,13 @@ function CreateEventPage() {
       const createResponse = await axios.post(`${apiUrl}/api/events/create`, eventDetails);
   
       if (createResponse.status === 201) {
-        setSuccess('Event Created Successfully!');
+        const eventId = createResponse.data.event_id; // Retrieve event_id from response
+        setSuccess('Event Created Successfully! Redirecting to the event page...');
+      
+        // Wait for 3 seconds before redirecting
+        setTimeout(() => {
+          navigate(`/joineventpage3/${eventId}`); // Redirect to event page with event ID
+        }, 3000); // 3 seconds delay
       } else {
         setError('Failed to create event.');
       }
@@ -278,8 +285,6 @@ function CreateEventPage() {
         </button>
 
         {success && <div className="success-message">{success}</div>}
-        {/* Error prompt should appear above 
-        TODO: Jump to respective Event page */}
       </form>
     </div>
   );

@@ -1,0 +1,20 @@
+/* Center the redirect message in the viewport */
+.redirect-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f0f4f8;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: #333;
+  font-size: 1.2rem;
+  width: 300px;
+}
+
+p {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
