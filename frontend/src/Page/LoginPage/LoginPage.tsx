@@ -14,10 +14,9 @@ function LoginPage() {
     const authContext = useContext(AuthContext); 
 
         if (!authContext) {
-            // Handle case where AuthContext is undefined, for example, by throwing an error or returning null
-            throw new Error("AuthContext is undefined. Make sure you are using AuthProvider.");
+            return <p>Authentication not available. Please refresh the page.</p>;
         }
-
+      
         const { setIsAuthenticated } = authContext; // Safely destructure it
 
     // State for input fields
@@ -35,23 +34,28 @@ function LoginPage() {
         setLoading(true); // Set loading state to true
 
         try {
-        // Make a POST request to the backend server
-        const response = await axios.post(`${apiUrl}/api/auth/login`, {
-            email,
-            password,
-        });
+            // Make a POST request to the backend server
+            const response = await axios.post(`${apiUrl}/api/auth/login`, {
+                email,
+                password,
+            });
 
-        // If login is successful, store the token and update context state
-        if (response.data.token) {
-            localStorage.setItem('authToken', response.data.token); // Store the token in local storage
-            setIsAuthenticated(true); // Update authentication state in context
-            navigate('/homepage'); // Redirect to homepage after successful login
-        }
-        } catch (err) {
-        // Handle errors (e.g., invalid credentials)
-        setError('Invalid email or password');
+            // If login is successful, store the token and update context state
+            if (response.data.token) {
+                localStorage.setItem('authToken', response.data.token); // Store the token in local storage
+                setIsAuthenticated(true); // Update authentication state in context
+                navigate('/homepage'); // Redirect to homepage after successful login
+            } else {
+                setError('Unexpected error occurred.');
+            }
+        } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                setError('Invalid credentials');
+            } else {
+                setError('Server error. Please try again later.');
+            }
         } finally {
-        setLoading(false); // Reset loading state after request completes
+            setLoading(false); // Reset loading state after request completes
         }
     };
 
