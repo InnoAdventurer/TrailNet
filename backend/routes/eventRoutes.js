@@ -2,9 +2,11 @@
 
 import { Router } from 'express';
 import { createEvent, getUpcoming10Events, getFilteredEvents, getEventById } from '../controllers/eventController.js';
+import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = Router();
 
+// Apply authMiddleware to routes that require authentication
 // Route for event creation
 router.post('/create', createEvent);
 

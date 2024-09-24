@@ -23,7 +23,7 @@ const ErrorPrompt = () => {
     <div className="error-prompt" onClick={handleDivClick}>
       <div className="error-message">
         <p>{error}</p>
-        <button onClick={handleButtonClick}>Close</button>
+        <button onClick={handleButtonClick}>Dismiss</button>
       </div>
     </div>
   );
