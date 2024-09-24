@@ -14,7 +14,7 @@ function CreateEventPage() {
   const navigate = useNavigate(); // Initialize navigate from react-router-dom
 
   // State to manage form inputs
-  const [activity, setActivity] = useState<string>('hiking');
+  const [activity, setActivity] = useState<string>('Hiking');
   const [date, setDate] = useState<string>('');
   const [time, setTime] = useState<string>('');
   const [address, setAddress] = useState<string>('');
