@@ -3,31 +3,56 @@
 import { useEffect, useState, useRef, useContext } from 'react';
 import axios from 'axios';
 import './MapScreen.css';
-import { FiSearch, FiCrosshair } from "react-icons/fi"; // Import FiCrosshair for center icon
+import { FiSearch, FiCrosshair, FiNavigation2 } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
-import { ErrorContext } from '../../contexts/ErrorContext'; // Import ErrorContext for error handling
+import ReactDOMServer from 'react-dom/server';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import { ErrorContext } from '../../contexts/ErrorContext';
+import L from 'leaflet';
 
 const apiUrl = process.env.VITE_BACKEND_URL;
+
+// Create a custom icon using react-icons
+const centerPinIcon = new L.DivIcon({
+  html: ReactDOMServer.renderToString(<FiCrosshair size={24} color="#48AEE1" />),
+  className: 'custom-center-pin', // Optional: Add custom CSS class
+  iconSize: [35, 35],  // Size of the icon
+  iconAnchor: [17, 17] // Anchor to the center of the icon
+});
 
 function MapScreen() {
   const { setError } = useContext(ErrorContext);
   const [weather, setWeather] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<any[]>([]);
-  const [lastClickedSuggestion, setLastClickedSuggestion] = useState<any>(null); // Track last clicked suggestion
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [useLiveLocation, setUseLiveLocation] = useState<boolean>(true); // Flag to control GPS updates
+  const [lastClickedSuggestion, setLastClickedSuggestion] = useState<any>(null);
+  const [latitude, setLatitude] = useState<number>(-34.4251);
+  const [longitude, setLongitude] = useState<number>(150.8931);
+  const [useLiveLocation, setUseLiveLocation] = useState<boolean>(true);
+  const [events, setEvents] = useState<any[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [distance, setDistance] = useState<number | null>(null);
 
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Function to get the user's current GPS coordinates
+  // Hook to handle map movement and refetch events/weather
+  const MapEventsHandler = () => {
+    useMapEvents({
+      moveend: (event) => {
+        const { lat, lng } = event.target.getCenter();
+        setLatitude(lat);
+        setLongitude(lng);
+      }
+    });
+    return null;
+  };
+
   const getUserLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // Only update location if using live location
           if (useLiveLocation) {
             setLatitude(position.coords.latitude);
             setLongitude(position.coords.longitude);
@@ -35,8 +60,6 @@ function MapScreen() {
         },
         (error) => {
           console.error('Error getting location:', error);
-
-          // Handle the specific geolocation error types
           switch (error.code) {
             case error.PERMISSION_DENIED:
               setError('Permission denied. Please enable location services.');
@@ -55,18 +78,30 @@ function MapScreen() {
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
       );
     } else {
-      console.error('Geolocation is not supported by this browser.');
       setError('Geolocation is not supported by this browser.');
     }
   };
 
   useEffect(() => {
-    // Fetch user's current location when component mounts
-    getUserLocation();
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.post(`${apiUrl}/api/events/more`, {
+          latitude,
+          longitude,
+        });
+        setEvents(response.data.events);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        setError('Error fetching event info. Please try again.');
+      }
+    };
+    fetchEvents();
+  }, [latitude, longitude, setError]);
 
+  useEffect(() => {
     const fetchWeather = async () => {
       try {
-        if (latitude !== null && longitude !== null) {
+        if (latitude && longitude) {
           const response = await axios.get(`${apiUrl}/api/weather/current`, {
             params: { lat: latitude, lon: longitude },
           });
@@ -83,10 +118,22 @@ function MapScreen() {
       }
     };
 
-    if (latitude !== null && longitude !== null) {
-      fetchWeather();
+    fetchWeather();
+  }, [latitude, longitude, setError]);
+
+  const handleMarkerClick = async (event: any) => {
+    setSelectedEvent(event);
+    try {
+      const response = await axios.post(`${apiUrl}/api/map/calculate-distance`, {
+        startCoords: [latitude, longitude],
+        endCoords: [event.latitude, event.longitude],
+      });
+      setDistance(response.data.distance);
+    } catch (error) {
+      console.error('Error calculating distance:', error);
+      setDistance(null);
     }
-  }, [latitude, longitude, setError, useLiveLocation]); // Ensure this runs when location or flag changes
+  };
 
   const fetchSuggestions = async (query: string) => {
     if (query.length > 2) {
@@ -109,46 +156,49 @@ function MapScreen() {
     setSearchQuery(query);
 
     if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current); // Clear the previous timeout
+      clearTimeout(debounceTimeout.current);
     }
 
     debounceTimeout.current = setTimeout(() => {
-      fetchSuggestions(query); // Fetch suggestions after 0.5s delay
+      fetchSuggestions(query);
     }, 500);
   };
 
   const handleSuggestionClick = (suggestion: any) => {
-    setSearchQuery(suggestion.display_name); // Set the selected suggestion to the input
+    setSearchQuery(suggestion.display_name);
     setLatitude(parseFloat(suggestion.lat));
     setLongitude(parseFloat(suggestion.lon));
-    setUseLiveLocation(false); // Disable live location when a search is made
-    setLastClickedSuggestion(suggestion); // Save the last clicked suggestion
-    setSuggestions([]); // Clear suggestions after selection
+    setUseLiveLocation(false);
+    setLastClickedSuggestion(suggestion);
+    setSuggestions([]);
   };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // If there is a previously clicked suggestion, use it to update the map
     if (lastClickedSuggestion) {
       setLatitude(parseFloat(lastClickedSuggestion.lat));
       setLongitude(parseFloat(lastClickedSuggestion.lon));
-      setUseLiveLocation(false); // Disable live location since we're manually setting location
-    } else {
-      // If no suggestion has been clicked, check if there are current suggestions
-      if (suggestions.length > 0) {
-        handleSuggestionClick(suggestions[0]); // Automatically select the first suggestion if available
-      }
+      setUseLiveLocation(false);
+    } else if (suggestions.length > 0) {
+      handleSuggestionClick(suggestions[0]);
     }
   };
 
   const handleCenterMap = () => {
-    setUseLiveLocation(true); // Re-enable live location updates
+    setUseLiveLocation(true);
     getUserLocation();
   };
 
-  // Dynamically calculate the bounding box for the map
-  const bbox = `${longitude !== null ? longitude - 0.0015 : 0},${latitude !== null ? latitude - 0.0015 : 0},${longitude !== null ? longitude + 0.0015 : 0},${latitude !== null ? latitude + 0.0015 : 0}`;
+  const formatDate = (isoString: string) => {
+    const date = new Date(isoString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    };
+    return date.toLocaleDateString(undefined, options);
+  };
 
   return (
     <div className="mapscreen-container flex">
@@ -179,27 +229,58 @@ function MapScreen() {
           </ul>
         )}
       </div>
-      <div className="map" style={{ height: "250px", width: "100%", position: "relative" }}>
-        <iframe
-          width="100%"
-          height="100%"
-          frameBorder="0"
-          scrolling="no"
-          marginHeight={0}
-          marginWidth={0}
-          src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${latitude},${longitude}`}
-          style={{ border: 0 }}
-        />
-        {/* Add a center button to recenter the map */}
-        <button className="center-button" onClick={handleCenterMap}>
-          <FiCrosshair size={24} />
-        </button>
+      <div className="map-container">
+        <MapContainer
+          center={[latitude, longitude]}
+          zoom={13}
+          style={{ height: "300px", width: "100%" }}
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          {events.map((event, index) => (
+            <Marker
+              key={event.id || index}
+              position={[event.latitude, event.longitude]}
+              eventHandlers={{
+                click: () => handleMarkerClick(event),
+              }}
+            >
+              <Popup>
+                <div>
+                  <h3>{event.event_name}</h3>
+                  <p>{event.description}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+
+          {/* Center marker showing the current GPS coordinates */}
+          <Marker position={[latitude, longitude]} icon={centerPinIcon}>
+            <Popup>
+              <div><b>Current Center</b></div>
+              <div>Lat: {latitude}, Lng: {longitude}</div>
+            </Popup>
+          </Marker>
+
+          <MapEventsHandler />
+
+        </MapContainer>
+        
+        <div className="center-button">
+          <button onClick={handleCenterMap}>
+            <FiNavigation2 size={24} />
+          </button>
+        </div>
       </div>
-      <div className="table flex">
-        <div><b>Activity:</b> Hiking</div>
-        <div><b>Distance:</b> 25km</div>
-        <div><b>Event:</b> Birthday Hiking Camp</div>
-      </div>
+
+      {selectedEvent && (
+        <div className="event-info">
+          <p><Link to={`/joineventpage3/${selectedEvent.event_id}`}>{selectedEvent.event_name}</Link></p>
+          <p>Date: {formatDate(selectedEvent.event_date)}</p>
+          <p>Time: {selectedEvent.start_time}</p>
+          {distance !== null && <p>Distance: {distance} meters</p>}
+        </div>
+      )}
+      
       <div>
         <h3>Weather Information</h3>
         {weather ? (
