@@ -63,6 +63,7 @@ export const getEventById = async (req, res) => {
     }
 };
 
+// Get filtered events
 export const getFilteredEvents = async (req, res) => {
     const { latitude, longitude, activityType, dateRange } = req.body;
 
@@ -72,7 +73,7 @@ export const getFilteredEvents = async (req, res) => {
 
         // Filter by GPS coordinates if provided and valid
         if (latitude !== null && longitude !== null && !isNaN(latitude) && !isNaN(longitude)) {
-            const distanceLimit = 0.1; // Adjust the distance limit as needed
+            const distanceLimit = 0.01; // Adjust the distance limit as needed
             query += ' AND latitude BETWEEN ? AND ? AND longitude BETWEEN ? AND ?';
             queryParams.push(latitude - distanceLimit, latitude + distanceLimit, longitude - distanceLimit, longitude + distanceLimit);
         }

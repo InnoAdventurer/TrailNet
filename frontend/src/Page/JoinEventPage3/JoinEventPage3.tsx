@@ -65,6 +65,20 @@ function JoinEventPage3() {
     }
   };
 
+  // Parse date format
+  const formatDate = (isoString: string) => {
+    const date = new Date(isoString);
+    
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric', // 2024
+      month: 'short',   // 'Oct'
+      day: 'numeric',  // 19
+    };
+    
+    return date.toLocaleDateString(undefined, options);
+  };
+
+
   if (!event) {
     return <div>Loading event...</div>;
   }
@@ -81,7 +95,7 @@ function JoinEventPage3() {
         <img src={getEventPicture(event.activity_type, event.event_id)} alt={event.event_name} className="event-detail-image" />
         <div className="event-detail-info">
           <h2 className="event-detail-name">{event.event_name}</h2>
-          <p className="event-detail-date"><FaRegCalendarCheck /> {new Date(event.event_date).toLocaleDateString()}</p>
+          <p className="event-detail-date"><FaRegCalendarCheck /> {formatDate(event.event_date)}</p>
           <p className="event-detail-location"><PiMapPinArea /> {event.location}</p>
         </div>
       </div>

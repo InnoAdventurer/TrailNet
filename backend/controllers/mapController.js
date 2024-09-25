@@ -99,7 +99,46 @@ export const getLocationForCoordinates = async (req, res) => {
       full_address: display_name  // Return the full address in case needed
     });
   } catch (error) {
-    console.error('Error fetching location from OpenStreetMap:', error);
-    return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    // Check if the error is related to the "routable point" issue (error code 2010)
+    if (error.response && error.response.data.error.code === 2010) {
+      console.error('Routable point not found:', error.response.data.error.message);
+      return res.status(400).json({ error: 'Routable point not found for this location.' });
+    } else {
+      // Log and return a generic error if it's a different issue
+      console.error('Error calling OpenRouteService API:', error.response ? error.response.data : error.message);
+      return res.status(500).json({ error: 'Failed to calculate distance due to an internal error.' });
+    }
+  }
+};
+
+// Calculate distance with OpenRouteServiceAPI
+export const calculateDistance = async (req, res) => {
+  const { startCoords, endCoords } = req.body;
+
+  if (!startCoords || !endCoords) {
+    return res.status(400).json({ error: 'Coordinates missing' });
+  }
+
+  try {
+    const response = await axios.post('https://api.openrouteservice.org/v2/directions/foot-walking', {
+      coordinates: [
+        [startCoords[1], startCoords[0]], // [longitude, latitude]
+        [endCoords[1], endCoords[0]]      // [longitude, latitude]
+      ]
+    }, {
+      headers: {
+        Authorization: `Bearer ${process.env.OPENROUTESERVICE_API_KEY}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    // Extract the distance from the response
+    const distance = response.data.routes[0].summary.distance;
+
+    // Send the distance back to the client
+    res.status(200).json({ distance });
+  } catch (error) {
+    console.error('Error calling OpenRouteService API:', error.response?.data || error.message);
+    res.status(500).json({ error: 'Failed to calculate distance' });
   }
 };
