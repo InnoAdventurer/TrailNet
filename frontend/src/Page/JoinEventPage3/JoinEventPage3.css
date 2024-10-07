@@ -80,3 +80,13 @@
   color: #2C425A;
   margin-bottom: 10px;
 }
+
+.joineventpage3-container .event-details-container button {
+  padding: 10px 20px;
+  background-color: #48AEE1;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px; /* Space between the button and the icon */
+}
