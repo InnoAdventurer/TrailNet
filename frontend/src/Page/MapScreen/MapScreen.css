@@ -10,65 +10,86 @@
   padding: 0;
 }
 
-.map-container {
+.mapscreen-container .map-container {
   position: relative;
   width: 100%;
   height: 300px;  /* Fixed height for the map */
 }
 
-.map-container iframe,
-.map-container .leaflet-container {
+.mapscreen-container .map-container iframe,
+.mapscreen-container .map-container .leaflet-container {
   height: 100%;
 }
 
-/* Search Form Styling */
-.search-container {
+.mapscreen-container .header {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+  align-items: center;                /* Vertically centers items */
+  justify-content: space-between;     /* Distributes space between items */
+  width: 100%;                        /* Ensures header takes full width */
+  padding: 10px;                     /* Adds padding to the header */
+  position: relative;                 /* Allows for absolute positioning of back button */
 }
 
-.search-form {
+.mapscreen-container .back {
+  font-size: 24px;                   /* Adjust size as needed */
+  color: black;                      /* Force the color to black */
+}
+
+.mapscreen-container h2 {
+  font-size: 24px;
+  margin: 0;                         /* Remove default margin for better centering */
+  text-align: center;                /* Center h2 text */
+  flex-grow: 1;                      /* Allows h2 to take up remaining space */
+}
+
+.mapscreen-container .search-container {
+  display: flex;
+  flex-direction: row; /* Change to row to align items horizontally */
+  align-items: center; /* Center items vertically */
+  width: 100%;
+  margin-bottom: 10px; /* Space below */
+}
+
+.mapscreen-container .search-form {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 400px;
-  margin-bottom: 10px;
+  max-width: 400px; /* Adjust if necessary */
 }
 
-.search-input {
-  flex-grow: 1;
+.mapscreen-container .search-input {
+  flex-grow: 1; /* Allows the input to take up remaining space */
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px 0 0 4px;
+  border-radius: 4px 0 0 4px; /* Rounded corners for the input */
   font-size: 16px;
-  height: 40px;
+  height: 40px; /* Consistent height */
   outline: none;
 }
 
-.search-button {
+.mapscreen-container .search-button {
   background-color: #48AEE1;
   border: none;
-  padding: 0 16px;
-  border-radius: 0 4px 4px 0;
+  padding: 0 16px; /* Horizontal padding */
+  border-radius: 0 4px 4px 0; /* Rounded corners for button */
   cursor: pointer;
-  height: 40px;
-  display: flex;
+  height: 40px; /* Consistent height */
+  display: flex; /* Center content */
   align-items: center;
 }
 
-.search-button:hover {
+
+.mapscreen-container .search-button:hover {
   background-color: #2C425A;
 }
 
-.search-icon {
+.mapscreen-container .search-icon {
   color: white;
   font-size: 20px;
 }
 
 /* Suggestions dropdown styling */
-.suggestions-list {
+.mapscreen-container .suggestions-list {
   position: absolute;
   top: 100%;
   left: 0;
@@ -83,46 +104,46 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.suggestions-list li {
+.mapscreen-container .suggestions-list li {
   padding: 10px;
   cursor: pointer;
 }
 
-.suggestions-list li:hover {
+.mapscreen-container .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
 
 /* Weather Info Styling */
-.weather-info {
+.mapscreen-container .weather-info {
   display: flex;
   align-items: center;
 }
 
-.weather-info img {
+.mapscreen-container .weather-info img {
   height: 24px;
   width: 24px;
   margin-left: 8px;
 }
 
 /* Attribution Styling */
-.attribution {
+.mapscreen-container .attribution {
   font-size: 8px;
   text-align: center;
   margin-top: 20px;
   color: #aaa;
 }
 
-.attribution a {
+.mapscreen-container .attribution a {
   color: #aaa;
   text-decoration: none;
 }
 
-.attribution a:hover {
+.mapscreen-container .attribution a:hover {
   text-decoration: underline;
 }
 
 /* Center Button Styling */
-.center-button {
+.mapscreen-container .center-button {
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -135,10 +156,10 @@
   z-index: 1000;
 }
 
-.center-button:hover {
+.mapscreen-container .center-button:hover {
   background-color: #f0f0f0;
 }
 
-.center-button svg {
+.mapscreen-container .center-button svg {
   color: #48AEE1;
 }

@@ -97,6 +97,7 @@ function JoinEventPage3() {
           <h2 className="event-detail-name">{event.event_name}</h2>
           <p className="event-detail-date"><FaRegCalendarCheck /> {formatDate(event.event_date)}</p>
           <p className="event-detail-location"><PiMapPinArea /> {event.location}</p>
+          <button>Join event</button>
         </div>
       </div>
     </div>

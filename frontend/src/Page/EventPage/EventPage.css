@@ -18,7 +18,7 @@
 .eventpage-container .search-container {
     display: flex;
     align-items: center;
-    justify-content: center; /* Center the container */
+    justify-content: flex-start; /* Align items to the start */
     width: 100%;
     max-width: 350px; /* Limit the width to the fixed container */
     margin-bottom: 20px; /* Space below the search bar */
@@ -31,7 +31,6 @@
 }
 
 .eventpage-container .search {
-    width: 220px;
     height: 40px; /* Adjust the height as needed */
     padding: 0 15px; /* Add padding inside the input */
     font-size: 14px;
@@ -39,6 +38,8 @@
     background-color: rgba(165, 161, 161, 0.15); /* Background with some transparency */
     border-radius: 20px; /* Makes the input more rounded */
     outline: none; /* Remove default outline */
+    flex-grow: 1; /* Allow input to take available space */
+    margin-right: 10px; /* Ensure spacing between the input and the icon */
 }
 
 .eventpage-container .search-icon {
