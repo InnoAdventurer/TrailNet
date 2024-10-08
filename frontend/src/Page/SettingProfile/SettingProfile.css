@@ -1,47 +1,59 @@
 /* frontend/src/Page/SettingProfile/SettingProfile.css */
 
+/* Container for the whole profile settings page */
 .settingprofile-container {
-    padding: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-.settingprofile-container .header-container {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Centers the h2 */
-    margin-bottom: 50px; /* Adjust this for spacing below the header */
+/* Header container: Contains the back button and the title */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+  position: relative;
 }
 
+/* Back button style */
 .settingprofile-container .back {
-    position: absolute;
-    left: 10px; /* Add space from the left */
-    font-size: 24px; /* Adjust size as needed */
-    color: black; /* Force the color to black */
+  position: absolute;
+  left: 10px;
+  font-size: 24px;
+  color: black;
 }
 
+/* Title style for the header */
 .settingprofile-container h2 {
-    font-size: 24px;
-    margin: 0;
-    text-align: center; /* Center h2 text */
+  font-size: 24px;
+  margin: 0;
+  text-align: center;
 }
 
-.settingprofile-container .setting {
-    display: flex;
-    align-items: center; /* Vertically center icons and text */
-    padding: 15px 0; /* Vertical padding for each setting item */
-    margin-left: 20px;
+/* Setting item container (icon and label) */
+.setting {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  margin-left: 20px;
+  cursor: pointer;
 }
 
-.settingprofile-container .setting div {
-    margin-left: 10px; /* Space between icon and text */
-    font-size: 20px; /* Adjust font size for the setting labels */
-    color: #333; /* Set a default color for text */
+/* Label inside setting item */
+.setting div {
+  margin-left: 10px;
+  font-size: 20px;
+  color: #333;
 }
 
-.settingprofile-container .setting .icon {
-    font-size: 26px; /* Adjust font size for the setting labels */
+/* Icon size for each setting item */
+.setting .icon {
+  font-size: 26px;
+  color: #333; /* Default icon color */
 }
 
-/* Modal styles */
+/* Modal styles for profile picture, full name, and email */
 .modal {
   position: fixed;
   top: 0;
@@ -54,6 +66,7 @@
   align-items: center;
 }
 
+/* Modal content box */
 .modal-content {
   background-color: white;
   padding: 20px;
@@ -62,25 +75,39 @@
   text-align: center;
 }
 
+/* Grid layout for profile picture selection */
 .icon-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  grid-template-columns: repeat(3, 1fr); /* 3 icons per row */
   gap: 10px;
   margin-top: 10px;
 }
 
+/* Individual profile picture icons */
 .profile-icon {
-  width: 25px;
-  height: 25px;
+  width: 50px; /* Adjusted size for better visibility */
+  height: 50px;
   cursor: pointer;
   border-radius: 50%;
-  border: 2px solid transparent;
+  border: 2px solid transparent; /* Default border */
 }
 
+/* Highlight selected profile icon */
 .profile-icon.selected {
-  border-color: #48AEE1; /* Highlight selected icon */
+  border-color: #48AEE1;
 }
 
+/* Input field styles inside modal (for full name, email) */
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Button styles (OK and Cancel) */
 .btn {
   margin-top: 10px;
   padding: 10px 20px;
@@ -89,8 +116,16 @@
   border: none;
   cursor: pointer;
   border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
 .btn:hover {
   background-color: #2C425A;
+}
+
+/* Success message styling */
+.success-message {
+  margin-top: 20px;
+  color: green;
+  font-size: 16px;
 }

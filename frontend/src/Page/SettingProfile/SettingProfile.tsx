@@ -1,3 +1,5 @@
+// frontend\src\Page\SettingProfile\SettingProfile.tsx
+
 import './SettingProfile.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
@@ -7,7 +9,7 @@ import { TfiEmail } from "react-icons/tfi";
 import { FaPhoneAlt } from "react-icons/fa";
 import { GoPeople } from "react-icons/go";
 import { RxActivityLog } from "react-icons/rx";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // Import the profile icons
@@ -23,9 +25,37 @@ const apiUrl = process.env.VITE_BACKEND_URL;
 function SettingProfile() {
   const [selectedIcon, setSelectedIcon] = useState<string>(''); // State for the selected profile icon
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State to control modal visibility
+  const [isFullNameModalOpen, setIsFullNameModalOpen] = useState<boolean>(false); // State to control full name modal
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false); // State to control email modal
+  const [fullName, setFullName] = useState<string>(''); // State for full name input
+  const [email, setEmail] = useState<string>(''); // State for email input
   const [success, setSuccess] = useState<string>(''); // Handle success message
+  const [loading, setLoading] = useState<boolean>(true); // Loading state for initial data fetch
+  const [error, setError] = useState<string | null>(null); // Error state
 
-  // Function to submit the selected profile picture
+  // Fetch user data from the backend (full name, email, profile picture)
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.post(`${apiUrl}/api/profile/fetch`);
+        const { username, email, profile_picture } = response.data;
+
+        // Set the fetched values into state
+        setFullName(username);
+        setEmail(email);
+        setSelectedIcon(profile_picture);
+
+        setLoading(false); // Stop loading when data is fetched
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+        setError('Failed to fetch user data.');
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);  // Function to submit the selected profile picture
+
   const handleSubmitProfilePicture = async () => {
     try {
       const response = await axios.post(`${apiUrl}/api/profile/update-picture`, {
@@ -41,6 +71,38 @@ function SettingProfile() {
     }
   };
 
+  // Function to submit the updated full name
+  const handleSubmitFullName = async () => {
+    try {
+      const response = await axios.post(`${apiUrl}/api/profile/update-fullname`, {
+        full_name: fullName, // Send full name to backend
+      });
+
+      if (response.status === 200) {
+        setSuccess('Full Name updated successfully');
+        setIsFullNameModalOpen(false); // Close modal after successful submission
+      }
+    } catch (error) {
+      console.error('Error updating Full Name:', error);
+    }
+  };
+
+  // Function to submit the updated email
+  const handleSubmitEmail = async () => {
+    try {
+      const response = await axios.post(`${apiUrl}/api/profile/update-email`, {
+        email: email, // Send email to backend
+      });
+
+      if (response.status === 200) {
+        setSuccess('Email updated successfully');
+        setIsEmailModalOpen(false); // Close modal after successful submission
+      }
+    } catch (error) {
+      console.error('Error updating Email:', error);
+    }
+  };
+
   return (
     <div className="settingprofile-container flex">
       <div className="header-container">
@@ -49,7 +111,7 @@ function SettingProfile() {
         </div>
         <h2>Profile Setting</h2>
       </div>
-      
+
       {/* Profile Picture Display */}
       <div className="setting" onClick={() => setIsModalOpen(true)}> {/* Opens modal on click */}
         <CgProfile className="icon" />
@@ -82,17 +144,63 @@ function SettingProfile() {
         </div>
       )}
 
-      {success && <div className="success-message">{success}</div>}
-      
-      {/* Other settings */}
-      <div className="setting">
+      {/* Full Name Display */}
+      <div className="setting" onClick={() => setIsFullNameModalOpen(true)}> {/* Opens full name modal on click */}
         <CiEdit className="icon" />
         <div>Full Name</div>
       </div>
-      <div className="setting">
+
+      {/* Modal for full name update */}
+      {isFullNameModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Update Full Name</h3>
+            <input
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Enter your full name"
+              className="modal-input"
+            />
+            <button className="btn" onClick={handleSubmitFullName}>
+              OK
+            </button>
+            <button className="btn" onClick={() => setIsFullNameModalOpen(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Email Display */}
+      <div className="setting" onClick={() => setIsEmailModalOpen(true)}> {/* Opens email modal on click */}
         <TfiEmail className="icon" />
         <div>Email Address</div>
       </div>
+
+      {/* Modal for email update */}
+      {isEmailModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Update Email</h3>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email address"
+              className="modal-input"
+            />
+            <button className="btn" onClick={handleSubmitEmail}>
+              OK
+            </button>
+            <button className="btn" onClick={() => setIsEmailModalOpen(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Other settings */}
       <div className="setting">
         <FaPhoneAlt className="icon" />
         <div>Contact Number</div>
@@ -105,6 +213,9 @@ function SettingProfile() {
         <RxActivityLog className="icon" />
         <div>Activities</div>
       </div>
+
+      {success && <div className="success-message">{success}</div>}
+
     </div>
   );
 }
