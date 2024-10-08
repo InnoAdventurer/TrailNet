@@ -27,8 +27,6 @@ function SettingProfile() {
 
   // Function to submit the selected profile picture
   const handleSubmitProfilePicture = async () => {
-    console.log(axios.defaults.headers.common['Authorization']); // Check if the token is set
-    
     try {
       const response = await axios.post(`${apiUrl}/api/profile/update-picture`, {
         profile_picture: selectedIcon, // Send selected icon to backend
