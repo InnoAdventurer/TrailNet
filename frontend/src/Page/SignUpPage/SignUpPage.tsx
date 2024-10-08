@@ -6,6 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import signuppage_1 from './signuppage_1.png';
 
+// Import profile icons
+import icon1 from '../../assets/Picture/Icon/icon_1.png';
+import icon2 from '../../assets/Picture/Icon/icon_2.png';
+import icon3 from '../../assets/Picture/Icon/icon_3.png';
+import icon4 from '../../assets/Picture/Icon/icon_4.png';
+import icon5 from '../../assets/Picture/Icon/icon_5.png';
+import icon6 from '../../assets/Picture/Icon/icon_6.png';
+
 const apiUrl = process.env.VITE_BACKEND_URL
 
 function SignUpPage() {
@@ -14,6 +22,7 @@ function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [selectedIcon, setSelectedIcon] = useState<string>(icon1); // State to manage profile icon
   const [error, setError] = useState(''); // State to handle errors
   const [success, setSuccess] = useState(''); // State to handle success message
   const [loading, setLoading] = useState(false); // State to handle loading message
@@ -37,11 +46,11 @@ function SignUpPage() {
 
     try {
       // Make a POST request to the backend to create a new account
-      // const response = await axios.post('http://localhost:50000/api/auth/register', {
       const response = await axios.post(`${apiUrl}/api/auth/register`, {
         username,
         email,
         password,
+        profile_picture: selectedIcon, // Send the selected icon
       });
 
       // If signup is successful, navigate to the login page or show success message
@@ -51,7 +60,7 @@ function SignUpPage() {
       }
     } catch (err: any) {
       // Handle errors (e.g., email already exists)
-      if (err.response && err.response.data && err.response.data.message) {
+      if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
         setError('Something went wrong. Please try again.');
@@ -116,6 +125,20 @@ function SignUpPage() {
               placeholder="Re-enter your password" // Placeholder for confirm password field
               required
             />
+          </div>
+
+          {/* Profile Icon Selection */}
+          <div className="label">Choose a Profile Picture</div>
+          <div className="icon-grid">
+            {[icon1, icon2, icon3, icon4, icon5, icon6].map((icon, index) => (
+              <img 
+                key={index} 
+                src={icon} 
+                alt={`icon_${index + 1}`} 
+                className={`profile-icon ${selectedIcon === icon ? 'selected' : ''}`} 
+                onClick={() => setSelectedIcon(icon)} // Handle icon selection on click
+              />
+            ))}
           </div>
 
           <button className="btn" disabled={loading}>Sign up</button> {/* Disable button while loading */}
