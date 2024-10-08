@@ -138,7 +138,14 @@ export const calculateDistance = async (req, res) => {
     // Send the distance back to the client
     res.status(200).json({ distance });
   } catch (error) {
-    console.error('Error calling OpenRouteService API:', error.response?.data || error.message);
-    res.status(500).json({ error: 'Failed to calculate distance' });
+    // Check if the error is related to the "routable point" issue (error code 2010)
+    if (error.response && error.response.data.error.code === 2010) {
+      console.error('Routable point not found:', error.response.data.error.message);
+      return res.status(400).json({ error: 'Routable point not found for this location.' });
+    } else {
+      // Log and return a generic error if it's a different issue
+      console.error('Error calling OpenRouteService API:', error.response ? error.response.data : error.message);
+      return res.status(500).json({ error: 'Failed to calculate distance due to an internal error.' });
+    }
   }
 };

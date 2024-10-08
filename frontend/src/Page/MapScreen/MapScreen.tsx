@@ -130,8 +130,23 @@ function MapScreen() {
       });
       setDistance(response.data.distance);
     } catch (error) {
-      console.error('Error calculating distance:', error);
-      setDistance(null);
+      // Type guard to check if error is an AxiosError or similar object
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 400) {
+          console.error('Distance calculation error:', error.response.data.error);
+          setDistance(null);
+          setError('Distance calculation failed. This location is not routable.');
+        } else {
+          console.error('Error calculating distance:', error);
+          setDistance(null);
+          setError('An error occurred while calculating the distance.');
+        }
+      } else {
+        // Handle unknown errors that are not Axios related
+        console.error('Unknown error occurred:', error);
+        setDistance(null);
+        setError('An unexpected error occurred.');
+      }
     }
   };
 

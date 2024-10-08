@@ -9,6 +9,7 @@ import weatherRoutes from './routes/weatherRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import timeRoutes from './routes/timeRoutes.js';
 import mapRoutes from './routes/mapRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
 
 const app = express();
 
@@ -46,6 +47,9 @@ app.use('/api/time', timeRoutes);
 
 // Map-related routes
 app.use('/api/map', mapRoutes); 
+
+// Profile Setup related routes
+app.use('/api/profile', profileRoutes); 
 
 // Route to handle OAuth2 callback
 app.get('/oauth2callback', handleOAuth2Callback);
