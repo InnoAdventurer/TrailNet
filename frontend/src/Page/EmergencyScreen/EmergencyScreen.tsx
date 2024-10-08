@@ -11,6 +11,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { ErrorContext } from '../../contexts/ErrorContext'; // Import ErrorContext
 
+const apiUrl = process.env.VITE_BACKEND_URL;
+
 function EmergencyScreen() {
   const { setError } = useContext(ErrorContext); // Use the setError function from context
   const [activeButton, setActiveButton] = useState<string | null>(null);
@@ -46,9 +48,8 @@ function EmergencyScreen() {
 
   const handleAskForHelp = async () => {
     try {
-      const response = await axios.post('/backend_api/api/emergency/help', {
+      const response = await axios.post(`${apiUrl}/api/emergency/help`, {
         location: { latitude, longitude },
-        user_id: 1, // TODO: Change to current logged on user id.
       });
       if (response.status === 200) {
         alert('Help request sent to nearby users!');
