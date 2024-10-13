@@ -6,6 +6,10 @@ export const followUser = async (req, res) => {
     const followerId = req.user.id; // Extract userId from token
     const { followingId } = req.body;
 
+    if (!followingId) {
+        return res.status(400).json({ error: 'Following ID is required' });
+    }
+
     try {
         await db.query(
             `INSERT INTO Friends (user_id_1, user_id_2, status) VALUES (?, ?, 'Accepted')`,
@@ -13,7 +17,7 @@ export const followUser = async (req, res) => {
         );
         res.status(200).json({ message: 'Followed successfully' });
     } catch (error) {
-        console.error(error);
+        console.error('Error following user:', error);
         res.status(500).json({ error: 'Failed to follow user' });
     }
 };
@@ -22,6 +26,10 @@ export const unfollowUser = async (req, res) => {
     const followerId = req.user.id;
     const { followingId } = req.body;
 
+    if (!followingId) {
+        return res.status(400).json({ error: 'Following ID is required' });
+    }
+
     try {
         await db.query(
             `DELETE FROM Friends WHERE user_id_1 = ? AND user_id_2 = ?`,
@@ -29,7 +37,7 @@ export const unfollowUser = async (req, res) => {
         );
         res.status(200).json({ message: 'Unfollowed successfully' });
     } catch (error) {
-        console.error(error);
+        console.error('Error unfollowing user:', error);
         res.status(500).json({ error: 'Failed to unfollow user' });
     }
 };

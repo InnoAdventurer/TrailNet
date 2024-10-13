@@ -36,14 +36,13 @@ function HomePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const config = {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  };
+
   useEffect(() => {
     const fetchHomePagePosts = async () => {
       try {
-        const token = localStorage.getItem('authToken');
-        if (!token) throw new Error('No auth token found');
-
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-
         const response = await axios.get(`${apiUrl}/api/posts/home-posts`, config);
         setPosts(response.data.posts);
         setLoading(false);
@@ -57,6 +56,31 @@ function HomePage() {
     fetchHomePagePosts();
   }, []);
 
+  const handleFollow = async (postOwnerId: number, isFollowing: boolean) => {
+    console.log(`Following ID: ${postOwnerId}, Is Following: ${isFollowing}`); // Debug log
+
+    // Optimistically update the state before the API call
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.post_owner_id === postOwnerId ? { ...post, isFollowing: !isFollowing } : post
+      )
+    );
+
+    try {
+      const endpoint = isFollowing ? '/api/friends/unfollow' : '/api/friends/follow';
+      const response = await axios.post(`${apiUrl}${endpoint}`, { followingId: postOwnerId }, config);
+    } catch (error) {
+      console.error('Error updating follow state:', error);
+
+      // Roll back the optimistic update if the API call fails
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.post_owner_id === postOwnerId ? { ...post, isFollowing: isFollowing } : post
+        )
+      );
+    }
+  };
+
   return (
     <div className="homepage-container flex">
       <TopNavBar />
@@ -67,30 +91,31 @@ function HomePage() {
         ) : error ? (
           <div className="error-message">{error}</div>
         ) : (
-          posts.map((post, index) => {
-            const profilePic = post.profile_picture && iconMap[post.profile_picture as keyof typeof iconMap]
-              ? iconMap[post.profile_picture as keyof typeof iconMap]
-              : icon1;
+          posts.map((post) => {
+            const isFollowing = post.isFollowing;
+            const profilePic =
+              post.profile_picture && iconMap[post.profile_picture as keyof typeof iconMap]
+                ? iconMap[post.profile_picture as keyof typeof iconMap]
+                : icon1;
 
             return (
               <div className="content" key={post.post_id}>
                 <div className="profile-section">
-                  <img
-                    src={profilePic}
-                    alt="profilepic"
-                    className="profilepicture"
-                  />
+                  <img src={profilePic} alt="profilepic" className="profilepicture" />
                   <div className="text-content">
                     <div>{post.username}</div>
                     <div>{formatDate(post.created_at)}</div> {/* Format date */}
                   </div>
-                  <button>Follow</button>
+                  {post.post_owner_id !== post.current_user_id && (
+                    <button
+                      onClick={() => handleFollow(post.post_owner_id, isFollowing)} // Use post_owner_id here
+                      className={`follow-button ${isFollowing ? 'following' : ''}`}
+                    >
+                      {isFollowing ? 'Following' : 'Follow'}
+                    </button>
+                  )}
                 </div>
-                <img
-                  src={post.image_blob || image404}
-                  alt="post"
-                  className="event-picture"
-                />
+                <img src={post.image_blob || image404} alt="post" className="event-picture" />
                 <div className="caption">{post.content}</div>
                 <div className="caption">Privacy: {post.privacy}</div>
               </div>

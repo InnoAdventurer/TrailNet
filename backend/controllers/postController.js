@@ -154,6 +154,7 @@ export const fetchHomePagePosts = async (req, res) => {
                 privacy: privacyMap[post.privacy],
                 username: post.username,
                 profile_picture: post.profile_picture,
+                post_owner_id: post.post_owner_id, // Include post_owner_id in the response
                 isFollowing: !!post.isFollowing,
                 current_user_id: userId, // Add the current user's ID to the response
             };
