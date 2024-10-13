@@ -11,10 +11,10 @@ const router = Router();
 router.post('/create', authMiddleware, createEvent);
 
 // Get upcoming 10 events events
-router.post('/10events', getUpcoming10Events);
+router.post('/10events', authMiddleware, getUpcoming10Events);
 
 // Get more events (e.g., "More Events" page)
-router.post('/more', getFilteredEvents);
+router.post('/more', authMiddleware, getFilteredEvents);
 
 // Fetch event with participants
 router.get('/:id', authMiddleware, fetchEventWithParticipants);

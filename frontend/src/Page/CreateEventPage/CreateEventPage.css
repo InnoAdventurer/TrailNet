@@ -1,5 +1,6 @@
-/* frontend/src/Page/CreateEventPage/CreateEventPage.css
-Container for the entire page */
+/* frontend/src/Page/CreateEventPage/CreateEventPage.css */
+
+/* Container for the entire page */
 .createeventpage-container {
   display: flex;
   flex-direction: column;
@@ -30,16 +31,13 @@ Container for the entire page */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 500px;
-  position: relative; /* Added to create a positioning context for suggestions */
 }
 
 /* Form group styling */
 .form-group {
   margin-bottom: 20px;
-  position: relative; /* Ensure each form group is positioned relative to the parent */
 }
 
-/* Label styling */
 .form-group label {
   display: block;
   font-weight: bold;
@@ -47,21 +45,33 @@ Container for the entire page */
   color: #333;
 }
 
-/* Activity options styling */
-.activity-options {
+/* Options button styling */
+.options {
   display: flex;
   justify-content: space-between;
 }
 
-/* Input field styling */
-input[type="text"],
-input[type="date"],
-input[type="time"] {
-  width: 100%;
-  padding: 10px;
+.option-button {
+  padding: 10px 20px;
+  font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+  flex: 1;
+  margin: 0 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.option-button.selected {
+  background-color: #48AEE1;
+  color: white;
+}
+
+.option-button:hover {
+  background-color: #48AEE1;
+  color: white;
 }
 
 /* Suggestions list styling */
@@ -72,16 +82,15 @@ input[type="time"] {
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: white;
-  max-height: 150px; /* Adjust the height as needed */
+  max-height: 150px;
   overflow-y: auto;
-  position: absolute; /* This ensures it appears directly below the input */
-  width: 100%; /* Ensures the width matches the input field */
+  position: absolute;
+  width: 100%;
   z-index: 1000;
-  top: 100%; /* Place directly below the input */
+  top: 100%;
   left: 0;
 }
 
-/* Suggestion item styling */
 .suggestions-list li {
   padding: 10px;
   cursor: pointer;
@@ -105,4 +114,14 @@ input[type="time"] {
 
 .submit-button:hover {
   background-color: #2C425A;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 20px;
+}
+
+.success-message {
+  color: green;
+  margin-top: 20px;
 }

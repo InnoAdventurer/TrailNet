@@ -108,8 +108,6 @@ export const fetchProfilePosts = async (req, res) => {
 };
 
 // Fetch posts for the home page based on privacy settings
-// backend/controllers/postController.js
-
 export const fetchHomePagePosts = async (req, res) => {
     const userId = req.user.id; // Extract userId from the authenticated user
 
@@ -125,10 +123,11 @@ export const fetchHomePagePosts = async (req, res) => {
                 p.privacy = 'all_users'
                 OR (p.privacy = 'followers' AND f.user_id_2 IS NOT NULL)
                 OR (p.privacy = 'only_me' AND p.user_id = ?)
+                OR p.user_id = ?
             ORDER BY p.created_at DESC
         `;
 
-        const [posts] = await db.query(query, [userId, userId]);
+        const [posts] = await db.query(query, [userId, userId, userId]);
 
         if (!posts || posts.length === 0) {
             return res.status(404).json({ message: 'No posts available.' });
