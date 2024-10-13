@@ -7,6 +7,8 @@ import { FaRegCalendarCheck } from "react-icons/fa6";
 import { PiMapPinArea } from "react-icons/pi";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { IoMdPerson } from "react-icons/io";
+
 
 // Import event images
 import Cycling_1 from '../../assets/Picture/Event/Cycling_1.webp';
@@ -97,6 +99,7 @@ function JoinEventPage3() {
           <h2 className="event-detail-name">{event.event_name}</h2>
           <p className="event-detail-date"><FaRegCalendarCheck /> {formatDate(event.event_date)}</p>
           <p className="event-detail-location"><PiMapPinArea /> {event.location}</p>
+          <p className="participant"><IoMdPerson /><span>15&nbsp;</span>Participant</p>
           <button>Join event</button>
         </div>
       </div>

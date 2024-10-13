@@ -90,6 +90,7 @@ function ProfilePage() {
                 <div className="friends-count">Friends: {friendsCount}</div> {/* Dynamic friends count */}
               </>
             )}
+            <Link to="/postphotopage"><button>New Post</button></Link>
           </div>
         </div>
 

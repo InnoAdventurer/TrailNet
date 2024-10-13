@@ -47,20 +47,22 @@
 }
 
 /* Styling for the event image */
-.event-detail-image {
+.joineventpage3-container .event-detail-image {
   width: 100%;
   height: auto;
   object-fit: cover;
 }
 
 /* Container for event info text */
-.event-detail-info {
+.joineventpage3-container .event-detail-info {
   padding: 20px;
   text-align: center;
+  font-family: Arial, sans-serif;
+  color: #2C425A; /* Ensure consistent text color */
 }
 
 /* Styling for the event name */
-.event-detail-name {
+.joineventpage3-container .event-detail-name {
   font-size: 24px;
   font-weight: bold;
   color: #2C425A;
@@ -68,19 +70,33 @@
 }
 
 /* Styling for the event date */
-.event-detail-date {
+.joineventpage3-container .event-detail-date {
   font-size: 16px;
   color: #666;
   margin-bottom: 5px;
 }
 
 /* Styling for the event location */
-.event-detail-location {
+.joineventpage3-container .event-detail-location {
   font-size: 16px;
   color: #2C425A;
-  margin-bottom: 10px;
 }
 
+/* Styling for the participants */
+.joineventpage3-container .participant {
+  font-size: 16px;
+  color: #2C425A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.joineventpage3-container .participant span {
+  margin-left: 5px;
+}
+
+/* Button Styling */
 .joineventpage3-container .event-details-container button {
   padding: 10px 20px;
   background-color: #48AEE1;
@@ -88,5 +104,11 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-right: 10px; /* Space between the button and the icon */
+  margin-top: 10px;
+}
+
+/* Ensure consistency for participant icon */
+.joineventpage3-container .participant svg {
+  font-size: 20px;
+  color: #2C425A; /* Match the color with the text */
 }
