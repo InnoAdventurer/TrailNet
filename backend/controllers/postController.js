@@ -76,7 +76,8 @@ export const fetchProfilePosts = async (req, res) => {
         const [posts] = await db.query(
             `SELECT post_id, content, event_id, created_at, image_blob, privacy 
              FROM Posts 
-             WHERE user_id = ?`,
+             WHERE user_id = ?
+             ORDER BY created_at DESC`,
             [userId]
         );
 
