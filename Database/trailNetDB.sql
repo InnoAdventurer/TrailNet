@@ -94,10 +94,12 @@ CREATE TABLE Posts (
     post_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     content TEXT NOT NULL,
-    trail_id INT,
+    event_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    image_blob LONGBLOB,
+    privacy ENUM('all_users', 'followers', 'only_me') NOT NULL DEFAULT 'all_users',
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (trail_id) REFERENCES Trails(trail_id)
+    FOREIGN KEY (event_id) REFERENCES Events(event_id)
 );
 
 CREATE TABLE Comments (
