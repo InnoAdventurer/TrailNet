@@ -1,30 +1,50 @@
 /* frontend/src/Components/TopNavBar/TopNavBar.css */
+
+/* TopNavBar Container Styling */
 .topnavbar-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #ffffff; /* Adjust as needed */
-    border-bottom: 1px solid #ddd; /* Light border line */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Shadow for the bottom line */
-    position: relative; /* Allows positioning for shadow */
-  }
-  
-  .topnavbar-container .icon {
-    font-size: 24px;
-    margin: 0 10px;
-    color: #000; /* Specify the desired color */
-  }
-  
-  .topnavbar-container a {
-    color: inherit; /* Ensures that the link inherits the color from its parent */
-    text-decoration: none; /* Removes the default underline from the link */
-    display: flex;
-    align-items: center; /* Ensures the icon is vertically centered */
-  }
-  
-  .topnavbar-container h2 {
-    font-size: 24px;
-    margin: 0;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #ffffff; /* Adjust as needed */
+  border-bottom: 1px solid #ddd; /* Light border line */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for the bottom line */
+  position: relative; /* Allows positioning for shadow */
+}
+
+/* Icon Styling */
+.topnavbar-container .icon {
+  font-size: 24px;
+  margin: 0 10px;
+  color: #000; /* Specify the desired color */
+  cursor: pointer; /* Show pointer when hovering over the icon */
+}
+
+/* Link Styling */
+.topnavbar-container a {
+  color: inherit; /* Ensures that the link inherits the color from its parent */
+  text-decoration: none; /* Removes the default underline from the link */
+  display: flex;
+  align-items: center; /* Ensures the icon is vertically centered */
+}
+
+/* Header Styling */
+.topnavbar-container h2 {
+  font-size: 24px;
+  margin: 0;
+}
+
+/* Logout Message Styling */
+.logout-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.75); /* Semi-transparent background */
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  z-index: 10; /* Ensure it appears above all other elements */
+}
