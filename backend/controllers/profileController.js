@@ -58,7 +58,7 @@ export const fetchUserInfo = async (req, res) => {
         }
 
         // Fetch the number of friends from the Friends table
-        const [friendsCount] = await db.query('SELECT COUNT(*) as count FROM Friends WHERE user_id_1 = ?', [userId]);
+        const [friendsCount] = await db.query('SELECT COUNT(*) as count FROM Friends WHERE user_id_2 = ?', [userId]);
 
         // Return the user's profile information
         res.status(200).json({
