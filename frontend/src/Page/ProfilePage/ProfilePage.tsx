@@ -36,6 +36,7 @@ function ProfilePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [posts, setPosts] = useState<any[]>([]);
+  const [noPosts, setNoPosts] = useState<boolean>(false); // Track if no posts are available
 
   useEffect(() => {
     const fetchUserDataAndPosts = async () => {
@@ -52,6 +53,11 @@ function ProfilePage() {
         // Fetch user posts
         const postResponse = await axios.get(`${apiUrl}/api/posts/user-posts`, config);
         setPosts(postResponse.data.posts);
+
+        if (postResponse.data.posts.length === 0) {
+          setNoPosts(true); // Set noPosts flag if no posts are available
+        }
+
         setLoading(false);
       } catch (err) {
         console.error('Error fetching user data or posts:', err);
@@ -88,7 +94,7 @@ function ProfilePage() {
             ) : (
               <>
                 <div className="username">{username}</div>
-                <div className="friends-count">Friends: {friendsCount}</div>
+                <div className="friends-count">Followers: {friendsCount}</div>
               </>
             )}
             <Link to="/postphotopage"><button>New Post</button></Link>
@@ -100,6 +106,8 @@ function ProfilePage() {
             <div>Loading posts...</div>
           ) : error ? (
             <div className="error-message">{error}</div>
+          ) : noPosts ? (
+            <div className="no-posts-message">You have no posts yet. Start sharing something!</div>
           ) : (
             posts.map((post) => (
               <div className="post" key={post.post_id}>

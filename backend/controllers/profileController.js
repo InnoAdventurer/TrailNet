@@ -57,8 +57,8 @@ export const fetchUserInfo = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Fetch the number of friends from the Friends table (assuming you have a Friends table)
-        const [friendsCount] = await db.query('SELECT COUNT(*) as count FROM Friends WHERE user_id_1 = ?', [userId]);
+        // Fetch the number of friends from the Friends table
+        const [friendsCount] = await db.query('SELECT COUNT(*) as count FROM Friends WHERE user_id_2 = ?', [userId]);
 
         // Return the user's profile information
         res.status(200).json({

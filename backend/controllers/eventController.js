@@ -35,28 +35,65 @@ export const createEvent = async (req, res) => {
     }
 };
 
-// Fetch upcoming 10 events events (main page)
+// Fetch upcoming 10 events (main page)
 export const getUpcoming10Events = async (req, res) => {
+    const userId = req.user.id; // Extract userId from the authenticated user
+
     try {
-        // Query to fetch the 10 upcoming events
-        let query = 'SELECT * FROM Events WHERE event_date >= CURDATE() ORDER BY event_date ASC LIMIT 10';
+        // Query to fetch upcoming events considering privacy settings
+        const query = `
+            SELECT 
+                e.*, u.username AS creator
+            FROM Events e
+            JOIN Users u ON e.user_id = u.user_id
+            LEFT JOIN Friends f ON f.user_id_1 = ? AND f.user_id_2 = e.user_id AND f.status = 'Accepted'
+            WHERE 
+                e.event_date >= CURDATE() 
+                AND (
+                    e.privacy = 'all_users'
+                    OR (e.privacy = 'followers' AND f.user_id_2 IS NOT NULL)
+                    OR (e.privacy = 'only_me' AND e.user_id = ?)
+                )
+            ORDER BY e.event_date ASC
+            LIMIT 10
+        `;
 
-        // Execute the query without additional filters
-        const [events] = await db.query(query);
+        const [events] = await db.query(query, [userId, userId]);
 
-        res.status(200).json({ success: true, events });
+        // Process each event to extract the location before the first comma
+        const processedEvents = events.map(event => ({
+            ...event,
+            location: event.location.split(',')[0], // Extract location before the first comma
+        }));
+
+        res.status(200).json({ success: true, events: processedEvents });
     } catch (error) {
         console.error('Error fetching upcoming events:', error);
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 };
 
-// Fetch a single event by ID
+// Fetch a single event by ID considering privacy
 export const getEventById = async (req, res) => {
     const { id } = req.params;
+    const userId = req.user.id;
 
     try {
-        const [event] = await db.query('SELECT * FROM Events WHERE event_id = ?', [id]);
+        const query = `
+            SELECT e.*, u.username AS creator
+            FROM Events e
+            JOIN Users u ON e.user_id = u.user_id
+            LEFT JOIN Friends f ON f.user_id_1 = ? AND f.user_id_2 = e.user_id AND f.status = 'Accepted'
+            WHERE 
+                e.event_id = ? 
+                AND (
+                    e.privacy = 'all_users'
+                    OR (e.privacy = 'followers' AND f.user_id_2 IS NOT NULL)
+                    OR (e.privacy = 'only_me' AND e.user_id = ?)
+                )
+        `;
+
+        const [event] = await db.query(query, [userId, id, userId]);
 
         if (!event.length) {
             return res.status(404).json({ success: false, message: 'Event not found' });
@@ -69,13 +106,25 @@ export const getEventById = async (req, res) => {
     }
 };
 
-// Get filtered events
+// Get filtered events with privacy consideration
 export const getFilteredEvents = async (req, res) => {
     const { latitude, longitude, activityType, dateRange } = req.body;
+    const userId = req.user.id;
 
     try {
-        let query = 'SELECT * FROM Events WHERE event_date >= CURDATE()';
-        const queryParams = [];
+        let query = `
+            SELECT e.*, u.username AS creator
+            FROM Events e
+            JOIN Users u ON e.user_id = u.user_id
+            LEFT JOIN Friends f ON f.user_id_1 = ? AND f.user_id_2 = e.user_id AND f.status = 'Accepted'
+            WHERE e.event_date >= CURDATE()
+            AND (
+                e.privacy = 'all_users'
+                OR (e.privacy = 'followers' AND f.user_id_2 IS NOT NULL)
+                OR (e.privacy = 'only_me' AND e.user_id = ?)
+            )
+        `;
+        const queryParams = [userId, userId];
 
         // Filter by GPS coordinates if provided and valid
         if (latitude !== null && longitude !== null && !isNaN(latitude) && !isNaN(longitude)) {
@@ -109,7 +158,14 @@ export const getFilteredEvents = async (req, res) => {
         query += ' ORDER BY event_date ASC LIMIT 50';
 
         const [events] = await db.query(query, queryParams);
-        res.status(200).json({ success: true, events });
+
+        // Process each event to extract the location before the first comma
+        const processedEvents = events.map(event => ({
+            ...event,
+            location: event.location.split(',')[0], // Extract location before the first comma
+        }));
+
+        res.status(200).json({ success: true, events: processedEvents });
     } catch (error) {
         console.error('Error fetching events:', error);
         res.status(500).json({ success: false, message: 'Server error', error: error.message });

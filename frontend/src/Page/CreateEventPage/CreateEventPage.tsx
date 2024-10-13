@@ -70,8 +70,6 @@ function CreateEventPage() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setAddress(query);
-
-    // Clear GPS coordinates when the address changes
     setLatitude(null);
     setLongitude(null);
 
@@ -91,6 +89,14 @@ function CreateEventPage() {
     setSuggestions([]); // Clear suggestions after selection
   };
 
+  const handleActivityChange = (activityOption: string) => {
+    setActivity(activityOption);
+  };
+
+  const handlePrivacyChange = (privacyOption: string) => {
+    setPrivacy(privacyOption);
+  };
+
   // Function to handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,9 +113,6 @@ function CreateEventPage() {
 
     const eventDateTimeString = `${date}T${time}:00`;
     const eventDateTime = new Date(eventDateTimeString);
-  
-  
-    // Calculate end time as 4 hours later
 
     // Calculate end time as 4 hours later
     const endDateTime = new Date(eventDateTime);
@@ -165,36 +168,19 @@ function CreateEventPage() {
       </div>
       
       <form className="create-event-form" onSubmit={handleSubmit}>
-        <div className="form-group">
+      <div className="form-group">
           <label htmlFor="activity">What Activity?</label>
-          <div className="activity-options">
-            <label>
-              <input 
-                type="radio" 
-                value="Hiking" 
-                checked={activity === 'Hiking'} 
-                onChange={(e) => setActivity(e.target.value)} 
-              />
-              Hiking
-            </label>
-            <label>
-              <input 
-                type="radio" 
-                value="Jogging" 
-                checked={activity === 'Jogging'} 
-                onChange={(e) => setActivity(e.target.value)} 
-              />
-              Jogging
-            </label>
-            <label>
-              <input 
-                type="radio" 
-                value="Cycling" 
-                checked={activity === 'Cycling'} 
-                onChange={(e) => setActivity(e.target.value)} 
-              />
-              Cycling
-            </label>
+          <div className="options">
+            {['Hiking', 'Jogging', 'Cycling'].map(option => (
+              <button
+                key={option}
+                type="button"
+                className={`option-button ${activity === option ? 'selected' : ''}`}
+                onClick={() => handleActivityChange(option)}
+              >
+                {option}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -244,34 +230,17 @@ function CreateEventPage() {
 
         <div className="form-group">
           <label htmlFor="privacy">Who Can Join?</label>
-          <div className="activity-options">
-            <label>
-              <input 
-                type="radio" 
-                value="all_users" 
-                checked={privacy === 'all_users'} 
-                onChange={(e) => setPrivacy(e.target.value)} 
-              />
-              All Users
-            </label>
-            <label>
-              <input 
-                type="radio" 
-                value="followers" 
-                checked={privacy === 'followers'} 
-                onChange={(e) => setPrivacy(e.target.value)} 
-              />
-              Only Followers
-            </label>
-            <label>
-              <input 
-                type="radio" 
-                value="only_me" 
-                checked={privacy === 'only_me'} 
-                onChange={(e) => setPrivacy(e.target.value)} 
-              />
-              Only Me
-            </label>
+          <div className="options">
+            {['all_users', 'followers', 'only_me'].map(option => (
+              <button
+                key={option}
+                type="button"
+                className={`option-button ${privacy === option ? 'selected' : ''}`}
+                onClick={() => handlePrivacyChange(option)}
+              >
+                {option === 'all_users' ? 'All Users' : option === 'followers' ? 'Only Followers' : 'Only Me'}
+              </button>
+            ))}
           </div>
         </div>
 

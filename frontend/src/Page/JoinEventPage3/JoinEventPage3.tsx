@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { IoMdPerson } from "react-icons/io";
 
-
 // Import event images
 import Cycling_1 from '../../assets/Picture/Event/Cycling_1.webp';
 import Cycling_2 from '../../assets/Picture/Event/Cycling_2.webp';
@@ -35,6 +34,7 @@ interface Event {
   location: string;
   activity_type: string;
   creator: string;
+  privacy: string; // Added privacy property
 }
 
 function JoinEventPage3() {
@@ -101,6 +101,19 @@ function JoinEventPage3() {
     return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
+  const getPrivacyLabel = (privacy: string) => {
+    switch (privacy) {
+      case 'all_users':
+        return 'All Users';
+      case 'followers':
+        return 'Followers Only';
+      case 'only_me':
+        return 'Only Me';
+      default:
+        return 'Unknown';
+    }
+  };
+
   if (loading) return <div>Loading event...</div>;
 
   return (
@@ -118,6 +131,7 @@ function JoinEventPage3() {
           <p className="event-detail-creator">Created by: {event!.creator}</p>
           <p className="event-detail-date"><FaRegCalendarCheck /> {formatDate(event!.event_date)}</p>
           <p className="event-detail-location"><PiMapPinArea /> {event!.location}</p>
+          <p className="event-detail-privacy"><IoMdPerson /> {getPrivacyLabel(event!.privacy)}</p>
           <button onClick={toggleParticipation}>
             {status === 'Going' ? 'Revoke Join' : 'Join Event'}
           </button>

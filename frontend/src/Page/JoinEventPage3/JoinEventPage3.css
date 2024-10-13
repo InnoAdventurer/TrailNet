@@ -44,6 +44,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  margin-bottom: 20px;
 }
 
 /* Styling for the event image */
@@ -58,7 +59,7 @@
   padding: 20px;
   text-align: center;
   font-family: Arial, sans-serif;
-  color: #2C425A; /* Ensure consistent text color */
+  color: #2C425A;
 }
 
 /* Styling for the event name */
@@ -74,26 +75,41 @@
   font-size: 16px;
   color: #666;
   margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joineventpage3-container .event-detail-date svg {
+  margin-right: 5px;
 }
 
 /* Styling for the event location */
 .joineventpage3-container .event-detail-location {
   font-size: 16px;
   color: #2C425A;
-}
-
-/* Styling for the participants */
-.joineventpage3-container .participant {
-  font-size: 16px;
-  color: #2C425A;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
-.joineventpage3-container .participant span {
-  margin-left: 5px;
+.joineventpage3-container .event-detail-location svg {
+  margin-right: 5px;
+}
+
+/* Styling for the event privacy */
+.joineventpage3-container .event-detail-privacy {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joineventpage3-container .event-detail-privacy svg {
+  margin-right: 5px;
 }
 
 /* Button Styling */
@@ -105,10 +121,64 @@
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.joineventpage3-container .event-details-container button:hover {
+  background-color: #2C425A;
+}
+
+/* Styling for the participants container */
+.joineventpage3-container .participants-container {
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.joineventpage3-container .participants-container h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2C425A;
+  margin-bottom: 10px;
+}
+
+.joineventpage3-container .participants-container .participant {
+  font-size: 16px;
+  color: #2C425A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.joineventpage3-container .participants-container .participant span {
+  margin-left: 5px;
+}
+
+.joineventpage3-container .participants-container .no-participants-message {
+  font-size: 16px;
+  color: #666;
 }
 
 /* Ensure consistency for participant icon */
-.joineventpage3-container .participant svg {
+.joineventpage3-container .participants-container .participant svg {
   font-size: 20px;
-  color: #2C425A; /* Match the color with the text */
+  color: #2C425A;
+}
+
+.joineventpage3-container .event-detail-creator {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joineventpage3-container .event-detail-creator svg {
+  margin-right: 5px;
 }

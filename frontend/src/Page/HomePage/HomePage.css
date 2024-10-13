@@ -99,3 +99,19 @@
   border-top: 1px solid #ddd; /* Optional: Adds a top border */
   box-sizing: border-box; /* Includes padding in height calculation */
 }
+
+/* Follow button styles */
+.follow-button {
+  padding: 5px 10px;
+  background-color: #EFF5F7;
+  color: #2C425A;
+  border: 2px solid #48AEE1;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.follow-button.following {
+  background-color: #48AEE1;
+  color: white;
+}

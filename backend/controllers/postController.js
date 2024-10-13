@@ -70,24 +70,20 @@ export const createPostWithCompressedImage = (req, res) => {
 
 // Fetch posts on profile page for the authenticated user
 export const fetchProfilePosts = async (req, res) => {
-    const userId = req.user.id;  // Extract userId from the authenticated user
+    const userId = req.user.id; // Extract userId from the authenticated user
 
     try {
         const [posts] = await db.query(
             `SELECT post_id, content, event_id, created_at, image_blob, privacy 
              FROM Posts 
-             WHERE user_id = ?`,
+             WHERE user_id = ?
+             ORDER BY created_at DESC`,
             [userId]
         );
 
-        if (!posts || posts.length === 0) {
-            console.warn('No Posts Found for User:', userId);  // Log a warning if no posts are found
-            return res.status(404).json({ message: 'No posts found for this user.' });
-        }
-
-        const processedPosts = posts.map(post => {
-            const base64Image = post.image_blob 
-                ? `data:image/jpeg;base64,${post.image_blob.toString('base64')}` 
+        const processedPosts = posts.map((post) => {
+            const base64Image = post.image_blob
+                ? `data:image/jpeg;base64,${post.image_blob.toString('base64')}`
                 : null;
 
             return {
@@ -96,20 +92,22 @@ export const fetchProfilePosts = async (req, res) => {
                 event_id: post.event_id,
                 created_at: post.created_at,
                 image_blob: base64Image,
-                privacy: privacyMap[post.privacy]
+                privacy: privacyMap[post.privacy],
             };
         });
 
-        res.status(200).json({ posts: processedPosts });
+        // Respond with posts, or an empty array if no posts are found
+        res.status(200).json({
+            message: posts.length > 0 ? 'Posts retrieved successfully' : 'No posts found for this user.',
+            posts: processedPosts,
+        });
     } catch (error) {
-        console.error('Error fetching user posts:', error);  // Log any errors
+        console.error('Error fetching user posts:', error); // Log any errors
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
 // Fetch posts for the home page based on privacy settings
-// backend/controllers/postController.js
-
 export const fetchHomePagePosts = async (req, res) => {
     const userId = req.user.id; // Extract userId from the authenticated user
 
@@ -117,18 +115,26 @@ export const fetchHomePagePosts = async (req, res) => {
         const query = `
             SELECT 
                 p.post_id, p.content, p.event_id, p.created_at, p.image_blob, p.privacy, 
-                u.username, u.profile_picture 
+                u.user_id AS post_owner_id, u.username, u.profile_picture,
+                CASE 
+                    WHEN f.user_id_2 IS NOT NULL THEN TRUE
+                    ELSE FALSE 
+                END AS isFollowing
             FROM Posts p
             JOIN Users u ON p.user_id = u.user_id
-            LEFT JOIN Friends f ON f.user_id_1 = ? AND f.user_id_2 = p.user_id AND f.status = 'Accepted'
+            LEFT JOIN Friends f 
+                ON f.user_id_1 = ? 
+                AND f.user_id_2 = p.user_id 
+                AND f.status = 'Accepted'
             WHERE 
                 p.privacy = 'all_users'
                 OR (p.privacy = 'followers' AND f.user_id_2 IS NOT NULL)
                 OR (p.privacy = 'only_me' AND p.user_id = ?)
+                OR p.user_id = ?
             ORDER BY p.created_at DESC
         `;
 
-        const [posts] = await db.query(query, [userId, userId]);
+        const [posts] = await db.query(query, [userId, userId, userId]);
 
         if (!posts || posts.length === 0) {
             return res.status(404).json({ message: 'No posts available.' });
@@ -148,6 +154,9 @@ export const fetchHomePagePosts = async (req, res) => {
                 privacy: privacyMap[post.privacy],
                 username: post.username,
                 profile_picture: post.profile_picture,
+                post_owner_id: post.post_owner_id, // Include post_owner_id in the response
+                isFollowing: !!post.isFollowing,
+                current_user_id: userId, // Add the current user's ID to the response
             };
         });
 

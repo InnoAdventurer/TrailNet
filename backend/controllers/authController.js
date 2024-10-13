@@ -41,13 +41,13 @@ export const login = async (req, res) => {
         const [user] = await db.query('SELECT * FROM Users WHERE email = ?', [email]);
         if (user.length === 0) {
             console.log('Invalid credentials: User not found');
-            return res.status(400).json({ success: false, message: 'Invalid credentials' });
+            return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
 
         const isMatch = await compare(password, user[0].password_hash);
         if (!isMatch) {
             console.log('Invalid credentials: Password mismatch');
-            return res.status(400).json({ success: false, message: 'Invalid credentials' });
+            return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
 
         const token = jwt.sign({ id: user[0].user_id }, process.env.JWT_SECRET, { expiresIn: '24h' });
