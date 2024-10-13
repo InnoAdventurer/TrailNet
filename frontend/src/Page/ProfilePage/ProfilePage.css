@@ -79,3 +79,10 @@
     margin-top: 5px;
     font-size: 16px;
 }
+
+    .no-posts-message {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+    color: #666;
+}
