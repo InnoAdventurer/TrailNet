@@ -22,6 +22,12 @@
     text-align: center; /* Center h2 text */
 }
 
+.profilepage-container .main-content button {
+    padding: 5px;
+    font-size: 15px;
+    background-color: rgb(177, 209, 235);
+}
+
 .profilepage-container .main-content {
     display: flex;
     flex-direction: column;
