@@ -22,6 +22,12 @@ const centerPinIcon = new L.DivIcon({
   iconAnchor: [17, 17] // Anchor to the center of the icon
 });
 
+const getAuthToken = () => localStorage.getItem('authToken');
+
+const useAxiosConfig = () => ({
+  headers: { Authorization: `Bearer ${getAuthToken()}` },
+});
+
 function MapScreen() {
   const { setError } = useContext(ErrorContext);
   const [weather, setWeather] = useState<any>(null);
@@ -36,6 +42,7 @@ function MapScreen() {
   const [distance, setDistance] = useState<number | null>(null);
 
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const axiosConfig = useAxiosConfig();
 
   // Hook to handle map movement and refetch events/weather
   const MapEventsHandler = () => {
@@ -85,7 +92,13 @@ function MapScreen() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
+        const token = localStorage.getItem('authToken');
+        if (!token) throw new Error('No auth token found');
+  
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+
         const response = await axios.post(`${apiUrl}/api/events/more`, {
+          config,
           latitude,
           longitude,
         });
@@ -99,27 +112,42 @@ function MapScreen() {
   }, [latitude, longitude, setError]);
 
   useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.post(
+          `${apiUrl}/api/events/more`,
+          { latitude, longitude },
+          axiosConfig
+        );
+        setEvents(response.data.events);
+      } catch (error) {
+        handleAxiosError(error, 'Error fetching event info. Please try again.');
+      }
+    };
+    fetchEvents();
+  }, [latitude, longitude]);
+
+  useEffect(() => {
     const fetchWeather = async () => {
       try {
-        if (latitude && longitude) {
-          const response = await axios.get(`${apiUrl}/api/weather/current`, {
-            params: { lat: latitude, lon: longitude },
-          });
+        const response = await axios.get(`${apiUrl}/api/weather/current`, {
+          ...axiosConfig,
+          params: { lat: latitude, lon: longitude },
+        });
 
-          setWeather({
-            temperature: response.data.temperature,
-            condition: response.data.condition,
-            icon: response.data.icon,
-          });
-        }
+        setWeather(response.data);
       } catch (error) {
-        console.error('Error fetching weather data:', error);
-        setError('Error fetching weather data. Please try again.');
+        handleAxiosError(error, 'Error fetching weather data. Please try again.');
       }
     };
 
     fetchWeather();
-  }, [latitude, longitude, setError]);
+  }, [latitude, longitude]);
+
+  const handleAxiosError = (error: any, defaultMessage: string) => {
+    console.error(error);
+    setError(defaultMessage);
+  };
 
   const handleMarkerClick = async (event: any) => {
     setSelectedEvent(event);
@@ -167,15 +195,12 @@ function MapScreen() {
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    setSearchQuery(query);
+    setSearchQuery(e.target.value);
 
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
-    }
+    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
 
     debounceTimeout.current = setTimeout(() => {
-      fetchSuggestions(query);
+      fetchSuggestions(e.target.value);
     }, 500);
   };
 
@@ -205,15 +230,12 @@ function MapScreen() {
     getUserLocation();
   };
 
-  const formatDate = (isoString: string) => {
-    const date = new Date(isoString);
-    const options: Intl.DateTimeFormatOptions = {
+  const formatDate = (isoString: string) => 
+    new Date(isoString).toLocaleDateString(undefined, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-    };
-    return date.toLocaleDateString(undefined, options);
-  };
+    });
 
   return (
     <div className="mapscreen-container flex">
