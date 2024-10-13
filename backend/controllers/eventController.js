@@ -109,7 +109,14 @@ export const getFilteredEvents = async (req, res) => {
         query += ' ORDER BY event_date ASC LIMIT 50';
 
         const [events] = await db.query(query, queryParams);
-        res.status(200).json({ success: true, events });
+
+        // Process each event to extract the location before the first comma
+        const processedEvents = events.map(event => ({
+            ...event,
+            location: event.location.split(',')[0] // Extract location before the first comma
+        }));
+
+        res.status(200).json({ success: true, events: processedEvents });
     } catch (error) {
         console.error('Error fetching events:', error);
         res.status(500).json({ success: false, message: 'Server error', error: error.message });

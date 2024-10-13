@@ -131,6 +131,11 @@ function JoinEventPage2() {
     }
   };
 
+  const formatDate = (isoString: string) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  };
+
   return (
     <div className="joineventpage2-container">
       <div className="search-container">
@@ -154,7 +159,7 @@ function JoinEventPage2() {
                   <div className="event-card">
                     <img src={getEventPicture(event.activity_type, event.event_id)} alt={event.event_name} className="event-image" />
                     <div className="event-details">
-                      <div className="event-date">{new Date(event.event_date).toLocaleDateString()}</div>
+                      <div className="event-date">{formatDate(event.event_date)}</div>
                       <div className="event-name">{event.event_name}</div>
                       <div className="event-location">{event.location}</div>
                     </div>
