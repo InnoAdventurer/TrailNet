@@ -104,57 +104,52 @@ function CreateEventPage() {
       setLoading(false);
       return;
     }
-  
+
     const eventDateTimeString = `${date}T${time}:00`;
     const eventDateTime = new Date(eventDateTimeString);
   
+  
+    // Calculate end time as 4 hours later
+
     // Calculate end time as 4 hours later
     const endDateTime = new Date(eventDateTime);
     endDateTime.setHours(eventDateTime.getHours() + 4);
-  
+
     try {
-      // Get the current time from the server for comparison
-      const response = await axios.get(`${apiUrl}/api/time/current`);
-      const serverTime = new Date(response.data.currentTime);
-  
-      if (isNaN(eventDateTime.getTime())) {
-        setError('Invalid event date or time.');
-        setLoading(false);
-        return;
-      } else if (eventDateTime < serverTime) {
-        setError('Event date and time must be in the future.');
-        setLoading(false);
-        return;
-      }
-  
+      const token = localStorage.getItem('authToken');
+      if (!token) throw new Error('No auth token found');
+
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
       const eventDetails = {
         event_name: activity,
         description: `Event for ${activity}`,
-        event_date: date, // Format the date as YYYY-MM-DD
+        event_date: date,
         start_time: time,
-        end_time: endDateTime.toTimeString().substring(0, 5), // Format as HH:MM
+        end_time: endDateTime.toTimeString().substring(0, 5),
         location: address,
-        latitude: latitude,
-        longitude: longitude,
-        privacy: privacy,
-        activity_type: activity, // Add activity type field
-        trail_id: null, // Assuming trail_id is optional; otherwise, set it accordingly
+        latitude,
+        longitude,
+        privacy,
+        activity_type: activity,
+        trail_id: null,
       };
-  
-      const createResponse = await axios.post(`${apiUrl}/api/events/create`, eventDetails);
-  
+
+      const createResponse = await axios.post(`${apiUrl}/api/events/create`, eventDetails, config);
+
       if (createResponse.status === 201) {
-        const eventId = createResponse.data.event_id; // Retrieve event_id from response
-        setSuccess('Event Created Successfully! Redirecting to the event page...');
-      
-        // Wait for 3 seconds before redirecting
+        const eventId = createResponse.data.event_id;
+        setSuccess('Event Created Successfully! Redirecting...');
+
         setTimeout(() => {
-          navigate(`/joineventpage3/${eventId}`); // Redirect to event page with event ID
-        }, 3000); // 3 seconds delay
+          navigate(`/joineventpage3/${eventId}`);
+        }, 3000); // 3-second delay before redirect
       } else {
         setError('Failed to create event.');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error creating event:', err);
       setError('An error occurred while creating the event. Please try again.');
     } finally {

@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import './ProfilePage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
-import axios from 'axios'; // To fetch user data
-import homepage_1 from './homepage_1.png';
+import axios from 'axios';
+import image404 from '../../assets/Picture/image404.webp'; // Placeholder image
 
-// Import all profile icons
+// Import profile icons
 import icon1 from '../../assets/Picture/Icon/icon_1.png';
 import icon2 from '../../assets/Picture/Icon/icon_2.png';
 import icon3 from '../../assets/Picture/Icon/icon_3.png';
@@ -15,7 +15,7 @@ import icon4 from '../../assets/Picture/Icon/icon_4.png';
 import icon5 from '../../assets/Picture/Icon/icon_5.png';
 import icon6 from '../../assets/Picture/Icon/icon_6.png';
 
-const apiUrl = process.env.VITE_BACKEND_URL; // Make sure to set this in your environment
+const apiUrl = process.env.VITE_BACKEND_URL;
 
 const iconMap = {
   '/frontend/src/assets/Picture/Icon/icon_1.png': icon1,
@@ -26,46 +26,47 @@ const iconMap = {
   '/frontend/src/assets/Picture/Icon/icon_6.png': icon6,
 };
 
-const posts = [
-  {
-    postDate: "Sep 20, 2024",
-    postPic: homepage_1,
-    caption: "Cycling at Bulli to Wollongong Beach"
-  },
-  {
-    postDate: "Sep 20, 2024",
-    postPic: homepage_1,
-    caption: "Cycling at Bulli to Wollongong Beach"
-  },
-];
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
 
 function ProfilePage() {
-  const [userData, setUserData] = useState<any>(null); // State to store user data
-  const [loading, setLoading] = useState<boolean>(true); // To handle loading state
-  const [error, setError] = useState<string | null>(null); // To handle any errors
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [posts, setPosts] = useState<any[]>([]);
 
   useEffect(() => {
-    // Fetch user data from backend
-    const fetchUserData = async () => {
+    const fetchUserDataAndPosts = async () => {
       try {
-        const response = await axios.post(`${apiUrl}/api/profile/fetch`);
-        setUserData(response.data);
+        const token = localStorage.getItem('authToken');
+        if (!token) throw new Error('No auth token found');
+
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+
+        // Fetch user data
+        const userResponse = await axios.post(`${apiUrl}/api/profile/fetch`, {}, config);
+        setUserData(userResponse.data);
+
+        // Fetch user posts
+        const postResponse = await axios.get(`${apiUrl}/api/posts/user-posts`, config);
+        setPosts(postResponse.data.posts);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching user data:', err);
-        setError('Failed to load profile data');
+        console.error('Error fetching user data or posts:', err);
+        setError('Failed to load profile data or posts');
         setLoading(false);
       }
     };
 
-    fetchUserData();
+    fetchUserDataAndPosts();
   }, []);
 
-  // Extract user data
   const { username, friendsCount, profile_picture } = userData || {};
-  const profilePic = profile_picture && iconMap.hasOwnProperty(profile_picture) 
-    ? iconMap[profile_picture as keyof typeof iconMap] 
-    : icon1; // Default to icon1 if not found
+  const profilePic = profile_picture && iconMap[profile_picture as keyof typeof iconMap]
+    ? iconMap[profile_picture as keyof typeof iconMap]
+    : icon1;
 
   return (
     <div className="profilepage-container flex">
@@ -78,7 +79,7 @@ function ProfilePage() {
 
       <div className="main-content">
         <div className="profile-section">
-          <img src={profilePic} alt="profilepic" className="profilepicture" /> {/* Dynamic profile picture */}
+          <img src={profilePic} alt="profilepic" className="profilepicture" />
           <div className="profile-details">
             {loading ? (
               <div>Loading profile...</div>
@@ -86,8 +87,8 @@ function ProfilePage() {
               <div className="error-message">{error}</div>
             ) : (
               <>
-                <div className="username">{username}</div> {/* Dynamic username */}
-                <div className="friends-count">Friends: {friendsCount}</div> {/* Dynamic friends count */}
+                <div className="username">{username}</div>
+                <div className="friends-count">Friends: {friendsCount}</div>
               </>
             )}
             <Link to="/postphotopage"><button>New Post</button></Link>
@@ -95,12 +96,24 @@ function ProfilePage() {
         </div>
 
         <div className="post-section">
-          {posts.map((post, index) => (
-            <div className="post" key={index}>
-              <img src={post.postPic} alt="post" className="post-picture" />
-              <div className="caption">{post.caption}</div>
-            </div>
-          ))}
+          {loading ? (
+            <div>Loading posts...</div>
+          ) : error ? (
+            <div className="error-message">{error}</div>
+          ) : (
+            posts.map((post) => (
+              <div className="post" key={post.post_id}>
+                <div>{formatDate(post.created_at)}</div> {/* Format date */}
+                {post.image_blob ? (
+                  <img src={post.image_blob} alt="post" className="post-picture" />
+                ) : (
+                  <img src={image404} alt="post" className="post-picture" />
+                )}
+                <div className="caption">{post.content}</div>
+                <div className="caption">Privacy: {post.privacy}</div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

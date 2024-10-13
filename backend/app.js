@@ -10,6 +10,7 @@ import eventRoutes from './routes/eventRoutes.js';
 import timeRoutes from './routes/timeRoutes.js';
 import mapRoutes from './routes/mapRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
+import postRoutes from './routes/postRoutes.js';
 
 const app = express();
 
@@ -50,6 +51,9 @@ app.use('/api/map', mapRoutes);
 
 // Profile Setup related routes
 app.use('/api/profile', profileRoutes); 
+
+// Post related routes
+app.use('/api/posts', postRoutes); 
 
 // Route to handle OAuth2 callback
 app.get('/oauth2callback', handleOAuth2Callback);
