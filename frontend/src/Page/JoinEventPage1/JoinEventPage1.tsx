@@ -5,7 +5,6 @@ import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import joineventpage1_1 from './joineventpage1_1.png';
 import joineventpage1_3 from './joineventpage1_3.png';
 
 import Cycling_1 from '../../assets/Picture/Event/Cycling_1.webp';
