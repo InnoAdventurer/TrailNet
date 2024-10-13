@@ -27,6 +27,7 @@ import SOSScreen from './Page/SOSScreen/SOSScreen';
 import SettingScreen from './Page/SettingScreen/SettingScreen';
 import SettingProfile from './Page/SettingProfile/SettingProfile';
 import ProfilePage from './Page/ProfilePage/ProfilePage';
+import PostPhotoPage from './Page/PostPhotoPage/PostPhotoPage';
 
 import { ErrorProvider } from './contexts/ErrorContext';
 import ErrorPrompt from './Components/ErrorPrompt/ErrorPrompt';
@@ -66,6 +67,7 @@ function App() {
                 <Route path="/settingscreen" element={<PrivateRoute><SettingScreen /></PrivateRoute>} />
                 <Route path="/settingprofile" element={<PrivateRoute><SettingProfile /></PrivateRoute>} />
                 <Route path="/profilepage" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+                <Route path="/postphotopage" element={<PrivateRoute><PostPhotoPage /></PrivateRoute>} />
               </Routes>
             </AuthProvider>
           </BrowserRouter>

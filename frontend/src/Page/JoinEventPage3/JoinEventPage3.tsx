@@ -7,6 +7,8 @@ import { FaRegCalendarCheck } from "react-icons/fa6";
 import { PiMapPinArea } from "react-icons/pi";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { IoMdPerson } from "react-icons/io";
+
 
 // Import event images
 import Cycling_1 from '../../assets/Picture/Event/Cycling_1.webp';

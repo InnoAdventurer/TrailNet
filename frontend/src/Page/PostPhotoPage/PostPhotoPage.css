@@ -1,0 +1,88 @@
+/* Container for the entire page */
+.postphotopage-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  /* Header styling with back button */
+  .postphotopage-container .header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .postphotopage-container .header h2 {
+    margin: 0 auto;
+    font-size: 24px;
+    color: #2C425A;
+  }
+  
+  .postphotopage-container .header .back {
+    position: absolute;
+    left: 10px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  /* Content styling */
+  .postphotopage-container .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  /* Photo upload styling */
+  .postphotopage-container .photo-upload input[type="file"] {
+    padding: 10px;
+    background-color: #48AEE1;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .postphotopage-container .photo-preview {
+    margin-top: 10px;
+    max-width: 100%;
+  }
+  
+  .postphotopage-container .photo-preview img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  /* Caption input styling */
+  .postphotopage-container .caption-input textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    resize: none;
+    height: 100px;
+  }
+  
+  /* Submit button styling */
+  .postphotopage-container .submit-button {
+    padding: 10px 20px;
+    background-color: #48AEE1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .postphotopage-container .submit-button:hover {
+    background-color: #2C425A;
+  }
+  

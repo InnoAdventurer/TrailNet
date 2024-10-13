@@ -91,6 +91,7 @@ function ProfilePage() {
                 <div className="friends-count">Friends: {friendsCount}</div>
               </>
             )}
+            <Link to="/postphotopage"><button>New Post</button></Link>
           </div>
         </div>
 
