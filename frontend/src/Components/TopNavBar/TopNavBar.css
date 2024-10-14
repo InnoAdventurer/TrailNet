@@ -6,10 +6,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px;
-  background-color: #ffffff; /* Adjust as needed */
-  border-bottom: 1px solid #ddd; /* Light border line */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for the bottom line */
-  position: relative; /* Allows positioning for shadow */
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
 }
 
 /* Icon Styling */
@@ -47,4 +48,107 @@
   text-align: center;
   font-size: 16px;
   z-index: 10; /* Ensure it appears above all other elements */
+}
+
+/* Notification related styling */
+/* Notification Container */
+.notification-container {
+  position: relative; /* Ensures the popup aligns with the icon */
+}
+
+/* Notification Popup */
+.notification-popup {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-74%); /* Center the popup horizontally */
+  width: 90vw;
+  max-width: 300px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 1000;
+}
+
+/* Ensure popup remains visible on smaller screens */
+@media (max-width: 400px) {
+  .notification-popup {
+    width: 95vw;
+    right: 5px;
+  }
+}
+
+/* Notification List Styling */
+.notification-popup ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-popup li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.notification-popup li:last-child {
+  border-bottom: none;
+}
+
+/* Styling when no notifications are available */
+.no-notifications {
+  text-align: center;
+  color: gray;
+  font-style: italic;
+  padding: 10px;
+}
+
+/* Wrapper to position the bell icon and red dot */
+.bell-icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Red dot for unread notifications */
+.unread-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+  z-index: 10; /* Ensure it's above the bell icon */
+}
+
+/* Unread notification dot */
+.unread-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Close icon styling */
+.close-icon {
+  margin-left: 10px;
+  color: gray;
+  cursor: pointer;
+}
+
+.close-icon:hover {
+  color: black;
+}
+
+/* Time Styling */
+.notification-time {
+  color: gray;
+  font-size: 8px;
+  margin-left: 10px;
 }

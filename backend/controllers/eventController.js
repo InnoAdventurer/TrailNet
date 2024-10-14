@@ -1,6 +1,7 @@
 // backend/controllers/eventController.js
 
 import db from '../config/db.js';
+import { addNotification } from './notificationController.js';
 
 export const createEvent = async (req, res) => {
     const {
@@ -196,6 +197,23 @@ export const toggleEventParticipation = async (req, res) => {
                 'INSERT INTO User_Events (user_id, event_id, status) VALUES (?, ?, ?)',
                 [user_id, event_id, status]
             );
+
+            // Notify the event creator if a user joins
+            if (status === 'Going') {
+                const [[event]] = await db.query(
+                    'SELECT event_name, creator_id FROM Events WHERE event_id = ?',
+                    [event_id]
+                );
+
+                const [[user]] = await db.query(
+                    'SELECT username FROM Users WHERE user_id = ?',
+                    [user_id]
+                );
+
+                const message = `${user.username} has joined your event "${event.event_name}".`;
+
+                await addNotification(event.creator_id, message, 'Event Reminder');
+            }
         }
 
         res.status(200).json({ message: 'Participation status updated successfully' });

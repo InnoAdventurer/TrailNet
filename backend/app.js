@@ -12,6 +12,7 @@ import mapRoutes from './routes/mapRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import friendRoutes from './routes/friendRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 const app = express();
 
@@ -58,6 +59,9 @@ app.use('/api/posts', postRoutes);
 
 // Friend related routes
 app.use('/api/friends', friendRoutes); 
+
+// Notification related routes
+app.use('/api/noti', notificationRoutes); 
 
 // Route to handle OAuth2 callback
 app.get('/oauth2callback', handleOAuth2Callback);

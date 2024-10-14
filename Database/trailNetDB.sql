@@ -128,7 +128,7 @@ CREATE TABLE Likes (
 CREATE TABLE Notifications (
     notification_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
-    notification_type ENUM('Friend Request', 'Event Reminder', 'Message', 'Like', 'Comment', 'Activity') NOT NULL,
+    notification_type ENUM('Friend Request', 'Event Reminder', 'Message', 'Like', 'Comment', 'Activity', 'Help Seeking', 'Follow', 'Unfollow') NOT NULL,
     message VARCHAR(255) NOT NULL,
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
