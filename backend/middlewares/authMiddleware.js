@@ -13,7 +13,6 @@ const authMiddleware = (req, res, next) => {
   try {
     const decoded = verify(token, process.env.JWT_SECRET); // Decode the JWT token
     req.user = decoded; // Attach the decoded user data (which should contain the userId) to req.user
-    console.log('Decoded token:', req.user);
     next(); // Call next to proceed to the next middleware or route handler
   } catch (error) {
     res.status(401).json({ message: 'Token is not valid' });
