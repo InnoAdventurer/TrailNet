@@ -6,6 +6,6 @@ import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/help', authMiddleware, handleAskForHelp);
+router.post('/help', authMiddleware, handleAskForHelp);
 
 export default router;
