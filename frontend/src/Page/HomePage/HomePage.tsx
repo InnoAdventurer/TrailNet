@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import './HomePage.css';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'; // Heart icons for like/unlike
 import TopNavBar from "../../Components/TopNavBar/TopNavBar";
 import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
 import axios from '../../utils/axiosInstance';
@@ -34,19 +35,29 @@ function HomePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchHomePagePosts = async () => {
-      try {
-        const response = await axios.get(`/api/posts/home-posts`);
-        setPosts(response.data.posts);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching home page posts:', err);
-        setError('Failed to load home page posts');
-        setLoading(false);
-      }
-    };
+  const fetchHomePagePosts = async () => {
+    try {
+      const response = await axios.get(`/api/posts/home-posts`);
+      setPosts(response.data.posts);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching home page posts:', err);
+      setError('Failed to load home page posts');
+      setLoading(false);
+    }
+  };
 
+  const toggleLike = async (post_id: number, liked: boolean) => {
+    try {
+      const endpoint = liked ? '/api/posts/unlike' : '/api/posts/like';
+      await axios.post(endpoint, { post_id });
+      fetchHomePagePosts(); // Refresh posts to update like status and count
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchHomePagePosts();
   }, []);
 
@@ -112,6 +123,14 @@ function HomePage() {
                 <img src={post.image_blob || image404} alt="post" className="event-picture" />
                 <div className="caption">{post.content}</div>
                 <div className="caption">Privacy: {post.privacy}</div>
+                <div className="caption">
+                  {post.liked ? (
+                    <AiFillHeart onClick={() => toggleLike(post.post_id, true)} />
+                  ) : (
+                    <AiOutlineHeart onClick={() => toggleLike(post.post_id, false)} />
+                  )}
+                  <span>{post.likeCount} Likes</span>
+                </div>
               </div>
             );
           })

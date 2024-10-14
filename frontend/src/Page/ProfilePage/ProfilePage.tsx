@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import './ProfilePage.css';
 import { IoIosArrowBack } from "react-icons/io";
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'; 
 import { Link } from 'react-router-dom';
 import axios from '../../utils/axiosInstance';
 import image404 from '../../assets/Picture/image404.webp'; // Placeholder image
@@ -36,30 +37,51 @@ function ProfilePage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [noPosts, setNoPosts] = useState<boolean>(false); // Track if no posts are available
 
-  useEffect(() => {
-    const fetchUserDataAndPosts = async () => {
-      try {
-        // Fetch user data
-        const userResponse = await axios.post(`/api/profile/fetch`, {});
-        setUserData(userResponse.data);
+  const fetchUserData = async () => {
+    try {
+      // Fetch user data
+      const userResponse = await axios.post(`/api/profile/fetch`, {});
+      setUserData(userResponse.data);
 
-        // Fetch user posts
-        const postResponse = await axios.get(`/api/posts/user-posts`);
-        setPosts(postResponse.data.posts);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching user data:', err);
+      setError('Failed to load user data');
+      setLoading(false);
+    }
+  };
 
-        if (postResponse.data.posts.length === 0) {
-          setNoPosts(true); // Set noPosts flag if no posts are available
-        }
+  const fetchPosts = async () => {
+    try {
+      // Fetch user posts
+      const postResponse = await axios.get(`/api/posts/user-posts`);
+      setPosts(postResponse.data.posts);
 
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching user data or posts:', err);
-        setError('Failed to load profile data or posts');
-        setLoading(false);
+      if (postResponse.data.posts.length === 0) {
+        setNoPosts(true); // Set noPosts flag if no posts are available
       }
-    };
 
-    fetchUserDataAndPosts();
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching posts:', err);
+      setError('Failed to load posts');
+      setLoading(false);
+    }
+  };
+
+  const toggleLike = async (post_id: number, liked: boolean) => {
+    try {
+      const endpoint = liked ? '/api/posts/unlike' : '/api/posts/like';
+      await axios.post(endpoint, { post_id });
+      fetchPosts(); // Refresh posts to update like status and count
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+    fetchPosts();
   }, []);
 
   const { username, friendsCount, profile_picture } = userData || {};
@@ -112,6 +134,14 @@ function ProfilePage() {
                 )}
                 <div className="caption">{post.content}</div>
                 <div className="caption">Privacy: {post.privacy}</div>
+                <div className="caption">
+                  {post.liked ? (
+                    <AiFillHeart onClick={() => toggleLike(post.post_id, true)} />
+                  ) : (
+                    <AiOutlineHeart onClick={() => toggleLike(post.post_id, false)} />
+                  )}
+                  <span>{post.likeCount} Likes</span>
+                </div>
               </div>
             ))
           )}
