@@ -52,7 +52,7 @@ function EmergencyScreen() {
         location: { latitude, longitude },
       });
       if (response.status === 200) {
-        alert('Help request sent to nearby users!');
+        alert('Help request sent to all users!');
       }
     } catch (error) {
       console.error('Error sending help request:', error);

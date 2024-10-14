@@ -65,49 +65,50 @@ export const getCoordinatesForLocation = async (req, res) => {
   }
 };
 
-// Reverse geocoding: Fetch location for given GPS coordinates
-export const getLocationForCoordinates = async (req, res) => {
-  const { latitude, longitude } = req.body;
-
+// Core reverse geocoding logic that can be reused
+export const fetchLocationName = async (latitude, longitude) => {
   if (!latitude || !longitude) {
-    return res.status(400).json({ success: false, message: "Latitude and Longitude are required" });
+    throw new Error('Latitude and Longitude are required');
   }
 
   try {
-    // Query Nominatim API for reverse geocoding
     const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
       params: {
         lat: latitude,
         lon: longitude,
         format: 'json',
-        addressdetails: 1
-      }
+        addressdetails: 1,
+      },
     });
 
     if (!response.data || !response.data.display_name) {
-      return res.status(404).json({ success: false, message: 'Location not found for given coordinates' });
+      throw new Error('Location not found for given coordinates');
     }
 
     const { display_name } = response.data;
+    const parsedDisplayName = display_name.split(',')[0]; // Parse to stop at the first comma
 
-    // Parse display name to stop at the first comma
-    const parsedDisplayName = display_name.split(',')[0];
-
-    return res.status(200).json({
+    return {
       success: true,
       location: parsedDisplayName,
-      full_address: display_name  // Return the full address in case needed
-    });
+      full_address: display_name,
+    };
   } catch (error) {
-    // Check if the error is related to the "routable point" issue (error code 2010)
-    if (error.response && error.response.data.error.code === 2010) {
-      console.error('Routable point not found:', error.response.data.error.message);
-      return res.status(400).json({ error: 'Routable point not found for this location.' });
-    } else {
-      // Log and return a generic error if it's a different issue
-      console.error('Error calling OpenRouteService API:', error.response ? error.response.data : error.message);
-      return res.status(500).json({ error: 'Failed to calculate distance due to an internal error.' });
-    }
+    console.error('Error fetching location:', error);
+    throw new Error('Failed to fetch location');
+  }
+};
+
+// Route handler for API calls
+export const getLocationForCoordinates = async (req, res) => {
+  const { latitude, longitude } = req.body;
+
+  try {
+    const locationData = await fetchLocationName(latitude, longitude);
+    res.status(200).json(locationData);
+  } catch (error) {
+    console.error('Error in reverse geocoding API:', error.message);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
