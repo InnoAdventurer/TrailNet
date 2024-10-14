@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import './HomePage.css';
 import TopNavBar from "../../Components/TopNavBar/TopNavBar";
 import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import image404 from '../../assets/Picture/image404.webp'; // Placeholder image
 
 // Import profile icons
@@ -14,8 +14,6 @@ import icon3 from '../../assets/Picture/Icon/icon_3.png';
 import icon4 from '../../assets/Picture/Icon/icon_4.png';
 import icon5 from '../../assets/Picture/Icon/icon_5.png';
 import icon6 from '../../assets/Picture/Icon/icon_6.png';
-
-const apiUrl = process.env.VITE_BACKEND_URL;
 
 const iconMap = {
   '/frontend/src/assets/Picture/Icon/icon_1.png': icon1,
@@ -36,14 +34,10 @@ function HomePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-  };
-
   useEffect(() => {
     const fetchHomePagePosts = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/posts/home-posts`, config);
+        const response = await axios.get(`/api/posts/home-posts`);
         setPosts(response.data.posts);
         setLoading(false);
       } catch (err) {
@@ -68,7 +62,7 @@ function HomePage() {
 
     try {
       const endpoint = isFollowing ? '/api/friends/unfollow' : '/api/friends/follow';
-      const response = await axios.post(`${apiUrl}${endpoint}`, { followingId: postOwnerId }, config);
+      const response = await axios.post(`${endpoint}`, { followingId: postOwnerId });
     } catch (error) {
       console.error('Error updating follow state:', error);
 

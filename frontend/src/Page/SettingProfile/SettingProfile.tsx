@@ -11,7 +11,7 @@ import { PiPasswordFill } from "react-icons/pi";
 import { SlUserFollowing } from "react-icons/sl";
 import { MdFollowTheSigns } from "react-icons/md";
 
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 
 // Import the profile icons
 import icon1 from '../../assets/Picture/Icon/icon_1.png';
@@ -20,8 +20,6 @@ import icon3 from '../../assets/Picture/Icon/icon_3.png';
 import icon4 from '../../assets/Picture/Icon/icon_4.png';
 import icon5 from '../../assets/Picture/Icon/icon_5.png';
 import icon6 from '../../assets/Picture/Icon/icon_6.png';
-
-const apiUrl = process.env.VITE_BACKEND_URL;
 
 interface User {
   user_id: number;
@@ -51,7 +49,7 @@ function SettingProfile() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.post(`${apiUrl}/api/profile/fetch`);
+        const response = await axios.post(`/api/profile/fetch`);
         const { username, email, profile_picture } = response.data;
 
         // Set the fetched values into state
@@ -72,7 +70,7 @@ function SettingProfile() {
 
   const handleSubmitProfilePicture = async () => {
     try {
-      const response = await axios.post(`${apiUrl}/api/profile/update-picture`, {
+      const response = await axios.post(`/api/profile/update-picture`, {
         profile_picture: selectedIcon, // Send selected icon to backend
       });
 
@@ -88,7 +86,7 @@ function SettingProfile() {
   // Function to submit the updated full name
   const handleSubmitFullName = async () => {
     try {
-      const response = await axios.post(`${apiUrl}/api/profile/update-fullname`, {
+      const response = await axios.post(`/api/profile/update-fullname`, {
         full_name: fullName, // Send full name to backend
       });
 
@@ -104,7 +102,7 @@ function SettingProfile() {
   // Function to submit the updated email
   const handleSubmitEmail = async () => {
     try {
-      const response = await axios.post(`${apiUrl}/api/profile/update-email`, {
+      const response = await axios.post(`/api/profile/update-email`, {
         email: email, // Send email to backend
       });
 
@@ -125,7 +123,7 @@ function SettingProfile() {
     }
 
     try {
-      const response = await axios.post(`${apiUrl}/api/profile/update-password`, {
+      const response = await axios.post(`/api/profile/update-password`, {
         password,
       });
 
@@ -140,7 +138,7 @@ function SettingProfile() {
 
   const fetchFollowers = async () => {
     try {
-      const response = await axios.get<User[]>(`${apiUrl}/api/profile/followers`);
+      const response = await axios.get<User[]>(`/api/profile/followers`);
       setFollowers(response.data);
     } catch (error) {
       console.error('Error fetching followers:', error);
@@ -149,7 +147,7 @@ function SettingProfile() {
 
   const fetchFollowing = async () => {
     try {
-      const response = await axios.get<User[]>(`${apiUrl}/api/profile/following`);
+      const response = await axios.get<User[]>(`/api/profile/following`);
       setFollowing(response.data);
     } catch (error) {
       console.error('Error fetching following:', error);

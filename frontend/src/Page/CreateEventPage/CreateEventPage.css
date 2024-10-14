@@ -35,9 +35,11 @@
 
 /* Form group styling */
 .form-group {
+  position: relative;
   margin-bottom: 20px;
 }
 
+/* Label styling */
 .form-group label {
   display: block;
   font-weight: bold;
@@ -74,6 +76,17 @@
   color: white;
 }
 
+/* Date and time field styling */
+input[type="date"],
+input[type="time"],
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
 /* Suggestions list styling */
 .suggestions-list {
   list-style-type: none;
@@ -89,15 +102,21 @@
   z-index: 1000;
   top: 100%;
   left: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added shadow for better visibility */
 }
 
+/* Individual suggestion item */
 .suggestions-list li {
   padding: 10px;
   cursor: pointer;
+  white-space: nowrap; /* Prevents text from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds ellipsis for long text */
 }
 
+/* Hover effect for suggestions */
 .suggestions-list li:hover {
-  background-color: #f0f0f0;
+  background-color: #e0e0e0;
 }
 
 /* Submit button styling */

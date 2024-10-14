@@ -4,10 +4,8 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import './CreateEventPage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance'; 
 import { ErrorContext } from '../../contexts/ErrorContext'; // Import ErrorContext
-
-const apiUrl = process.env.VITE_BACKEND_URL;
 
 function CreateEventPage() {
   const { error, setError } = useContext(ErrorContext); // Use both error and setError from context
@@ -54,7 +52,7 @@ function CreateEventPage() {
   const fetchSuggestions = async (query: string) => {
     if (query.length > 2) {
       try {
-        const response = await axios.get(`${apiUrl}/api/map/search`, {
+        const response = await axios.get(`/api/map/search`, {
           params: { query }
         });
         setSuggestions(response.data);
@@ -119,13 +117,6 @@ function CreateEventPage() {
     endDateTime.setHours(eventDateTime.getHours() + 4);
 
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) throw new Error('No auth token found');
-
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-
       const eventDetails = {
         event_name: activity,
         description: `Event for ${activity}`,
@@ -140,7 +131,7 @@ function CreateEventPage() {
         trail_id: null,
       };
 
-      const createResponse = await axios.post(`${apiUrl}/api/events/create`, eventDetails, config);
+      const createResponse = await axios.post(`/api/events/create`, eventDetails);
 
       if (createResponse.status === 201) {
         const eventId = createResponse.data.event_id;
@@ -159,7 +150,6 @@ function CreateEventPage() {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="createeventpage-container">

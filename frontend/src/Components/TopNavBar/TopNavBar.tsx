@@ -6,11 +6,9 @@ import { IoIosWarning, IoIosLogOut, IoMdClose } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import { GoBell } from "react-icons/go";
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import { formatDistanceToNow } from 'date-fns';
 import { toDate } from 'date-fns-tz'; 
-
-const apiUrl = process.env.VITE_BACKEND_URL;
 
 interface Notification {
   notification_id: number;
@@ -31,9 +29,7 @@ function TopNavBar() {
     try {
       const token = localStorage.getItem('authToken');
       if (!token) throw new Error('No auth token found');
-      const response = await axios.get(`${apiUrl}/api/noti/getByUser`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(`/api/noti/getByUser`);
       setNotifications(response.data);
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -42,9 +38,7 @@ function TopNavBar() {
 
   const markAsRead = async (notification_id: number) => {
     try {
-      await axios.patch(`${apiUrl}/api/noti/markAsRead`, { notification_id }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-      });
+      await axios.patch(`/api/noti/markAsRead`);
 
       setNotifications((prev) =>
         prev.map((noti) =>
@@ -62,9 +56,7 @@ function TopNavBar() {
 
   const deleteNotification = async (notification_id: number) => {
     try {
-      await axios.delete(`${apiUrl}/api/noti/delete/${notification_id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-      });
+      await axios.delete(`/api/noti/delete/${notification_id}`);
 
       setNotifications((prev) =>
         prev.filter((noti) => noti.notification_id !== notification_id)
@@ -95,9 +87,7 @@ function TopNavBar() {
 
   const formatNotificationTime = (timestamp: string) => {
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    console.log(userTimeZone);
     const localDate = toDate(timestamp, { timeZone: userTimeZone });
-    console.log(localDate);
     return formatDistanceToNow(localDate, { addSuffix: true });
   };
 

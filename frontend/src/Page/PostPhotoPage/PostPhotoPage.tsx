@@ -4,9 +4,7 @@ import React, { useState } from 'react';
 import './PostPhotoPage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-const apiUrl = process.env.VITE_BACKEND_URL;
+import axios from '../../utils/axiosInstance';
 
 function PostPhotoPage() {
   const [photo, setPhoto] = useState<File | null>(null);
@@ -47,16 +45,7 @@ function PostPhotoPage() {
       formData.append('content', caption);
       formData.append('privacy', privacy); // Add the selected privacy
 
-      // Since this is a private route, the token is assumed to be present.
-      const token = localStorage.getItem('authToken');
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,
-        },
-      };
-
-      const response = await axios.post(`${apiUrl}/api/posts/create`, formData, config);
+      const response = await axios.post(`/api/posts/create`, formData);
 
       if (response.status === 201) {
         setSuccess('Post Created Successfully! Redirecting...');

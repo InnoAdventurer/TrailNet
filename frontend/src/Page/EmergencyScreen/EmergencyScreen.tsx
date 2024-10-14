@@ -8,10 +8,8 @@ import { TbHeartHandshake } from "react-icons/tb";
 import { MdSos } from "react-icons/md";
 import { MdPhonelinkRing } from "react-icons/md";
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import { ErrorContext } from '../../contexts/ErrorContext'; // Import ErrorContext
-
-const apiUrl = process.env.VITE_BACKEND_URL;
 
 function EmergencyScreen() {
   const { setError } = useContext(ErrorContext); // Use the setError function from context
@@ -48,7 +46,7 @@ function EmergencyScreen() {
 
   const handleAskForHelp = async () => {
     try {
-      const response = await axios.post(`${apiUrl}/api/emergency/help`, {
+      const response = await axios.post(`/api/emergency/help`, {
         location: { latitude, longitude },
       });
       if (response.status === 200) {

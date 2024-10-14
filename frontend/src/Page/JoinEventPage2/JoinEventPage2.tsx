@@ -5,7 +5,7 @@ import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link, useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 
 // Import event images
 import Cycling_1 from '../../assets/Picture/Event/Cycling_1.webp';
@@ -22,8 +22,6 @@ import Jogging_1 from '../../assets/Picture/Event/Jogging_1.webp';
 import Jogging_2 from '../../assets/Picture/Event/Jogging_2.webp';
 import Jogging_3 from '../../assets/Picture/Event/Jogging_3.webp';
 import Jogging_4 from '../../assets/Picture/Event/Jogging_4.webp';
-
-const apiUrl = process.env.VITE_BACKEND_URL;
 
 interface Event {
   event_id: number;
@@ -51,7 +49,7 @@ function JoinEventPage2() {
     if (latitude && longitude) {
       const fetchLocationName = async () => {
         try {
-          const response = await axios.post(`${apiUrl}/api/map/reverse-geocode`, {
+          const response = await axios.post(`$/api/map/reverse-geocode`, {
             latitude,
             longitude,
           });
@@ -73,7 +71,7 @@ function JoinEventPage2() {
     const fetchEvents = async () => {
       try {
         // Send all filters (GPS coordinates, activity type, date range) to the backend
-        const response = await axios.post(`${apiUrl}/api/events/more`, {
+        const response = await axios.post(`/api/events/more`, {
           latitude: latitude || null, // Send null if no GPS provided
           longitude: longitude || null,
           activityType: activityType || null, // Send null if no activity type provided

@@ -6,7 +6,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { FaRegCalendarCheck } from "react-icons/fa6";
 import { PiMapPinArea } from "react-icons/pi";
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import { IoMdPerson } from "react-icons/io";
 
 // Import event images
@@ -32,8 +32,6 @@ import icon3 from '../../assets/Picture/Icon/icon_3.png';
 import icon4 from '../../assets/Picture/Icon/icon_4.png';
 import icon5 from '../../assets/Picture/Icon/icon_5.png';
 import icon6 from '../../assets/Picture/Icon/icon_6.png';
-
-const apiUrl = process.env.VITE_BACKEND_URL;
 
 const iconMap = {
   '/frontend/src/assets/Picture/Icon/icon_1.png': icon1,
@@ -68,12 +66,7 @@ function JoinEventPage3() {
 
   const fetchEventData = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) throw new Error('No auth token found');
-
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-
-      const response = await axios.get(`${apiUrl}/api/events/${id}`, config);
+      const response = await axios.get(`/api/events/${id}`);
       const { event, participants, userParticipation } = response.data;
 
       setEvent(event[0]);
@@ -91,11 +84,8 @@ function JoinEventPage3() {
 
   const toggleParticipation = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-
       const newStatus = status === 'Going' ? 'Not Going' : 'Going';
-      await axios.post(`${apiUrl}/api/events/toggle-participation`, { event_id: id, status: newStatus }, config);
+      await axios.post(`/api/events/toggle-participation`, { event_id: id, status: newStatus });
 
       setStatus(newStatus);  // Update the status locally
       fetchEventData();  // Refetch event data, including participants
@@ -120,7 +110,14 @@ function JoinEventPage3() {
 
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
-    return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    return date.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true, // Use 24-hour format; set to true for 12-hour format with AM/PM
+    });
   };
 
   const getPrivacyLabel = (privacy: string) => {
@@ -163,13 +160,13 @@ function JoinEventPage3() {
               {event!.creator}</p>
           </div>
           <p className="event-detail-date">
-            <FaRegCalendarCheck /> {formatDate(event!.event_date)}
+            <FaRegCalendarCheck className="icon" /> {formatDate(event!.event_date)}
           </p>
           <p className="event-detail-location">
-            <PiMapPinArea /> {event!.location}
+            <PiMapPinArea className="icon" /> {event!.location}
           </p>
           <p className="event-detail-privacy">
-            <IoMdPerson /> {getPrivacyLabel(event!.privacy)}
+            <IoMdPerson className="icon" /> {getPrivacyLabel(event!.privacy)}
           </p>
           <button onClick={toggleParticipation}>
             {status === 'Going' ? 'Revoke Join' : 'Join Event'}
