@@ -31,6 +31,7 @@ const useAxiosConfig = () => ({
 function MapScreen() {
   const { setError } = useContext(ErrorContext);
   const [weather, setWeather] = useState<any>(null);
+  const [locationName, setLocationName] = useState<string>(''); // For reverse geocoded location
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [lastClickedSuggestion, setLastClickedSuggestion] = useState<any>(null);
@@ -40,19 +41,29 @@ function MapScreen() {
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [distance, setDistance] = useState<number | null>(null);
+  const mapRef = useRef<L.Map | null>(null); // Create map reference
 
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const axiosConfig = useAxiosConfig();
 
   // Hook to handle map movement and refetch events/weather
   const MapEventsHandler = () => {
+    const onMoveEnd = async (event: any) => {
+      const { lat, lng } = event.target.getCenter();
+      setLatitude(lat);
+      setLongitude(lng);
+      await fetchLocationName(lat, lng); // Fetch location on map movement
+    };
+  
     useMapEvents({
       moveend: (event) => {
-        const { lat, lng } = event.target.getCenter();
-        setLatitude(lat);
-        setLongitude(lng);
-      }
+        // Call the async function within the promise handler.
+        onMoveEnd(event).catch((error) =>
+          console.error('Error during map movement handling:', error)
+        );
+      },
     });
+  
     return null;
   };
 
@@ -89,6 +100,33 @@ function MapScreen() {
     }
   };
 
+  const fetchLocationName = async (lat: number, lon: number) => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}/api/map/reverse-geocode`,
+        { latitude: lat, longitude: lon },
+        axiosConfig
+      );
+      setLocationName(response.data.location || 'Unknown Location');
+    } catch (error) {
+      console.error('Error fetching location name:', error);
+      setLocationName('Unknown Location');
+    }
+  };
+
+  const fetchWeather = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/api/weather/current`, {
+        ...axiosConfig,
+        params: { lat: latitude, lon: longitude },
+      });
+
+      setWeather(response.data);
+    } catch (error) {
+      handleAxiosError(error, 'Error fetching weather data. Please try again.');
+    }
+  };
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -111,37 +149,18 @@ function MapScreen() {
     fetchEvents();
   }, [latitude, longitude, setError]);
 
+  // Center the map when coordinates change
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.post(
-          `${apiUrl}/api/events/more`,
-          { latitude, longitude },
-          axiosConfig
-        );
-        setEvents(response.data.events);
-      } catch (error) {
-        handleAxiosError(error, 'Error fetching event info. Please try again.');
-      }
-    };
-    fetchEvents();
+    if (mapRef.current) {
+      mapRef.current.setView([latitude, longitude], mapRef.current.getZoom()); // Update map view
+    }
+    fetchLocationName(latitude, longitude);
+    fetchWeather();
   }, [latitude, longitude]);
 
   useEffect(() => {
-    const fetchWeather = async () => {
-      try {
-        const response = await axios.get(`${apiUrl}/api/weather/current`, {
-          ...axiosConfig,
-          params: { lat: latitude, lon: longitude },
-        });
-
-        setWeather(response.data);
-      } catch (error) {
-        handleAxiosError(error, 'Error fetching weather data. Please try again.');
-      }
-    };
-
     fetchWeather();
+    fetchLocationName(latitude, longitude); // Fetch location on initial load
   }, [latitude, longitude]);
 
   const handleAxiosError = (error: any, defaultMessage: string) => {
@@ -184,7 +203,8 @@ function MapScreen() {
         const response = await axios.get(`${apiUrl}/api/map/search`, {
           params: { query },
         });
-        setSuggestions(response.data);
+        console.log('Suggestions received:', response.data); // Debugging log
+        setSuggestions(response.data); // Ensure this gets updated
       } catch (error) {
         console.error('Error fetching suggestions:', error);
         setError('Error fetching map suggestions. Please try again.');
@@ -193,24 +213,24 @@ function MapScreen() {
       setSuggestions([]);
     }
   };
+  
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-
     if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-
+    
     debounceTimeout.current = setTimeout(() => {
-      fetchSuggestions(e.target.value);
+      fetchSuggestions(e.target.value); // Ensure this gets called
     }, 500);
   };
 
   const handleSuggestionClick = (suggestion: any) => {
-    setSearchQuery(suggestion.display_name);
     setLatitude(parseFloat(suggestion.lat));
     setLongitude(parseFloat(suggestion.lon));
     setUseLiveLocation(false);
     setLastClickedSuggestion(suggestion);
     setSuggestions([]);
+    fetchLocationName(parseFloat(suggestion.lat), parseFloat(suggestion.lon)); // Fetch location on search
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -257,20 +277,25 @@ function MapScreen() {
           </button>
         </form>
         {suggestions.length > 0 && (
-          <ul className="suggestions-list">
-            {suggestions.map((suggestion, index) => (
-              <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
-                {suggestion.display_name}
-              </li>
-            ))}
-          </ul>
+          <>
+            {console.log('Rendering suggestions:', suggestions)} {/* Debugging log */}
+            <ul className="suggestions-list">
+              {suggestions.map((suggestion, index) => (
+                <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
+                  {suggestion.display_name}
+                </li>
+              ))}
+            </ul>
+          </>
         )}
+
       </div>
       <div className="map-container">
         <MapContainer
           center={[latitude, longitude]}
           zoom={13}
           style={{ height: "300px", width: "100%" }}
+          ref={mapRef}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {events.map((event, index) => (
@@ -319,7 +344,7 @@ function MapScreen() {
       )}
       
       <div>
-        <h3>Weather Information</h3>
+        <h3>Weather Information for {locationName}</h3>
         {weather ? (
           <div>
             <div><b>Temperature: </b> {weather.temperature}°C</div>
