@@ -1,6 +1,7 @@
 // backend/controllers/eventController.js
 
 import db from '../config/db.js';
+import { addNotification } from './notificationController.js';
 
 export const createEvent = async (req, res) => {
     const {
@@ -196,6 +197,23 @@ export const toggleEventParticipation = async (req, res) => {
                 'INSERT INTO User_Events (user_id, event_id, status) VALUES (?, ?, ?)',
                 [user_id, event_id, status]
             );
+
+            // Notify the event creator if a user joins
+            if (status === 'Going') {
+                const [[event]] = await db.query(
+                    'SELECT event_name, user_id FROM Events WHERE event_id = ?',
+                    [event_id]
+                );
+
+                const [[user]] = await db.query(
+                    'SELECT username FROM Users WHERE user_id = ?',
+                    [user_id]
+                );
+
+                const message = `${user.username} has joined your event "${event.event_name}".`;
+
+                await addNotification(event.creator_id, message, 'Event Reminder');
+            }
         }
 
         res.status(200).json({ message: 'Participation status updated successfully' });
@@ -212,7 +230,7 @@ export const fetchEventWithParticipants = async (req, res) => {
 
     try {
         const [event] = await db.query(
-            `SELECT e.*, u.username AS creator 
+            `SELECT e.*, u.username AS creator, u.profile_picture AS creator_profile_picture
             FROM Events e 
             JOIN Users u ON e.user_id = u.user_id 
             WHERE e.event_id = ?`,
@@ -224,7 +242,7 @@ export const fetchEventWithParticipants = async (req, res) => {
         }
 
         const [participants] = await db.query(
-            `SELECT u.user_id, u.username 
+            `SELECT u.user_id, u.username, u.profile_picture 
             FROM User_Events ue 
             JOIN Users u ON ue.user_id = u.user_id 
             WHERE ue.event_id = ? AND ue.status = 'Going'`,

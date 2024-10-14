@@ -8,7 +8,7 @@ import { MdPersonSearch } from "react-icons/md";
 import { IoCreateOutline } from "react-icons/io5";
 import BottomNavBar from '../../Components/BottomNavBar/BottomNavBar';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 
 // Import static images
 import Cycling_1 from '../../assets/Picture/Event/Cycling_1.webp';
@@ -26,9 +26,6 @@ import Jogging_2 from '../../assets/Picture/Event/Jogging_2.webp';
 import Jogging_3 from '../../assets/Picture/Event/Jogging_3.webp';
 import Jogging_4 from '../../assets/Picture/Event/Jogging_4.webp';
 
-// Backend API URL
-const apiUrl = process.env.VITE_BACKEND_URL;
-
 interface Event {
   event_id: number;
   event_name: string;
@@ -45,7 +42,7 @@ function EventPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.post(`${apiUrl}/api/events/10events`, {});
+        const response = await axios.post(`/api/events/10events`, {});
         setEvents(response.data.events);
       } catch (error) {
         console.error('Error fetching events:', error);

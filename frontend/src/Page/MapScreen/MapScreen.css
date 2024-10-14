@@ -1,5 +1,4 @@
-/* frontend\src\Page\MapScreen\MapScreen.css */
-
+/* Ensure the map screen fills the entire viewport */
 .mapscreen-container {
   display: flex;
   flex-direction: column;
@@ -10,10 +9,12 @@
   padding: 0;
 }
 
+/* Map container settings */
 .mapscreen-container .map-container {
   position: relative;
   width: 100%;
   height: 300px;  /* Fixed height for the map */
+  z-index: 1; /* Lower z-index to prevent overlap */
 }
 
 .mapscreen-container .map-container iframe,
@@ -21,13 +22,14 @@
   height: 100%;
 }
 
+/* Header styling */
 .mapscreen-container .header {
   display: flex;
   align-items: center;                /* Vertically centers items */
   justify-content: space-between;     /* Distributes space between items */
   width: 100%;                        /* Ensures header takes full width */
-  padding: 10px;                     /* Adds padding to the header */
-  position: relative;                 /* Allows for absolute positioning of back button */
+  padding: 10px;                      /* Adds padding to the header */
+  position: relative;                 /* Allows for absolute positioning */
 }
 
 .mapscreen-container .back {
@@ -37,29 +39,32 @@
 
 .mapscreen-container h2 {
   font-size: 24px;
-  margin: 0;                         /* Remove default margin for better centering */
+  margin: 0;                         /* Remove default margin */
   text-align: center;                /* Center h2 text */
   flex-grow: 1;                      /* Allows h2 to take up remaining space */
 }
 
+/* Search container styling */
 .mapscreen-container .search-container {
   display: flex;
-  flex-direction: row; /* Change to row to align items horizontally */
+  flex-direction: row; /* Align items horizontally */
   align-items: center; /* Center items vertically */
+  position: relative; /* Ensure suggestions stay within this container */
   width: 100%;
-  margin-bottom: 10px; /* Space below */
+  margin-bottom: 10px; /* Add space below */
+  z-index: 2; /* Ensure it’s above the map */
 }
 
+/* Search form input and button */
 .mapscreen-container .search-form {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 400px; /* Adjust if necessary */
+  max-width: 400px;
 }
 
 .mapscreen-container .search-input {
-  flex-grow: 1; /* Allows the input to take up remaining space */
-  padding: 10px;
+  flex-grow: 1;
   border: 1px solid #ccc;
   border-radius: 4px 0 0 4px; /* Rounded corners for the input */
   font-size: 16px;
@@ -70,14 +75,13 @@
 .mapscreen-container .search-button {
   background-color: #48AEE1;
   border: none;
-  padding: 0 16px; /* Horizontal padding */
-  border-radius: 0 4px 4px 0; /* Rounded corners for button */
+  padding: 0 16px;
+  border-radius: 0 4px 4px 0;
   cursor: pointer;
   height: 40px; /* Consistent height */
-  display: flex; /* Center content */
+  display: flex;
   align-items: center;
 }
-
 
 .mapscreen-container .search-button:hover {
   background-color: #2C425A;
@@ -91,10 +95,9 @@
 /* Suggestions dropdown styling */
 .mapscreen-container .suggestions-list {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 5px); /* Slight gap below the input field */
   left: 0;
-  z-index: 1000;
-  width: 100%;
+  width: 100%; /* Match the search container width */
   max-width: 400px;
   background-color: white;
   border: 1px solid #ccc;
@@ -102,18 +105,23 @@
   max-height: 150px;
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensure it stays above the map */
 }
 
+/* Individual suggestion items */
 .mapscreen-container .suggestions-list li {
   padding: 10px;
   cursor: pointer;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mapscreen-container .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
 
-/* Weather Info Styling */
+/* Weather information styling */
 .mapscreen-container .weather-info {
   display: flex;
   align-items: center;
@@ -125,7 +133,7 @@
   margin-left: 8px;
 }
 
-/* Attribution Styling */
+/* Attribution styling */
 .mapscreen-container .attribution {
   font-size: 8px;
   text-align: center;
@@ -142,24 +150,42 @@
   text-decoration: underline;
 }
 
-/* Center Button Styling */
+/* Styling for the div wrapping the button */
 .mapscreen-container .center-button {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  background-color: #fff;
-  border: 2px solid #48AEE1;
+  display: flex; /* Align icon properly inside the button */
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff !important; /* Ensure white background */
+  border: 2px solid #48AEE1 !important; /* Force border color */
   border-radius: 50%;
-  padding: 10px;
+  padding: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   cursor: pointer;
-  z-index: 1000;
+  z-index: 1000; /* Ensure it stays on top */
 }
 
+/* Button styling */
+.mapscreen-container .center-button button {
+  background: transparent; /* Remove default button background */
+  border: none; /* Remove default button border */
+  padding: 0; /* Remove extra padding */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Center button hover effect */
 .mapscreen-container .center-button:hover {
-  background-color: #f0f0f0;
+  background-color: #5ab2de; /* Lighter blue on hover */
 }
 
-.mapscreen-container .center-button svg {
-  color: #48AEE1;
+/* SVG Icon styling */
+.mapscreen-container .center-button button svg {
+  color: #2C425A !important; /* Force dark color */
+  width: 24px;
+  height: 24px;
 }

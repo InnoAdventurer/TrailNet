@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import './ProfilePage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import image404 from '../../assets/Picture/image404.webp'; // Placeholder image
 
 // Import profile icons
@@ -14,8 +14,6 @@ import icon3 from '../../assets/Picture/Icon/icon_3.png';
 import icon4 from '../../assets/Picture/Icon/icon_4.png';
 import icon5 from '../../assets/Picture/Icon/icon_5.png';
 import icon6 from '../../assets/Picture/Icon/icon_6.png';
-
-const apiUrl = process.env.VITE_BACKEND_URL;
 
 const iconMap = {
   '/frontend/src/assets/Picture/Icon/icon_1.png': icon1,
@@ -41,17 +39,12 @@ function ProfilePage() {
   useEffect(() => {
     const fetchUserDataAndPosts = async () => {
       try {
-        const token = localStorage.getItem('authToken');
-        if (!token) throw new Error('No auth token found');
-
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-
         // Fetch user data
-        const userResponse = await axios.post(`${apiUrl}/api/profile/fetch`, {}, config);
+        const userResponse = await axios.post(`/api/profile/fetch`, {});
         setUserData(userResponse.data);
 
         // Fetch user posts
-        const postResponse = await axios.get(`${apiUrl}/api/posts/user-posts`, config);
+        const postResponse = await axios.get(`/api/posts/user-posts`);
         setPosts(postResponse.data.posts);
 
         if (postResponse.data.posts.length === 0) {

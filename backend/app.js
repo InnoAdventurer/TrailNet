@@ -12,6 +12,8 @@ import mapRoutes from './routes/mapRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import friendRoutes from './routes/friendRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+import emergencyRoutes from './routes/emergencyRoutes.js';
 
 const app = express();
 
@@ -58,6 +60,12 @@ app.use('/api/posts', postRoutes);
 
 // Friend related routes
 app.use('/api/friends', friendRoutes); 
+
+// Notification related routes
+app.use('/api/noti', notificationRoutes); 
+
+// Register emergency routes
+app.use('/api/emergency', emergencyRoutes); 
 
 // Route to handle OAuth2 callback
 app.get('/oauth2callback', handleOAuth2Callback);

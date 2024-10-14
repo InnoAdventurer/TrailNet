@@ -182,3 +182,31 @@
 .joineventpage3-container .event-detail-creator svg {
   margin-right: 5px;
 }
+
+/* Styling for the creator profile picture */
+.creator-profile-picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 10%;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/* Styling for participants */
+.participant {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.participant-profile-picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.icon {
+  font-size: 26px;
+  color: #333; /* Default icon color */
+}

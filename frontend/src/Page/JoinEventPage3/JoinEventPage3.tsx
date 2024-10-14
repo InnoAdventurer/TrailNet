@@ -6,7 +6,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { FaRegCalendarCheck } from "react-icons/fa6";
 import { PiMapPinArea } from "react-icons/pi";
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import { IoMdPerson } from "react-icons/io";
 
 // Import event images
@@ -25,7 +25,22 @@ import Jogging_2 from '../../assets/Picture/Event/Jogging_2.webp';
 import Jogging_3 from '../../assets/Picture/Event/Jogging_3.webp';
 import Jogging_4 from '../../assets/Picture/Event/Jogging_4.webp';
 
-const apiUrl = process.env.VITE_BACKEND_URL;
+// Import profile icons
+import icon1 from '../../assets/Picture/Icon/icon_1.png';
+import icon2 from '../../assets/Picture/Icon/icon_2.png';
+import icon3 from '../../assets/Picture/Icon/icon_3.png';
+import icon4 from '../../assets/Picture/Icon/icon_4.png';
+import icon5 from '../../assets/Picture/Icon/icon_5.png';
+import icon6 from '../../assets/Picture/Icon/icon_6.png';
+
+const iconMap = {
+  '/frontend/src/assets/Picture/Icon/icon_1.png': icon1,
+  '/frontend/src/assets/Picture/Icon/icon_2.png': icon2,
+  '/frontend/src/assets/Picture/Icon/icon_3.png': icon3,
+  '/frontend/src/assets/Picture/Icon/icon_4.png': icon4,
+  '/frontend/src/assets/Picture/Icon/icon_5.png': icon5,
+  '/frontend/src/assets/Picture/Icon/icon_6.png': icon6,
+};
 
 interface Event {
   event_id: number;
@@ -34,7 +49,8 @@ interface Event {
   location: string;
   activity_type: string;
   creator: string;
-  privacy: string; // Added privacy property
+  creator_profile_picture: string;
+  privacy: string;
 }
 
 function JoinEventPage3() {
@@ -50,12 +66,7 @@ function JoinEventPage3() {
 
   const fetchEventData = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) throw new Error('No auth token found');
-
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-
-      const response = await axios.get(`${apiUrl}/api/events/${id}`, config);
+      const response = await axios.get(`/api/events/${id}`);
       const { event, participants, userParticipation } = response.data;
 
       setEvent(event[0]);
@@ -67,13 +78,14 @@ function JoinEventPage3() {
     }
   };
 
+  const getProfilePicture = (picturePath: string) => {
+    return iconMap[picturePath as keyof typeof iconMap] || icon1;
+  };  
+
   const toggleParticipation = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-
       const newStatus = status === 'Going' ? 'Not Going' : 'Going';
-      await axios.post(`${apiUrl}/api/events/toggle-participation`, { event_id: id, status: newStatus }, config);
+      await axios.post(`/api/events/toggle-participation`, { event_id: id, status: newStatus });
 
       setStatus(newStatus);  // Update the status locally
       fetchEventData();  // Refetch event data, including participants
@@ -98,7 +110,14 @@ function JoinEventPage3() {
 
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
-    return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    return date.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true, // Use 24-hour format; set to true for 12-hour format with AM/PM
+    });
   };
 
   const getPrivacyLabel = (privacy: string) => {
@@ -125,13 +144,30 @@ function JoinEventPage3() {
       </div>
 
       <div className="event-details-container">
-        <img src={getEventPicture(event!.activity_type, event!.event_id)} alt={event!.event_name} className="event-detail-image" />
+        <img
+          src={getEventPicture(event!.activity_type, event!.event_id)}
+          alt={event!.event_name}
+          className="event-detail-image"
+        />
         <div className="event-detail-info">
-          <h2 className="event-detail-name">{event!.event_name}</h2>
-          <p className="event-detail-creator">Created by: {event!.creator}</p>
-          <p className="event-detail-date"><FaRegCalendarCheck /> {formatDate(event!.event_date)}</p>
-          <p className="event-detail-location"><PiMapPinArea /> {event!.location}</p>
-          <p className="event-detail-privacy"><IoMdPerson /> {getPrivacyLabel(event!.privacy)}</p>
+          <div className="creator-info">
+            <p>Created by 
+              <img
+                src={getProfilePicture(event!.creator_profile_picture)}
+                alt={event!.creator}
+                className="creator-profile-picture"
+              />
+              {event!.creator}</p>
+          </div>
+          <p className="event-detail-date">
+            <FaRegCalendarCheck className="icon" /> {formatDate(event!.event_date)}
+          </p>
+          <p className="event-detail-location">
+            <PiMapPinArea className="icon" /> {event!.location}
+          </p>
+          <p className="event-detail-privacy">
+            <IoMdPerson className="icon" /> {getPrivacyLabel(event!.privacy)}
+          </p>
           <button onClick={toggleParticipation}>
             {status === 'Going' ? 'Revoke Join' : 'Join Event'}
           </button>
@@ -144,7 +180,14 @@ function JoinEventPage3() {
           <p>No participants yet.</p>
         ) : (
           participants.map((participant) => (
-            <div key={participant.user_id}>{participant.username}</div>
+            <div className="participant" key={participant.user_id}>
+              <img
+                src={getProfilePicture(participant.profile_picture)}
+                alt={participant.username}
+                className="participant-profile-picture"
+              />
+              <span>{participant.username}</span>
+            </div>
           ))
         )}
       </div>

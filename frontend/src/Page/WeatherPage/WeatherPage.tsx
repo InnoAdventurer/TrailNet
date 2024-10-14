@@ -4,10 +4,8 @@ import './WeatherPage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import { ErrorContext } from '../../contexts/ErrorContext'; // Assuming you're using ErrorContext for error handling
-
-const apiUrl = process.env.VITE_BACKEND_URL;
 
 function WeatherPage() {
   const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Corrected to start from Sunday
@@ -62,7 +60,7 @@ function WeatherPage() {
     const fetchForecast = async () => {
       try {
         if (latitude !== null && longitude !== null) {
-          const response = await axios.get(`${apiUrl}/api/weather/forecast`, {
+          const response = await axios.get(`/api/weather/forecast`, {
             params: {
               lat: latitude,
               lon: longitude,
