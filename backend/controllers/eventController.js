@@ -201,7 +201,7 @@ export const toggleEventParticipation = async (req, res) => {
             // Notify the event creator if a user joins
             if (status === 'Going') {
                 const [[event]] = await db.query(
-                    'SELECT event_name, creator_id FROM Events WHERE event_id = ?',
+                    'SELECT event_name, user_id FROM Events WHERE event_id = ?',
                     [event_id]
                 );
 
