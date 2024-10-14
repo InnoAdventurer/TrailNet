@@ -6,10 +6,11 @@ import { Link } from 'react-router-dom';
 import { CgProfile } from "react-icons/cg";
 import { CiEdit } from "react-icons/ci";
 import { TfiEmail } from "react-icons/tfi";
-import { FaPhoneAlt } from "react-icons/fa";
-import { GoPeople } from "react-icons/go";
-import { RxActivityLog } from "react-icons/rx";
 import { useState, useEffect } from 'react';
+import { PiPasswordFill } from "react-icons/pi";
+import { SlUserFollowing } from "react-icons/sl";
+import { MdFollowTheSigns } from "react-icons/md";
+
 import axios from 'axios';
 
 // Import the profile icons
@@ -22,13 +23,26 @@ import icon6 from '../../assets/Picture/Icon/icon_6.png';
 
 const apiUrl = process.env.VITE_BACKEND_URL;
 
+interface User {
+  user_id: number;
+  username: string;
+}
+
 function SettingProfile() {
   const [selectedIcon, setSelectedIcon] = useState<string>(''); // State for the selected profile icon
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State to control modal visibility
   const [isFullNameModalOpen, setIsFullNameModalOpen] = useState<boolean>(false); // State to control full name modal
   const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false); // State to control email modal
-  const [fullName, setFullName] = useState<string>(''); // State for full name input
-  const [email, setEmail] = useState<string>(''); // State for email input
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState<boolean>(false);
+  const [isFollowerModalOpen, setIsFollowerModalOpen] = useState<boolean>(false);
+  const [isFollowingModalOpen, setIsFollowingModalOpen] = useState<boolean>(false);
+  const [fullName, setFullName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [followers, setFollowers] = useState<User[]>([]);
+  const [following, setFollowing] = useState<User[]>([]);
   const [success, setSuccess] = useState<string>(''); // Handle success message
   const [loading, setLoading] = useState<boolean>(true); // Loading state for initial data fetch
   const [error, setError] = useState<string | null>(null); // Error state
@@ -102,6 +116,50 @@ function SettingProfile() {
       console.error('Error updating Email:', error);
     }
   };
+
+  // Function to handle password update
+  const handleSubmitPassword = async () => {
+    if (password !== confirmPassword) {
+      setPasswordError('Passwords do not match.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${apiUrl}/api/profile/update-password`, {
+        password,
+      });
+
+      if (response.status === 200) {
+        alert('Password updated successfully');
+        setIsPasswordModalOpen(false);
+      }
+    } catch (error) {
+      console.error('Error updating password:', error);
+    }
+  };
+
+  const fetchFollowers = async () => {
+    try {
+      const response = await axios.get<User[]>(`${apiUrl}/api/profile/followers`);
+      setFollowers(response.data);
+    } catch (error) {
+      console.error('Error fetching followers:', error);
+    }
+  };
+
+  const fetchFollowing = async () => {
+    try {
+      const response = await axios.get<User[]>(`${apiUrl}/api/profile/following`);
+      setFollowing(response.data);
+    } catch (error) {
+      console.error('Error fetching following:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFollowers();
+    fetchFollowing();
+  }, []);
 
   return (
     <div className="settingprofile-container flex">
@@ -199,20 +257,77 @@ function SettingProfile() {
           </div>
         </div>
       )}
+      
+      {/* Password Display */}
+      <div className="setting" onClick={() => setIsPasswordModalOpen(true)}> {/* Opens password modal on click */}
+        <PiPasswordFill className="icon" />
+        <div>Password</div>
+      </div>
 
-      {/* Other settings */}
-      <div className="setting">
-        <FaPhoneAlt className="icon" />
-        <div>Contact Number</div>
+      {/* Modal for password update */}
+      {isPasswordModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <input
+              type="password"
+              placeholder="New Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="modal-input"
+            />
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="modal-input"
+            />
+            {passwordError && <p className="error">{passwordError}</p>}
+            <button className="btn" onClick={handleSubmitPassword}>Submit</button>
+            <button className="btn" onClick={() => setIsPasswordModalOpen(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {/* Follower Display */}
+      <div className="setting" onClick={() => setIsFollowerModalOpen(true)}> {/* Opens follower modal on click */}
+        <SlUserFollowing className="icon" />
+        <div>Follower Network</div>
       </div>
-      <div className="setting">
-        <GoPeople className="icon" />
-        <div>Friend Network</div>
+
+      {/* Modal for showing followers */}
+      {isFollowerModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Your Followers</h3>
+            <ul>
+              {followers.map((follower) => (
+                <li key={follower.user_id}>{follower.username}</li>
+              ))}
+            </ul>
+            <button className="btn" onClick={() => setIsFollowerModalOpen(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
+      <div className="setting" onClick={() => setIsFollowingModalOpen(true)}> {/* Opens following modal on click */}
+        <MdFollowTheSigns className="icon" />
+        <div>Following Network</div>
       </div>
-      <div className="setting">
-        <RxActivityLog className="icon" />
-        <div>Activities</div>
-      </div>
+
+      {isFollowingModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Your Following</h3>
+            <ul>
+              {following.map((followed) => (
+                <li key={followed.user_id}>{followed.username}</li>
+              ))}
+            </ul>
+            <button className="btn" onClick={() => setIsFollowingModalOpen(false)}>Close</button>
+          </div>
+        </div>
+      )}
 
       {success && <div className="success-message">{success}</div>}
 

@@ -1,5 +1,6 @@
 // backend/controllers/profileController.js
 
+import bcrypt from 'bcryptjs';
 import db from '../config/db.js';
 
 // Update user's profile picture
@@ -69,6 +70,62 @@ export const fetchUserInfo = async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching user info:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Update password
+export const updatePassword = async (req, res) => {
+    const { password } = req.body;
+    const userId = req.user.id; // Get user ID from auth middleware
+
+    try {
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Update the password in the database
+        await db.query('UPDATE Users SET password_hash = ? WHERE user_id = ?', [hashedPassword, userId]);
+
+        res.status(200).json({ message: 'Password updated successfully' });
+        console.log('Password updated successfully for user:', userId); // Log success
+    } catch (error) {
+        console.error('Error updating password:', error); // Log error
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Fetch followers
+export const fetchFollowers = async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        const [followers] = await db.query(`
+            SELECT u.user_id, u.username FROM Friends f
+            JOIN Users u ON f.user_id_1 = u.user_id
+            WHERE f.user_id_2 = ? AND f.status = 'Accepted'
+        `, [userId]);
+
+        res.status(200).json(followers);
+    } catch (error) {
+        console.error('Error fetching followers:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Fetch following
+export const fetchFollowing = async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        const [following] = await db.query(`
+            SELECT u.user_id, u.username FROM Friends f
+            JOIN Users u ON f.user_id_2 = u.user_id
+            WHERE f.user_id_1 = ? AND f.status = 'Accepted'
+        `, [userId]);
+
+        res.status(200).json(following);
+    } catch (error) {
+        console.error('Error fetching following:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
