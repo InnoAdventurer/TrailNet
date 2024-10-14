@@ -212,7 +212,7 @@ export const fetchEventWithParticipants = async (req, res) => {
 
     try {
         const [event] = await db.query(
-            `SELECT e.*, u.username AS creator 
+            `SELECT e.*, u.username AS creator, u.profile_picture AS creator_profile_picture
             FROM Events e 
             JOIN Users u ON e.user_id = u.user_id 
             WHERE e.event_id = ?`,
@@ -224,7 +224,7 @@ export const fetchEventWithParticipants = async (req, res) => {
         }
 
         const [participants] = await db.query(
-            `SELECT u.user_id, u.username 
+            `SELECT u.user_id, u.username, u.profile_picture 
             FROM User_Events ue 
             JOIN Users u ON ue.user_id = u.user_id 
             WHERE ue.event_id = ? AND ue.status = 'Going'`,

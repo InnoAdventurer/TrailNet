@@ -25,7 +25,24 @@ import Jogging_2 from '../../assets/Picture/Event/Jogging_2.webp';
 import Jogging_3 from '../../assets/Picture/Event/Jogging_3.webp';
 import Jogging_4 from '../../assets/Picture/Event/Jogging_4.webp';
 
+// Import profile icons
+import icon1 from '../../assets/Picture/Icon/icon_1.png';
+import icon2 from '../../assets/Picture/Icon/icon_2.png';
+import icon3 from '../../assets/Picture/Icon/icon_3.png';
+import icon4 from '../../assets/Picture/Icon/icon_4.png';
+import icon5 from '../../assets/Picture/Icon/icon_5.png';
+import icon6 from '../../assets/Picture/Icon/icon_6.png';
+
 const apiUrl = process.env.VITE_BACKEND_URL;
+
+const iconMap = {
+  '/frontend/src/assets/Picture/Icon/icon_1.png': icon1,
+  '/frontend/src/assets/Picture/Icon/icon_2.png': icon2,
+  '/frontend/src/assets/Picture/Icon/icon_3.png': icon3,
+  '/frontend/src/assets/Picture/Icon/icon_4.png': icon4,
+  '/frontend/src/assets/Picture/Icon/icon_5.png': icon5,
+  '/frontend/src/assets/Picture/Icon/icon_6.png': icon6,
+};
 
 interface Event {
   event_id: number;
@@ -34,7 +51,8 @@ interface Event {
   location: string;
   activity_type: string;
   creator: string;
-  privacy: string; // Added privacy property
+  creator_profile_picture: string;
+  privacy: string;
 }
 
 function JoinEventPage3() {
@@ -66,6 +84,10 @@ function JoinEventPage3() {
       console.error('Error fetching event:', error);
     }
   };
+
+  const getProfilePicture = (picturePath: string) => {
+    return iconMap[picturePath as keyof typeof iconMap] || icon1;
+  };  
 
   const toggleParticipation = async () => {
     try {
@@ -125,13 +147,30 @@ function JoinEventPage3() {
       </div>
 
       <div className="event-details-container">
-        <img src={getEventPicture(event!.activity_type, event!.event_id)} alt={event!.event_name} className="event-detail-image" />
+        <img
+          src={getEventPicture(event!.activity_type, event!.event_id)}
+          alt={event!.event_name}
+          className="event-detail-image"
+        />
         <div className="event-detail-info">
-          <h2 className="event-detail-name">{event!.event_name}</h2>
-          <p className="event-detail-creator">Created by: {event!.creator}</p>
-          <p className="event-detail-date"><FaRegCalendarCheck /> {formatDate(event!.event_date)}</p>
-          <p className="event-detail-location"><PiMapPinArea /> {event!.location}</p>
-          <p className="event-detail-privacy"><IoMdPerson /> {getPrivacyLabel(event!.privacy)}</p>
+          <div className="creator-info">
+            <p>Created by 
+              <img
+                src={getProfilePicture(event!.creator_profile_picture)}
+                alt={event!.creator}
+                className="creator-profile-picture"
+              />
+              {event!.creator}</p>
+          </div>
+          <p className="event-detail-date">
+            <FaRegCalendarCheck /> {formatDate(event!.event_date)}
+          </p>
+          <p className="event-detail-location">
+            <PiMapPinArea /> {event!.location}
+          </p>
+          <p className="event-detail-privacy">
+            <IoMdPerson /> {getPrivacyLabel(event!.privacy)}
+          </p>
           <button onClick={toggleParticipation}>
             {status === 'Going' ? 'Revoke Join' : 'Join Event'}
           </button>
@@ -144,7 +183,14 @@ function JoinEventPage3() {
           <p>No participants yet.</p>
         ) : (
           participants.map((participant) => (
-            <div key={participant.user_id}>{participant.username}</div>
+            <div className="participant" key={participant.user_id}>
+              <img
+                src={getProfilePicture(participant.profile_picture)}
+                alt={participant.username}
+                className="participant-profile-picture"
+              />
+              <span>{participant.username}</span>
+            </div>
           ))
         )}
       </div>
