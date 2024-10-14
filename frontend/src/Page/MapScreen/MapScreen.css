@@ -150,24 +150,42 @@
   text-decoration: underline;
 }
 
-/* Center button styling */
+/* Styling for the div wrapping the button */
 .mapscreen-container .center-button {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  background-color: #fff;
-  border: 2px solid #48AEE1;
+  display: flex; /* Align icon properly inside the button */
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff !important; /* Ensure white background */
+  border: 2px solid #48AEE1 !important; /* Force border color */
   border-radius: 50%;
-  padding: 10px;
+  padding: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   z-index: 1000; /* Ensure it stays on top */
 }
 
-.mapscreen-container .center-button:hover {
-  background-color: #f0f0f0;
+/* Button styling */
+.mapscreen-container .center-button button {
+  background: transparent; /* Remove default button background */
+  border: none; /* Remove default button border */
+  padding: 0; /* Remove extra padding */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.mapscreen-container .center-button svg {
-  color: #48AEE1;
+/* Center button hover effect */
+.mapscreen-container .center-button:hover {
+  background-color: #5ab2de; /* Lighter blue on hover */
+}
+
+/* SVG Icon styling */
+.mapscreen-container .center-button button svg {
+  color: #2C425A !important; /* Force dark color */
+  width: 24px;
+  height: 24px;
 }
