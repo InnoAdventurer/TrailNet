@@ -85,9 +85,15 @@ function EmergencyScreen() {
 
   const handleContactHelp = () => {
     if (!contactNumber) {
-      setError('Emergency contact not available.');
+      const confirmed = window.confirm(
+        'No emergency contact is set. Would you like to call 000 instead?'
+      );
+      if (confirmed) {
+        window.location.href = 'tel:000';
+      }
       return;
     }
+  
     const confirmed = window.confirm(
       `You are about to call your emergency contact: ${contactName}. Proceed?`
     );
