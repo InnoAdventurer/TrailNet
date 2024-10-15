@@ -76,7 +76,7 @@ function TopNavBar() {
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     setShowLogoutMessage(true);
-    setTimeout(() => navigate('/'), 3000);
+    setTimeout(() => navigate('/'), 1000);
   };
 
   useEffect(() => {
