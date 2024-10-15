@@ -1,6 +1,6 @@
 // frontend/src/Components/TopNavBar/TopNavBar.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './TopNavBar.css';
 import { IoIosWarning, IoIosLogOut, IoMdClose } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -24,6 +24,7 @@ function TopNavBar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutMessage, setShowLogoutMessage] = useState(false);
   const navigate = useNavigate();
+  const markReadTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Ref to track timeout
 
   const fetchNotifications = async () => {
     try {
@@ -34,28 +35,38 @@ function TopNavBar() {
     }
   };
 
-  const markAsRead = async (notification_id: number) => {
+  // Mark notification as read
+  const markAllAsRead = async () => {
     try {
-      await axios.patch(`/api/noti/markAsRead`);
-
+      await axios.patch(`/api/noti/markAllAsRead`);
       setNotifications((prev) =>
-        prev.map((noti) =>
-          noti.notification_id === notification_id ? { ...noti, is_read: true } : noti
-        )
+        prev.map((noti) => ({ ...noti, is_read: true }))
       );
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      console.error('Error marking all notifications as read:', error);
     }
   };
 
-  const handleNotificationOpen = (notification_id: number) => {
-    setTimeout(() => markAsRead(notification_id), 1000);
+  const handleBellClick = () => {
+    const newState = !showNotifications;
+    setShowNotifications(newState);
+
+    if (newState) {
+      fetchNotifications();
+
+      // Clear existing timeout to prevent redundant reads
+      if (markReadTimeoutRef.current) clearTimeout(markReadTimeoutRef.current);
+
+      // Mark all notifications as read after 3 seconds
+      markReadTimeoutRef.current = setTimeout(() => {
+        markAllAsRead();
+      }, 3000);
+    }
   };
 
   const deleteNotification = async (notification_id: number) => {
     try {
       await axios.delete(`/api/noti/delete/${notification_id}`);
-
       setNotifications((prev) =>
         prev.filter((noti) => noti.notification_id !== notification_id)
       );
@@ -63,15 +74,6 @@ function TopNavBar() {
       console.error('Error deleting notification:', error);
     }
   };
-
-  const handleBellClick = () => {
-    setShowNotifications(!showNotifications);
-    if (!showNotifications) {
-      fetchNotifications();
-    }
-  };
-
-  const hasUnreadNotifications = notifications.some((notification) => !notification.is_read);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
@@ -88,6 +90,8 @@ function TopNavBar() {
     const localDate = toDate(timestamp, { timeZone: userTimeZone });
     return formatDistanceToNow(localDate, { addSuffix: true });
   };
+
+  const hasUnreadNotifications = notifications.some((notification) => !notification.is_read);
 
   return (
     <div className="topnavbar-container">
@@ -110,7 +114,10 @@ function TopNavBar() {
             ) : (
               <ul>
                 {notifications.map((notification) => (
-                  <li key={notification.notification_id} onMouseEnter={() => handleNotificationOpen(notification.notification_id)}>
+                  <li
+                    key={notification.notification_id}
+                    className={notification.is_read ? 'read' : ''}
+                  >
                     <div className="notification-content">
                       <span>{notification.message}</span>
                       <span className="notification-time">

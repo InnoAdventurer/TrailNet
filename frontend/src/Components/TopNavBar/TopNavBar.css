@@ -152,3 +152,24 @@
   font-size: 8px;
   margin-left: 10px;
 }
+
+/* Gray out read notifications */
+.notification-popup li.read {
+  background-color: #f0f0f0;
+  color: gray;
+}
+
+.notification-popup li.read .notification-time {
+  color: lightgray;
+}
+
+/* Ensure the notification stays clickable */
+.notification-popup li {
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.notification-popup li:last-child {
+  border-bottom: none;
+}
