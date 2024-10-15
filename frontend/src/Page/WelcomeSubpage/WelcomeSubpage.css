@@ -1,18 +1,24 @@
 /* frontend\src\Page\WelcomeSubpage\WelcomeSubpage.css */
 
+/* Ensure the container fills the entire viewport */
 .welcomesubpage-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Center content horizontally */
+    align-items: center;     /* Center content vertically */
     flex-direction: column;
+    height: 100vh; /* Full height of the viewport */
+    margin: 0;
+    padding: 0;
 }
 
+/* Styling for the slogan */
 .welcomesubpage-slogan {
     color: #052122;
     font-weight: bold;
     font-style: italic;
     font-family: Helvetica;
     font-size: 26px;
+    text-align: center; /* Optional: Center-align text */
 }
 
 .welcomesubpage-slogan2 {
@@ -20,34 +26,47 @@
     font-style: italic;
     font-family: Helvetica;
     font-size: 18px;
+    text-align: center; /* Optional: Center-align text */
+    padding-top: 10px;
+    padding-bottom: 30px;
 }
 
-.welcomesubpage-button {
+/* Styling for the buttons */
+.login-button {
     background-color: #052122;
     color: #FFFFFF;
     border: none;
-    padding: 10px 60px;
+    width: 70vw;
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 5px;
 }
 
-.welcomesubpage-button2 {
+.signup-button {
+    background-color: #FFFFFF;
     border: none;
-    padding: 10px 60px;
+    width: 70vw;
     border-radius: 5px;
     cursor: pointer;
 }
 
+/* Styling for the images section */
 .welcomesubpage-images {
     display: flex;
-    flex-direction: row; /* This arranges the images horizontally */
+    flex-direction: row; /* Arrange images horizontally */
     justify-content: center;
-    gap: 20px; /* Adjust spacing between images as needed */
-    margin: 20px 0; /* Optional: Add margin around the image group */
+    gap: 20px; /* Adjust spacing between images */
+    margin: 20px 0; /* Add margin around the image group */
 }
 
 .welcomesubpage-image {
-    max-width: 100%;
+    max-width: 100%; /* Ensure images scale responsively */
     height: auto;
+}
+
+/* Optional: Prevents scrolling issues */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }

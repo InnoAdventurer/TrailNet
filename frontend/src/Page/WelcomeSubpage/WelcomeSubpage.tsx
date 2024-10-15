@@ -20,8 +20,8 @@ function WelcomeSubpage(){
 
             <p className="welcomesubpage-slogan2">Find your cycling buddy</p>
 
-            <button className="welcomesubpage-button" onClick={() => navigate("/loginpage")}>Log in</button>
-            <button className="welcomesubpage-button2" onClick={() => navigate("/signuppage")}>Sign up</button>
+            <button className="login-button" onClick={() => navigate("/loginpage")}>Log in</button>
+            <button className="signup-button" onClick={() => navigate("/signuppage")}>Sign up</button>
         </div>
     );
 }

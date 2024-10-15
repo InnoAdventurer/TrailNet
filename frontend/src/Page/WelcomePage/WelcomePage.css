@@ -5,8 +5,8 @@
     background-image: url('../../assets/Picture/homepage_1.jpg');
     background-size: cover;
     background-position: center;
-    height: 675px; 
-    width: 352px; 
+    height: 100vh; 
+    width: 100vw; 
     display: flex;
     justify-content: center;
     align-items: center;

@@ -99,7 +99,7 @@
 
 /* Input field styles inside modal (for full name, email) */
 .modal-input {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   margin-top: 10px;
   border: 1px solid #ccc;
@@ -109,7 +109,7 @@
 
 /* Button styles (OK and Cancel) */
 .btn {
-  margin-top: 10px;
+  margin: 10px;
   padding: 10px 20px;
   background-color: #48AEE1;
   color: white;

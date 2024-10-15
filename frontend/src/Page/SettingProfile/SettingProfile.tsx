@@ -298,6 +298,7 @@ function SettingProfile() {
       {isPasswordModalOpen && (
         <div className="modal">
           <div className="modal-content">
+            <h3>Enter your new password</h3>
             <input
               type="password"
               placeholder="New Password"
@@ -381,7 +382,7 @@ function SettingProfile() {
       {isFollowingModalOpen && (
         <div className="modal">
           <div className="modal-content">
-            <h3>Your Following</h3>
+            <h3>User you followed</h3>
             <ul>
               {following.map((followed) => (
                 <li key={followed.user_id}>{followed.username}</li>

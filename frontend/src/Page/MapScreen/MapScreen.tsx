@@ -1,15 +1,16 @@
 // frontend\src\Page\MapScreen\MapScreen.tsx
 
 import { useEffect, useState, useRef, useContext } from 'react';
-import axios from '../../utils/axiosInstance';
+import { Link } from 'react-router-dom';
 import './MapScreen.css';
 import { FiSearch, FiCrosshair, FiNavigation2 } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
-import { Link } from 'react-router-dom';
 import ReactDOMServer from 'react-dom/server';
+import axios from '../../utils/axiosInstance';
+import { ErrorContext } from '../../contexts/ErrorContext';
+import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { ErrorContext } from '../../contexts/ErrorContext';
 import L from 'leaflet';
 
 // Create a custom icon using react-icons
@@ -346,6 +347,7 @@ function MapScreen() {
       <div className="attribution">
         <p>Weather data provided by <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a>.</p>
       </div>
+      <BottomNavBar />
     </div>
   );
 }
