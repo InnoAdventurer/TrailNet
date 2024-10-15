@@ -25,8 +25,8 @@ import Jogging_4 from '../../assets/Picture/Event/Jogging_4.webp';
 
 // Importing date images
 import Today from '../../assets/Picture/Days/Today.webp';
-import Next7days from '../../assets/Picture/Days/Next7days.webp';
-import Over7days from '../../assets/Picture/Days/Over7days.webp';
+import Next7days from '../../assets/Picture/Days/N7Days.webp';
+import Over7days from '../../assets/Picture/Days/O7Days.webp';
 
 function JoinEventPage1() {
   const [activityType, setActivityType] = useState('Cycling');
