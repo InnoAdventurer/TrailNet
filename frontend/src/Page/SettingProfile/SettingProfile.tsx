@@ -9,7 +9,7 @@ import { TfiEmail } from "react-icons/tfi";
 import { useState, useEffect } from 'react';
 import { PiPasswordFill } from "react-icons/pi";
 import { SlUserFollowing } from "react-icons/sl";
-import { MdFollowTheSigns } from "react-icons/md";
+import { MdFollowTheSigns, MdContactEmergency } from "react-icons/md";
 
 import axios from '../../utils/axiosInstance';
 
@@ -38,9 +38,12 @@ function SettingProfile() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [emergencyContactName, setEmergencyContactName] = useState<string>('');
+  const [emergencyContactNumber, setEmergencyContactNumber] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [followers, setFollowers] = useState<User[]>([]);
   const [following, setFollowing] = useState<User[]>([]);
+  const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState<boolean>(false);
   const [success, setSuccess] = useState<string>(''); // Handle success message
   const [loading, setLoading] = useState<boolean>(true); // Loading state for initial data fetch
   const [error, setError] = useState<string | null>(null); // Error state
@@ -49,25 +52,33 @@ function SettingProfile() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.post(`/api/profile/fetch`);
-        const { username, email, profile_picture } = response.data;
-
+        const response = await axios.post('/api/profile/fetch');
+        const {
+          username,
+          email,
+          profile_picture,
+          emergency_contact_name,
+          emergency_contact_number,
+        } = response.data;
+  
         // Set the fetched values into state
         setFullName(username);
         setEmail(email);
         setSelectedIcon(profile_picture);
-
-        setLoading(false); // Stop loading when data is fetched
+        setEmergencyContactName(emergency_contact_name || '');
+        setEmergencyContactNumber(emergency_contact_number || '');
+        setLoading(false);
       } catch (err) {
         console.error('Error fetching user data:', err);
         setError('Failed to fetch user data.');
         setLoading(false);
       }
     };
-
+  
     fetchUserData();
-  }, []);  // Function to submit the selected profile picture
-
+  }, []); 
+  
+  // Function to submit the selected profile picture
   const handleSubmitProfilePicture = async () => {
     try {
       const response = await axios.post(`/api/profile/update-picture`, {
@@ -130,6 +141,11 @@ function SettingProfile() {
       if (response.status === 200) {
         alert('Password updated successfully');
         setIsPasswordModalOpen(false);
+
+        // Clear the password fields after submission
+        setPassword('');
+        setConfirmPassword('');
+        setPasswordError(null); // Clear any previous errors
       }
     } catch (error) {
       console.error('Error updating password:', error);
@@ -158,6 +174,22 @@ function SettingProfile() {
     fetchFollowers();
     fetchFollowing();
   }, []);
+
+  const handleEmergencyContactSubmit = async () => {
+    try {
+      const response = await axios.post('/api/profile/update-emergency-contact', {
+        emergency_contact_name: emergencyContactName,
+        emergency_contact_number: emergencyContactNumber,
+      });
+
+      if (response.status === 200) {
+        alert('Emergency contact updated successfully');
+        setIsEmergencyModalOpen(false); // Close modal on success
+      }
+    } catch (error) {
+      console.error('Error updating emergency contact:', error);
+    }
+  };
 
   return (
     <div className="settingprofile-container flex">
@@ -287,6 +319,37 @@ function SettingProfile() {
         </div>
       )}
 
+      {/* Emergency Contact Display */}
+      <div className="setting" onClick={() => setIsEmergencyModalOpen(true)}>
+        <MdContactEmergency className="icon" />
+        <div>Emergency Contact</div>
+      </div>
+
+      {/* Modal for Emergency Contact */}
+      {isEmergencyModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Set Emergency Contact</h3>
+            <input
+              type="text"
+              placeholder="Emergency Contact Name"
+              value={emergencyContactName}
+              onChange={(e) => setEmergencyContactName(e.target.value)}
+              className="modal-input"
+            />
+            <input
+              type="text"
+              placeholder="Emergency Contact Number"
+              value={emergencyContactNumber}
+              onChange={(e) => setEmergencyContactNumber(e.target.value)}
+              className="modal-input"
+            />
+            <button className="btn" onClick={handleEmergencyContactSubmit}>Submit</button>
+            <button className="btn" onClick={() => setIsEmergencyModalOpen(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
+
       {/* Follower Display */}
       <div className="setting" onClick={() => setIsFollowerModalOpen(true)}> {/* Opens follower modal on click */}
         <SlUserFollowing className="icon" />
@@ -308,11 +371,13 @@ function SettingProfile() {
         </div>
       )}
 
+      {/* Following Display */}
       <div className="setting" onClick={() => setIsFollowingModalOpen(true)}> {/* Opens following modal on click */}
         <MdFollowTheSigns className="icon" />
         <div>Following Network</div>
       </div>
-
+      
+      {/* Modal for showing followings */}
       {isFollowingModalOpen && (
         <div className="modal">
           <div className="modal-content">
@@ -327,6 +392,7 @@ function SettingProfile() {
         </div>
       )}
 
+      
       {success && <div className="success-message">{success}</div>}
 
     </div>

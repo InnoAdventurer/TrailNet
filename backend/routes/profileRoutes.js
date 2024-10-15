@@ -10,6 +10,7 @@ import {
     updatePassword,
     fetchFollowers,
     fetchFollowing,
+    updateEmergencyContact,
 } from '../controllers/profileController.js';
 
 const router = Router();
@@ -21,5 +22,6 @@ router.post('/fetch', authMiddleware, fetchUserInfo);
 router.post('/update-password', authMiddleware, updatePassword);
 router.get('/followers', authMiddleware, fetchFollowers);
 router.get('/following', authMiddleware, fetchFollowing);
+router.post('/update-emergency-contact', authMiddleware, updateEmergencyContact);
 
 export default router;

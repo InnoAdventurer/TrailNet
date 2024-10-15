@@ -7,6 +7,8 @@ CREATE TABLE Users (
     password_hash VARCHAR(255) NOT NULL,
     profile_picture VARCHAR(255),
     bio TEXT,
+    emergency_contact_name VARCHAR(100),
+    emergency_contact_number VARCHAR(15)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

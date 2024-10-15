@@ -73,13 +73,15 @@ export const fetchProfilePosts = async (req, res) => {
     const userId = req.user.id; // Extract userId from the authenticated user
 
     try {
-        const [posts] = await db.query(
-            `SELECT post_id, content, event_id, created_at, image_blob, privacy 
-             FROM Posts 
-             WHERE user_id = ?
-             ORDER BY created_at DESC`,
-            [userId]
-        );
+        const [posts] = await db.query(`
+            SELECT 
+                p.post_id, p.content, p.created_at, p.image_blob, p.privacy,
+                (SELECT COUNT(*) FROM Likes WHERE post_id = p.post_id) AS likeCount,
+                EXISTS (SELECT 1 FROM Likes WHERE post_id = p.post_id AND user_id = ?) AS liked
+            FROM Posts p
+            WHERE p.user_id = ?
+            ORDER BY p.created_at DESC
+        `, [userId, userId]);
 
         const processedPosts = posts.map((post) => {
             const base64Image = post.image_blob
@@ -89,20 +91,17 @@ export const fetchProfilePosts = async (req, res) => {
             return {
                 post_id: post.post_id,
                 content: post.content,
-                event_id: post.event_id,
                 created_at: post.created_at,
                 image_blob: base64Image,
                 privacy: privacyMap[post.privacy],
+                likeCount: post.likeCount,
+                liked: !!post.liked, // Ensure liked is a boolean
             };
         });
 
-        // Respond with posts, or an empty array if no posts are found
-        res.status(200).json({
-            message: posts.length > 0 ? 'Posts retrieved successfully' : 'No posts found for this user.',
-            posts: processedPosts,
-        });
+        res.status(200).json({ posts: processedPosts });
     } catch (error) {
-        console.error('Error fetching user posts:', error); // Log any errors
+        console.error('Error fetching user posts:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
@@ -114,8 +113,10 @@ export const fetchHomePagePosts = async (req, res) => {
     try {
         const query = `
             SELECT 
-                p.post_id, p.content, p.event_id, p.created_at, p.image_blob, p.privacy, 
+                p.post_id, p.content, p.created_at, p.image_blob, p.privacy, 
                 u.user_id AS post_owner_id, u.username, u.profile_picture,
+                (SELECT COUNT(*) FROM Likes WHERE post_id = p.post_id) AS likeCount,
+                EXISTS (SELECT 1 FROM Likes WHERE post_id = p.post_id AND user_id = ?) AS liked,
                 CASE 
                     WHEN f.user_id_2 IS NOT NULL THEN TRUE
                     ELSE FALSE 
@@ -134,11 +135,7 @@ export const fetchHomePagePosts = async (req, res) => {
             ORDER BY p.created_at DESC
         `;
 
-        const [posts] = await db.query(query, [userId, userId, userId]);
-
-        if (!posts || posts.length === 0) {
-            return res.status(404).json({ message: 'No posts available.' });
-        }
+        const [posts] = await db.query(query, [userId, userId, userId, userId]);
 
         const processedPosts = posts.map(post => {
             const base64Image = post.image_blob
@@ -148,15 +145,16 @@ export const fetchHomePagePosts = async (req, res) => {
             return {
                 post_id: post.post_id,
                 content: post.content,
-                event_id: post.event_id,
                 created_at: post.created_at,
                 image_blob: base64Image,
                 privacy: privacyMap[post.privacy],
                 username: post.username,
                 profile_picture: post.profile_picture,
-                post_owner_id: post.post_owner_id, // Include post_owner_id in the response
+                post_owner_id: post.post_owner_id,
+                current_user_id: userId,
                 isFollowing: !!post.isFollowing,
-                current_user_id: userId, // Add the current user's ID to the response
+                likeCount: post.likeCount,
+                liked: !!post.liked, // Ensure liked is a boolean
             };
         });
 
@@ -164,5 +162,110 @@ export const fetchHomePagePosts = async (req, res) => {
     } catch (error) {
         console.error('Error fetching home page posts:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Utility function to shorten the post caption
+const shortenCaption = (caption, maxLength = 30) => {
+    if (caption.length > maxLength) {
+        return caption.substring(0, maxLength) + '...';
+    }
+    return caption;
+};
+
+// Like a post and send notification with username and shortened caption
+export const likePost = async (req, res) => {
+    const { post_id } = req.body;
+    const user_id = req.user.id;
+
+    try {
+        // Insert the like entry
+        await db.query(
+            'INSERT INTO Likes (user_id, post_id) VALUES (?, ?)',
+            [user_id, post_id]
+        );
+
+        // Fetch post owner, post caption, and username of the liker
+        const [post] = await db.query('SELECT user_id, content FROM Posts WHERE post_id = ?', [post_id]);
+        const [user] = await db.query('SELECT username FROM Users WHERE user_id = ?', [user_id]);
+
+        if (post.length > 0 && user.length > 0) {
+            const postOwnerId = post[0].user_id;
+            const caption = shortenCaption(post[0].content); // Truncate the caption
+            const username = user[0].username;
+
+            if (postOwnerId !== user_id) {
+                // Create a notification using the liker’s username and post caption
+                const message = `${username} liked your post: "${caption}"`;
+                await db.query(
+                    `INSERT INTO Notifications (user_id, notification_type, message, is_read) 
+                     VALUES (?, 'Like', ?, FALSE)`,
+                    [postOwnerId, message]
+                );
+            }
+        }
+
+        res.status(200).json({ message: 'Post liked and notification sent.' });
+    } catch (error) {
+        console.error('Error liking post:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Unlike a post and remove the notification with the specific post caption and username
+export const unlikePost = async (req, res) => {
+    const { post_id } = req.body;
+    const user_id = req.user.id;
+
+    try {
+        // Delete the like entry
+        await db.query(
+            'DELETE FROM Likes WHERE user_id = ? AND post_id = ?',
+            [user_id, post_id]
+        );
+
+        // Fetch the username of the user who unliked the post and post caption
+        const [user] = await db.query('SELECT username FROM Users WHERE user_id = ?', [user_id]);
+        const [post] = await db.query('SELECT content FROM Posts WHERE post_id = ?', [post_id]);
+
+        if (user.length > 0 && post.length > 0) {
+            const username = user[0].username;
+            const caption = shortenCaption(post[0].content); // Truncate the caption
+
+            const message = `${username} liked your post: "${caption}"`;
+
+            // Delete the corresponding notification
+            await db.query(
+                `DELETE FROM Notifications 
+                 WHERE user_id = (SELECT user_id FROM Posts WHERE post_id = ?)
+                 AND message = ?`,
+                [post_id, message]
+            );
+        }
+
+        res.status(200).json({ message: 'Post unliked and notification removed.' });
+    } catch (error) {
+        console.error('Error unliking post:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Fetch like count and whether user liked the post
+export const getLikesForPost = async (req, res) => {
+    const { post_id } = req.params;
+    const user_id = req.user.id;
+
+    try {
+        const [[likeData]] = await db.query(
+            `SELECT COUNT(*) AS likeCount, 
+                    EXISTS(SELECT 1 FROM Likes WHERE user_id = ? AND post_id = ?) AS liked 
+             FROM Likes 
+             WHERE post_id = ?`,
+            [user_id, post_id, post_id]
+        );
+        res.status(200).json(likeData);
+    } catch (error) {
+        console.error('Error fetching likes:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 };

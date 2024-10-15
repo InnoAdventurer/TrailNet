@@ -1,3 +1,5 @@
+/* frontend/src/Page/ProfilePage/ProfilePage.css */
+
 .profilepage-container {
     padding: 20px;
 }
@@ -80,9 +82,22 @@
     font-size: 16px;
 }
 
-    .no-posts-message {
+.no-posts-message {
     text-align: center;
     margin-top: 20px;
     font-size: 16px;
     color: #666;
+}
+
+/* Ensure that heart icons are large enough and clickable */
+.caption svg {
+    width: 24px;
+    height: 24px;
+    cursor: pointer; /* Ensure it's clickable */
+    margin-right: 5px; /* Add spacing between icon and count */
+}
+
+.caption span {
+    vertical-align: middle; /* Align the like count with the heart */
+    font-size: 16px; /* Adjust size as needed */
 }
