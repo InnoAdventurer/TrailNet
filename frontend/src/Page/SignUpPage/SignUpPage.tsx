@@ -4,7 +4,7 @@ import './SignUpPage.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import signuppage_1 from './signuppage_1.png';
+import logo from '../../assets/Picture/Logo.jpeg';
 
 // Import profile icons
 import icon1 from '../../assets/Picture/Icon/icon_1.png';
@@ -72,7 +72,7 @@ function SignUpPage() {
 
   return (
     <div className="signuppage-container flex">
-      <img src={signuppage_1} alt="icon" className="icon" />
+      <img src={logo} alt="icon" className="icon" />
 
       <div className="table flex">
         <div className="table-title">Create an Account</div>
@@ -143,11 +143,6 @@ function SignUpPage() {
 
           <button className="btn" disabled={loading}>Sign up</button> {/* Disable button while loading */}
         </form>
-      </div>
-      
-      <div>
-        <div>------------------Or------------------</div>
-        <div>Continue with Facebook</div>
       </div>
     </div>
   );
