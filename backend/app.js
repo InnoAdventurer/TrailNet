@@ -14,6 +14,7 @@ import postRoutes from './routes/postRoutes.js';
 import friendRoutes from './routes/friendRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import emergencyRoutes from './routes/emergencyRoutes.js';
+import osmStaticRoutes from './routes/osmStaticRoutes.js';
 
 const app = express();
 
@@ -66,6 +67,9 @@ app.use('/api/noti', notificationRoutes);
 
 // Register emergency routes
 app.use('/api/emergency', emergencyRoutes); 
+
+// OSM Static Maps
+app.use('/api/osmstaticmaps', osmStaticRoutes);
 
 // Route to handle OAuth2 callback
 app.get('/oauth2callback', handleOAuth2Callback);

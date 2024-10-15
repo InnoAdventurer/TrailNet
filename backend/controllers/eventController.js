@@ -212,7 +212,7 @@ export const toggleEventParticipation = async (req, res) => {
 
                 const message = `${user.username} has joined your event "${event.event_name}".`;
 
-                await addNotification(event.creator_id, message, 'Event Reminder');
+                await addNotification(event.user_id, message, 'Activity');
             }
         }
 

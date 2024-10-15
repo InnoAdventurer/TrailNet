@@ -49,7 +49,7 @@ function JoinEventPage2() {
     if (latitude && longitude) {
       const fetchLocationName = async () => {
         try {
-          const response = await axios.post(`$/api/map/reverse-geocode`, {
+          const response = await axios.post(`/api/map/reverse-geocode`, {
             latitude,
             longitude,
           });
@@ -138,7 +138,7 @@ function JoinEventPage2() {
     <div className="joineventpage2-container">
       <div className="search-container">
         <div className="back">
-          <Link to="/eventpage"><IoIosArrowBack /></Link>
+          <Link to="/joineventpage1"><IoIosArrowBack /></Link>
         </div>
         <input type="text" placeholder="Search" className="search" />
         <FiSearch className="search-icon" />

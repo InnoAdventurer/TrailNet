@@ -33,15 +33,14 @@ export const addNotification = async (user_id, message, notification_type) => {
     }
 };
 
-// Mark a notification as read
-export const markAsRead = async (req, res) => {
-  const { notification_id } = req.body;
+// Mark all notification for a specific user as read
+export const markAllAsRead = async (req, res) => {
   try {
-    await db.query('UPDATE Notifications SET is_read = TRUE WHERE notification_id = ?', [notification_id]);
-    res.status(200).json({ message: 'Notification marked as read' });
+    await db.query('UPDATE Notifications SET is_read = TRUE WHERE user_id = ?', [req.user.id]);
+    res.status(200).json({ message: 'All notifications marked as read' });
   } catch (error) {
-    console.error('Error marking notification as read:', error);
-    res.status(500).json({ message: 'Failed to mark notification as read' });
+    console.error('Error marking notifications as read:', error.message);
+    res.status(500).json({ error: 'Failed to mark notifications as read' });
   }
 };
 

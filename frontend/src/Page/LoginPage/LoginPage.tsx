@@ -61,41 +61,37 @@ function LoginPage() {
 
     return (
         <div className="loginpage-container flex">
-        <img src={logo} alt="icon" className="icon" />
+            <img src={logo} alt="icon" className="icon" />
 
-        <div className="table flex">
-            <div className="table-title">Welcome back to TrailNet!</div>
-            {loading && <div className="loading-message">Loading...</div>} {/* Display loading message */}
-            {error && <div className="error-message">{error}</div>} {/* Display error message if there's an error */}
-            <form onSubmit={handleLogin}>
-            <div className="lable">Email</div>
-            <div className="user-detail">
-                <input 
-                type="text" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} // Update state on input change
-                placeholder="Enter your email" // Placeholder for email field
-                required
-                />
+            <div className="table flex">
+                <div className="table-title">Welcome back to TrailNet!</div>
+                {loading && <div className="loading-message">Loading...</div>} {/* Display loading message */}
+                {error && <div className="error-message">{error}</div>} {/* Display error message if there's an error */}
+                <form onSubmit={handleLogin}>
+                    <div className="lable">Email</div>
+                    <div className="user-detail">
+                        <input 
+                        type="text" 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} // Update state on input change
+                        placeholder="Enter your email" // Placeholder for email field
+                        required
+                        />
+                    </div>
+                    <div className="lable">Password</div>
+                    <div className="user-detail">
+                        <input 
+                        type="password" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} // Update state on input change
+                        placeholder="Enter your password" // Placeholder for password field
+                        required
+                        />
+                    </div>
+                    <button className="btn" disabled={loading}>Log in</button> {/* Disable button while loading */}
+                </form>
+                <button className="forgot" onClick={() => navigate("/passwordpage")}>Forgot password</button>
             </div>
-            <div className="lable">Password</div>
-            <div className="user-detail">
-                <input 
-                type="password" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} // Update state on input change
-                placeholder="Enter your password" // Placeholder for password field
-                required
-                />
-            </div>
-            <button className="btn" disabled={loading}>Log in</button> {/* Disable button while loading */}
-            </form>
-            <button className="forgot" onClick={() => navigate("/passwordpage")}>Forgot password</button>
-        </div>
-        <div>
-            <div>------------------Or------------------</div>
-            <div>Continue with Facebook</div>
-        </div>
         </div>
     );
 }

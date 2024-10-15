@@ -5,6 +5,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 import axios from '../../utils/axiosInstance';
+import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
 import { ErrorContext } from '../../contexts/ErrorContext'; // Assuming you're using ErrorContext for error handling
 
 function WeatherPage() {
@@ -130,6 +131,7 @@ function WeatherPage() {
       <div className="attribution">
         <p>Weather data provided by <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a>.</p>
       </div>
+      <BottomNavBar />
     </div>
   );
 }

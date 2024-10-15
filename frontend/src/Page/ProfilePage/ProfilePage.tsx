@@ -6,6 +6,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'; 
 import { Link } from 'react-router-dom';
 import axios from '../../utils/axiosInstance';
+import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
 import image404 from '../../assets/Picture/image404.webp'; // Placeholder image
 
 // Import profile icons
@@ -147,6 +148,7 @@ function ProfilePage() {
           )}
         </div>
       </div>
+      <BottomNavBar />
     </div>
   );
 }

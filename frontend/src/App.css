@@ -1,8 +1,9 @@
 /* frontend/src/App.css */
 
+/* Ensure the app container takes full height and width based on the device screen */
 .app-container {
-  width: 350px;
-  height: 681px;
+  width: 100vw; /* Full width of the viewport */
+  height: 100vh; /* Full height of the viewport */
   margin: 0 auto; /* Center the container horizontally */
   border: 1px solid #ddd; /* Optional: Add border for clarity */
   overflow-y: auto; /* Enable vertical scrolling */

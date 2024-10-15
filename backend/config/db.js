@@ -23,6 +23,7 @@ const db = createPool({
         rejectUnauthorized: true,
         ca: sslCert,
     },
+    timezone: 'Z', // Interpret timestamps in UTC by default
 });
 
 export default db;

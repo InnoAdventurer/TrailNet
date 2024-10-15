@@ -62,8 +62,6 @@ function HomePage() {
   }, []);
 
   const handleFollow = async (postOwnerId: number, isFollowing: boolean) => {
-    console.log(`Following ID: ${postOwnerId}, Is Following: ${isFollowing}`); // Debug log
-
     // Optimistically update the state before the API call
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
