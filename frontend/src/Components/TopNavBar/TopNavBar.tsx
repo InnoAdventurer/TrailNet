@@ -27,8 +27,6 @@ function TopNavBar() {
 
   const fetchNotifications = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) throw new Error('No auth token found');
       const response = await axios.get(`/api/noti/getByUser`);
       setNotifications(response.data);
     } catch (error) {
@@ -86,6 +84,7 @@ function TopNavBar() {
   }, []);
 
   const formatNotificationTime = (timestamp: string) => {
+    console.log(timestamp);
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const localDate = toDate(timestamp, { timeZone: userTimeZone });
     return formatDistanceToNow(localDate, { addSuffix: true });
