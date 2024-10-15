@@ -26,8 +26,8 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
       setShowMessage(true);
 
       const timer = setTimeout(() => {
-        setShouldRedirect(true); // Redirect after 3 seconds
-      }, 3000);
+        setShouldRedirect(true); // Redirect after 1 seconds
+      }, 1000);
 
       return () => clearTimeout(timer); // Cleanup timeout on unmount
     }

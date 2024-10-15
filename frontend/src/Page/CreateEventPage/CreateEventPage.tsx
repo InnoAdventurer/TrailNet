@@ -139,7 +139,7 @@ function CreateEventPage() {
 
         setTimeout(() => {
           navigate(`/joineventpage3/${eventId}`);
-        }, 3000); // 3-second delay before redirect
+        }, 1000); // 1-second delay before redirect
       } else {
         setError('Failed to create event.');
       }
