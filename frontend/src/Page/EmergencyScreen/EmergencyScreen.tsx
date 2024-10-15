@@ -5,8 +5,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { Link, useNavigate } from 'react-router-dom';
 import { PiPhoneCallFill } from "react-icons/pi";
 import { TbHeartHandshake } from "react-icons/tb";
-import { MdSos } from "react-icons/md";
-import { MdPhonelinkRing } from "react-icons/md";
+import { MdSos, MdPhonelinkRing } from "react-icons/md";
 import React, { useState, useEffect, useContext } from 'react';
 import axios from '../../utils/axiosInstance';
 import { ErrorContext } from '../../contexts/ErrorContext'; // Import ErrorContext
@@ -16,6 +15,8 @@ function EmergencyScreen() {
   const [activeButton, setActiveButton] = useState<string | null>(null);
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const [contactNumber, setContactNumber] = useState<string | null>(null); // Store fetched contact number
+  const [contactName, setContactName] = useState<string | null>(null); // Store fetched contact name
   const navigate = useNavigate(); // Use useNavigate hook for navigation
 
   useEffect(() => {
@@ -40,8 +41,28 @@ function EmergencyScreen() {
     }
   }, []);
 
+  useEffect(() => {
+    // Fetch emergency contact details on mount
+    const fetchEmergencyContact = async () => {
+      try {
+        const response = await axios.post('/api/profile/fetch');
+        const { emergency_contact_name, emergency_contact_number } = response.data;
+        setContactName(emergency_contact_name);
+        setContactNumber(emergency_contact_number);
+      } catch (error) {
+        console.error('Error fetching emergency contact:', error);
+        setError('Failed to fetch emergency contact. Please try again.');
+      }
+    };
+
+    fetchEmergencyContact();
+  }, [setError]);
+
   const handleCall000 = () => {
-    window.location.href = 'tel:000';
+    const confirmed = window.confirm('You are about to call 000. Proceed?');
+    if (confirmed) {
+      window.location.href = 'tel:000';
+    }
   };
 
   const handleAskForHelp = async () => {
@@ -58,23 +79,25 @@ function EmergencyScreen() {
     }
   };
 
-  const handleSendSOS = async () => {
-    try {
-      console.log('Navigating to SOS screen'); // Add this to check if function is being called
-      navigate('/sosscreen'); // Navigate to the SOS screen
-    } catch (error) {
-      console.error('Error in navigating:', error);
-      setError('Error navigating to SOS screen. Please try again.');
-    }
+  const handleSendSOS = () => {
+    navigate('/sosscreen'); // Navigate to the SOS screen
   };
 
   const handleContactHelp = () => {
-    const contactPhoneNumber = '1234567890'; // TODO: retrieve emergency contact from db.
-    window.location.href = `tel:${contactPhoneNumber}`;
+    if (!contactNumber) {
+      setError('Emergency contact not available.');
+      return;
+    }
+    const confirmed = window.confirm(
+      `You are about to call your emergency contact: ${contactName}. Proceed?`
+    );
+    if (confirmed) {
+      window.location.href = `tel:${contactNumber}`;
+    }
   };
 
   const handleButtonClick = (button: string) => {
-    setActiveButton(prevButton => (prevButton === button ? null : button));
+    setActiveButton((prevButton) => (prevButton === button ? null : button));
 
     switch (button) {
       case '000':
@@ -102,7 +125,9 @@ function EmergencyScreen() {
     <div className="emergencyscreen-container flex">
       <div className="header-container">
         <div className="back">
-          <Link to="/homepage"><IoIosArrowBack /></Link>
+          <Link to="/homepage">
+            <IoIosArrowBack />
+          </Link>
         </div>
         <h2>Emergency</h2>
       </div>

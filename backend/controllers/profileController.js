@@ -50,23 +50,34 @@ export const fetchUserInfo = async (req, res) => {
     const userId = req.user.id; // Get userId from req.user (set by authMiddleware)
 
     try {
-        // Fetch user info from the Users table
-        const [userInfo] = await db.query('SELECT username, email, profile_picture FROM Users WHERE user_id = ?', [userId]);
+        // Fetch user info including emergency contact details
+        const [userInfo] = await db.query(
+            `SELECT username, email, profile_picture, 
+                    emergency_contact_name, emergency_contact_number 
+             FROM Users 
+             WHERE user_id = ?`,
+            [userId]
+        );
 
         // If no user is found, return an error
         if (!userInfo || userInfo.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Fetch the number of friends from the Friends table
-        const [friendsCount] = await db.query('SELECT COUNT(*) as count FROM Friends WHERE user_id_2 = ?', [userId]);
+        // Fetch the number of friends
+        const [friendsCount] = await db.query(
+            'SELECT COUNT(*) as count FROM Friends WHERE user_id_2 = ?',
+            [userId]
+        );
 
-        // Return the user's profile information
+        // Respond with user information
         res.status(200).json({
             username: userInfo[0].username,
             email: userInfo[0].email,
             profile_picture: userInfo[0].profile_picture,
-            friendsCount: friendsCount[0].count
+            friendsCount: friendsCount[0].count,
+            emergency_contact_name: userInfo[0].emergency_contact_name || '',
+            emergency_contact_number: userInfo[0].emergency_contact_number || '',
         });
     } catch (error) {
         console.error('Error fetching user info:', error);
@@ -126,6 +137,24 @@ export const fetchFollowing = async (req, res) => {
         res.status(200).json(following);
     } catch (error) {
         console.error('Error fetching following:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Update emergency contact information
+export const updateEmergencyContact = async (req, res) => {
+    const { emergency_contact_name, emergency_contact_number } = req.body;
+    const userId = req.user.id; // Get user ID from auth middleware
+
+    try {
+        await db.query(
+            'UPDATE Users SET emergency_contact_name = ?, emergency_contact_number = ? WHERE user_id = ?',
+            [emergency_contact_name, emergency_contact_number, userId]
+        );
+
+        res.status(200).json({ message: 'Emergency contact updated successfully' });
+    } catch (error) {
+        console.error('Error updating emergency contact:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
