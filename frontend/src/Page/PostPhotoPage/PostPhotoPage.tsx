@@ -53,7 +53,7 @@ function PostPhotoPage() {
         setTimeout(() => {
           // Post was successfully created, navigate back to profile
           navigate(`/profilepage`);
-        }, 3000); // 3-second delay before redirect
+        }, 1000); // 1-second delay before redirect
       } else {
         setError('Failed to create the post. Please try again.');
       }
