@@ -1,7 +1,7 @@
 // frontend\src\Page\MapScreen\MapScreen.tsx
 
 import { useEffect, useState, useRef, useContext } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import './MapScreen.css';
 import { FiSearch, FiCrosshair, FiNavigation2 } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
@@ -12,20 +12,12 @@ import 'leaflet/dist/leaflet.css';
 import { ErrorContext } from '../../contexts/ErrorContext';
 import L from 'leaflet';
 
-const apiUrl = process.env.VITE_BACKEND_URL;
-
 // Create a custom icon using react-icons
 const centerPinIcon = new L.DivIcon({
   html: ReactDOMServer.renderToString(<FiCrosshair size={24} color="#48AEE1" />),
   className: 'custom-center-pin', // Optional: Add custom CSS class
   iconSize: [35, 35],  // Size of the icon
   iconAnchor: [17, 17] // Anchor to the center of the icon
-});
-
-const getAuthToken = () => localStorage.getItem('authToken');
-
-const useAxiosConfig = () => ({
-  headers: { Authorization: `Bearer ${getAuthToken()}` },
 });
 
 function MapScreen() {
@@ -44,7 +36,6 @@ function MapScreen() {
   const mapRef = useRef<L.Map | null>(null); // Create map reference
 
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const axiosConfig = useAxiosConfig();
 
   // Hook to handle map movement and refetch events/weather
   const MapEventsHandler = () => {
@@ -103,9 +94,8 @@ function MapScreen() {
   const fetchLocationName = async (lat: number, lon: number) => {
     try {
       const response = await axios.post(
-        `${apiUrl}/api/map/reverse-geocode`,
+        `/api/map/reverse-geocode`,
         { latitude: lat, longitude: lon },
-        axiosConfig
       );
       setLocationName(response.data.location || 'Unknown Location');
     } catch (error) {
@@ -116,8 +106,7 @@ function MapScreen() {
 
   const fetchWeather = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/weather/current`, {
-        ...axiosConfig,
+      const response = await axios.get(`/api/weather/current`, {
         params: { lat: latitude, lon: longitude },
       });
 
@@ -135,8 +124,7 @@ function MapScreen() {
   
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const response = await axios.post(`${apiUrl}/api/events/more`, {
-          config,
+        const response = await axios.post(`/api/events/more`, {
           latitude,
           longitude,
         });
@@ -171,14 +159,14 @@ function MapScreen() {
   const handleMarkerClick = async (event: any) => {
     setSelectedEvent(event);
     try {
-      const response = await axios.post(`${apiUrl}/api/map/calculate-distance`, {
+      const response = await axios.post(`/api/map/calculate-distance`, {
         startCoords: [latitude, longitude],
         endCoords: [event.latitude, event.longitude],
       });
       setDistance(response.data.distance);
-    } catch (error) {
-      // Type guard to check if error is an AxiosError or similar object
-      if (axios.isAxiosError(error) && error.response) {
+    } catch (err) {
+      const error = err as any;
+      if (error.response) {
         if (error.response.status === 400) {
           console.error('Distance calculation error:', error.response.data.error);
           setDistance(null);
@@ -200,10 +188,9 @@ function MapScreen() {
   const fetchSuggestions = async (query: string) => {
     if (query.length > 2) {
       try {
-        const response = await axios.get(`${apiUrl}/api/map/search`, {
+        const response = await axios.get(`/api/map/search`, {
           params: { query },
         });
-        console.log('Suggestions received:', response.data); // Debugging log
         setSuggestions(response.data); // Ensure this gets updated
       } catch (error) {
         console.error('Error fetching suggestions:', error);
@@ -214,7 +201,6 @@ function MapScreen() {
     }
   };
   
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
@@ -280,16 +266,13 @@ function MapScreen() {
           </button>
         </form>
         {suggestions.length > 0 && (
-          <>
-            {console.log('Rendering suggestions:', suggestions)} {/* Debugging log */}
-            <ul className="suggestions-list">
-              {suggestions.map((suggestion, index) => (
-                <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
-                  {suggestion.display_name}
-                </li>
-              ))}
-            </ul>
-          </>
+          <ul className="suggestions-list">
+            {suggestions.map((suggestion, index) => (
+              <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
+                {suggestion.display_name}
+              </li>
+            ))}
+          </ul>
         )}
 
       </div>
