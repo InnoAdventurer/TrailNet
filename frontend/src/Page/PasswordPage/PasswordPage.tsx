@@ -22,9 +22,6 @@ function PasswordPage() {
       // Send a POST request to the backend to initiate the password reset
       const response = await axios.post(`${apiUrl}/api/auth/forgot-password`, { email });
 
-      // Log the response for debugging
-      console.log(response.data);
-
       // Show a success message
       setMessage(response.data.message); // Display the message from the backend
     } catch (err: any) {

@@ -49,7 +49,7 @@ function TopNavBar() {
   };
 
   const handleNotificationOpen = (notification_id: number) => {
-    setTimeout(() => markAsRead(notification_id), 5000);
+    setTimeout(() => markAsRead(notification_id), 1000);
   };
 
   const deleteNotification = async (notification_id: number) => {
@@ -84,7 +84,6 @@ function TopNavBar() {
   }, []);
 
   const formatNotificationTime = (timestamp: string) => {
-    console.log(timestamp);
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const localDate = toDate(timestamp, { timeZone: userTimeZone });
     return formatDistanceToNow(localDate, { addSuffix: true });
