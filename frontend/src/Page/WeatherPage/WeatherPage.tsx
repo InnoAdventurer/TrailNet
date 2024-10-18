@@ -21,6 +21,7 @@ function WeatherPage() {
   const [forecast, setForecast] = useState<any[]>([]); // State to store the weather forecast data
   const [latitude, setLatitude] = useState<number | null>(null); // State for latitude
   const [longitude, setLongitude] = useState<number | null>(null); // State for longitude
+  const [locationName, setLocationName] = useState<string>('Current Location'); // New state for location name
 
   // Function to get the user's current GPS coordinates
   const getUserLocation = () => {
@@ -56,6 +57,16 @@ function WeatherPage() {
     }
   };
 
+  const fetchLocationName = async (lat: number, lon: number) => {
+    try {
+      const response = await axios.post('/api/map/reverse-geocode', { latitude: latitude, longitude: longitude });
+      setLocationName(response.data.location || 'Unknown Location');
+    } catch (error) {
+      console.error('Error fetching location name:', error);
+      setLocationName('Unknown Location');
+    }
+  };
+
   useEffect(() => {
     // Fetch the user's live GPS coordinates
     getUserLocation();
@@ -70,6 +81,7 @@ function WeatherPage() {
             },
           });
           setForecast(response.data);
+          fetchLocationName(latitude, longitude);
         }
       } catch (error) {
         console.error('Error fetching weather forecast:', error);
@@ -98,6 +110,7 @@ function WeatherPage() {
   return (
     <div className="weatherpage-container">
       <TopNavBar />
+      <h3>Weather for {locationName}</h3>
       <div className="vertical-weather-table">
         {forecast.length > 0 ? (
           forecast.slice(0, 5).map((day, index) => (

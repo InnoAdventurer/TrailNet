@@ -13,7 +13,7 @@
   flex-direction: column;
   gap: 20px;
   width: 100%;
-  margin-top: 100px;
+  margin-top: 10px;
 }
 
 .weatherpage-container .forecast-row {
@@ -91,4 +91,9 @@
 
 .weatherpage-container .attribution a:hover {
   text-decoration: underline;
+}
+
+.weatherpage-container h3 {
+  margin-top: 60px;
+  text-align: center;
 }
