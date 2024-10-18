@@ -18,14 +18,30 @@ import icon4 from '../../assets/Picture/Icon/icon_4.png';
 import icon5 from '../../assets/Picture/Icon/icon_5.png';
 import icon6 from '../../assets/Picture/Icon/icon_6.png';
 
-const iconMap = {
-  '/frontend/src/assets/Picture/Icon/icon_1.png': icon1,
-  '/frontend/src/assets/Picture/Icon/icon_2.png': icon2,
-  '/frontend/src/assets/Picture/Icon/icon_3.png': icon3,
-  '/frontend/src/assets/Picture/Icon/icon_4.png': icon4,
-  '/frontend/src/assets/Picture/Icon/icon_5.png': icon5,
-  '/frontend/src/assets/Picture/Icon/icon_6.png': icon6,
+const iconMap: { [key: string]: string } = {
+  'icon_1': icon1,
+  'icon_2': icon2,
+  'icon_3': icon3,
+  'icon_4': icon4,
+  'icon_5': icon5,
+  'icon_6': icon6,
 };
+
+interface Post {
+  post_id: number;
+  created_at: string;
+  content: string;
+  privacy: string;
+  image_blob: string;
+  liked: boolean;
+  likeCount: number;
+}
+
+interface UserData {
+  username: string;
+  friendsCount: number;
+  profile_picture: string;
+}
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -41,10 +57,8 @@ function ProfilePage() {
 
   const fetchUserData = async () => {
     try {
-      // Fetch user data
       const userResponse = await axios.post(`/api/profile/fetch`, {});
       setUserData(userResponse.data);
-
       setLoading(false);
     } catch (err) {
       console.error('Error fetching user data:', err);
@@ -55,7 +69,6 @@ function ProfilePage() {
 
   const fetchPosts = async () => {
     try {
-      // Fetch user posts
       const postResponse = await axios.get(`/api/posts/user-posts`);
       setPosts(postResponse.data.posts);
 
@@ -86,10 +99,13 @@ function ProfilePage() {
     fetchPosts();
   }, []);
 
+  const getProfilePicture = (picturePath: string): string => {
+    const matches = picturePath.match(/icon_\d+/);
+    return matches && iconMap[matches[0]] ? iconMap[matches[0]] : icon1;
+  };
+
   const { username, friendsCount, profile_picture } = userData || {};
-  const profilePic = profile_picture && iconMap[profile_picture as keyof typeof iconMap]
-    ? iconMap[profile_picture as keyof typeof iconMap]
-    : icon1;
+  const profilePic = getProfilePicture(profile_picture || '');
 
   return (
     <div className="profilepage-container flex">

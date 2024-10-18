@@ -33,13 +33,13 @@ import icon4 from '../../assets/Picture/Icon/icon_4.png';
 import icon5 from '../../assets/Picture/Icon/icon_5.png';
 import icon6 from '../../assets/Picture/Icon/icon_6.png';
 
-const iconMap = {
-  '/frontend/src/assets/Picture/Icon/icon_1.png': icon1,
-  '/frontend/src/assets/Picture/Icon/icon_2.png': icon2,
-  '/frontend/src/assets/Picture/Icon/icon_3.png': icon3,
-  '/frontend/src/assets/Picture/Icon/icon_4.png': icon4,
-  '/frontend/src/assets/Picture/Icon/icon_5.png': icon5,
-  '/frontend/src/assets/Picture/Icon/icon_6.png': icon6,
+const iconMap: { [key: string]: string } = {
+  'icon_1': icon1,
+  'icon_2': icon2,
+  'icon_3': icon3,
+  'icon_4': icon4,
+  'icon_5': icon5,
+  'icon_6': icon6,
 };
 
 interface Event {
@@ -78,9 +78,10 @@ function JoinEventPage3() {
     }
   };
 
-  const getProfilePicture = (picturePath: string) => {
-    return iconMap[picturePath as keyof typeof iconMap] || icon1;
-  };  
+  const getProfilePicture = (picturePath: string): string => {
+    const matches = picturePath.match(/icon_\d+/);
+    return matches && iconMap[matches[0]] ? iconMap[matches[0]] : icon1;
+  }; 
 
   const toggleParticipation = async () => {
     try {

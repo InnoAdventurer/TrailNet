@@ -16,15 +16,15 @@
   import icon5 from '../../assets/Picture/Icon/icon_5.png';
   import icon6 from '../../assets/Picture/Icon/icon_6.png';
 
-  const iconMap = {
-    '/frontend/src/assets/Picture/Icon/icon_1.png': icon1,
-    '/frontend/src/assets/Picture/Icon/icon_2.png': icon2,
-    '/frontend/src/assets/Picture/Icon/icon_3.png': icon3,
-    '/frontend/src/assets/Picture/Icon/icon_4.png': icon4,
-    '/frontend/src/assets/Picture/Icon/icon_5.png': icon5,
-    '/frontend/src/assets/Picture/Icon/icon_6.png': icon6,
+  const iconMap: { [key: string]: string } = {
+    'icon_1': icon1,
+    'icon_2': icon2,
+    'icon_3': icon3,
+    'icon_4': icon4,
+    'icon_5': icon5,
+    'icon_6': icon6,
   };
-
+  
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -84,6 +84,11 @@
       }
     };
 
+    const getProfilePicture = (profilePath: string): string => {
+      const matches = profilePath.match(/icon_\d+/);
+      return matches && iconMap[matches[0]] ? iconMap[matches[0]] : icon1;
+    };
+
     return (
       <div className="homepage-container flex">
         <TopNavBar />
@@ -104,7 +109,7 @@
               return (
                 <div className="content" key={post.post_id}>
                   <div className="profile-section">
-                    <img src={profilePic} alt="profilepic" className="profilepicture" />
+                    <img src={getProfilePicture(post.profile_picture)} alt="profilepic" className="profilepicture" />
                     <div className="text-content">
                       <div>{post.username}</div>
                       <div>{formatDate(post.created_at)}</div> {/* Format date */}
