@@ -32,7 +32,6 @@ export const createPostWithCompressedImage = (req, res) => {
 
             if (imageBuffer) {
                 const imageMetadata = await sharp(imageBuffer).metadata();
-                console.log('Image Metadata:', imageMetadata);  // Log image metadata
 
                 if (imageMetadata.format === 'jpeg') {
                     compressedImageBuffer = await sharp(imageBuffer)

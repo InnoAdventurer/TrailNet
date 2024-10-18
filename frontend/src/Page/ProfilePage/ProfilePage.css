@@ -108,3 +108,13 @@
 .profilepage-container .delete-button:hover {
   color: #e74c3c; /* Change color on hover */
 }
+
+.success-message {
+    background-color: #dff0d8; /* Light green background */
+    color: #3c763d;           /* Dark green text */
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    text-align: center;       /* Center the text */
+    font-size: 16px;
+}

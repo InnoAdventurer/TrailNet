@@ -10,7 +10,8 @@
     "build:frontend": "vite build --mode production --config frontend/vite.config.ts",
     "build:backend": "echo \"No build step for backend\"",
     "start:frontend": "serve -s dist",
-    "start:backend": "node backend/server.js"
+    "start:backend": "node backend/server.js",
+    "postinstall": "npx puppeteer install"
   },
   "dependencies": {
     "@types/react-leaflet": "^3.0.0",
