@@ -65,36 +65,45 @@ export const getCoordinatesForLocation = async (req, res) => {
   }
 };
 
-// Core reverse geocoding logic that can be reused
+// Core reverse geocoding logic using OpenRouteService
 export const fetchLocationName = async (latitude, longitude) => {
   if (!latitude || !longitude) {
     throw new Error('Latitude and Longitude are required');
   }
 
   try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
-      params: {
-        lat: latitude,
-        lon: longitude,
-        format: 'json',
-        addressdetails: 1,
-      },
-    });
+    const response = await axios.get(
+      'https://api.openrouteservice.org/geocode/reverse',
+      {
+        params: {
+          api_key: process.env.OPENROUTESERVICE_API_KEY,
+          'point.lat': latitude,
+          'point.lon': longitude,
+          size: 1, // Limit results to one
+          layers: 'localadmin', // Focus on local admin layers
+          'boundary.country': 'AUS', // Restrict to Australia
+        },
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    );
 
-    if (!response.data || !response.data.display_name) {
-      throw new Error('Location not found for given coordinates');
+    const features = response.data.features;
+    if (!features || features.length === 0) {
+      throw new Error('Location not found for the given coordinates.');
     }
 
-    const { display_name } = response.data;
-    const parsedDisplayName = display_name.split(',')[0]; // Parse to stop at the first comma
+    const { label } = features[0].properties;
+    const parsedDisplayName = label.split(',')[0];
 
     return {
       success: true,
       location: parsedDisplayName,
-      full_address: display_name,
+      full_address: label,
     };
   } catch (error) {
-    console.error('Error fetching location:', error);
+    console.error('Error fetching location:', error.message, error.response?.data);
     throw new Error('Failed to fetch location');
   }
 };

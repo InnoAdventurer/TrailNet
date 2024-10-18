@@ -55,6 +55,7 @@ function MapScreen() {
   const mapRef = useRef<L.Map | null>(null); // Create map reference
 
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debounceFetchLocationName = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Hook to handle map movement and refetch events/weather
   const MapEventsHandler = () => {
@@ -111,16 +112,16 @@ function MapScreen() {
   };
 
   const fetchLocationName = async (lat: number, lon: number) => {
-    try {
-      const response = await axios.post(
-        `/api/map/reverse-geocode`,
-        { latitude: lat, longitude: lon },
-      );
-      setLocationName(response.data.location || 'Unknown Location');
-    } catch (error) {
-      console.error('Error fetching location name:', error);
-      setLocationName('Unknown Location');
-    }
+    if (debounceFetchLocationName.current) clearTimeout(debounceFetchLocationName.current);
+
+    debounceFetchLocationName.current = setTimeout(async () => {
+      try {
+        const response = await axios.post(`/api/map/reverse-geocode`, { latitude: lat, longitude: lon });
+        setLocationName(response.data.location || 'Unknown Location');
+      } catch {
+        setLocationName('Unknown Location');
+      }
+    }, 500);
   };
 
   const fetchWeather = async () => {
