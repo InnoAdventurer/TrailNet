@@ -140,8 +140,6 @@ function JoinEventPage2() {
         <div className="back">
           <Link to="/joineventpage1"><IoIosArrowBack /></Link>
         </div>
-        <input type="text" placeholder="Search" className="search" />
-        <FiSearch className="search-icon" />
       </div>
 
       <h4>{generateHeaderMessage()}</h4> {/* Display the header message */}
