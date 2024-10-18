@@ -107,14 +107,22 @@ export const getEventById = async (req, res) => {
     }
 };
 
-// Get filtered events with privacy consideration
+// Adjust radius to fetch events based on distance
 export const getFilteredEvents = async (req, res) => {
     const { latitude, longitude, activityType, dateRange } = req.body;
     const userId = req.user.id;
+    const radius = 1000; // 5 km radius
 
     try {
         let query = `
-            SELECT e.*, u.username AS creator
+            SELECT e.*, u.username AS creator,
+            (
+                6371 * acos(
+                    cos(radians(?)) * cos(radians(e.latitude)) * 
+                    cos(radians(e.longitude) - radians(?)) + 
+                    sin(radians(?)) * sin(radians(e.latitude))
+                )
+            ) AS distance
             FROM Events e
             JOIN Users u ON e.user_id = u.user_id
             LEFT JOIN Friends f ON f.user_id_1 = ? AND f.user_id_2 = e.user_id AND f.status = 'Accepted'
@@ -125,42 +133,16 @@ export const getFilteredEvents = async (req, res) => {
                 OR (e.privacy = 'only_me' AND e.user_id = ?)
             )
         `;
-        const queryParams = [userId, userId];
 
-        // Filter by GPS coordinates if provided and valid
-        if (latitude !== null && longitude !== null && !isNaN(latitude) && !isNaN(longitude)) {
-            const distanceLimit = 0.01; // Adjust the distance limit as needed
-            query += ' AND latitude BETWEEN ? AND ? AND longitude BETWEEN ? AND ?';
-            queryParams.push(latitude - distanceLimit, latitude + distanceLimit, longitude - distanceLimit, longitude + distanceLimit);
-        }
+        const queryParams = [latitude, longitude, latitude, userId, userId];
 
-        // Filter by activity type if provided
-        if (activityType !== null && activityType !== undefined) {
-            query += ' AND activity_type = ?';
-            queryParams.push(activityType);
-        }
-
-        // Filter by date range if provided
-        switch (dateRange) {
-            case 'Today':
-                query += ' AND event_date = CURDATE()';
-                break;
-            case 'Next7days':
-                query += ' AND event_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)';
-                break;
-            case 'Over7days':
-                query += ' AND event_date > DATE_ADD(CURDATE(), INTERVAL 7 DAY)';
-                break;
-            default:
-                break; // No date range filtering if no valid range is provided
-        }
-
-        // Limit to only 50 events and sort by event_date
-        query += ' ORDER BY event_date ASC LIMIT 50';
+        // Apply the distance filter (events within the given radius)
+        query += ` HAVING distance <= ? ORDER BY distance LIMIT 50`;
+        queryParams.push(radius);
 
         const [events] = await db.query(query, queryParams);
 
-        // Process each event to extract the location before the first comma
+        // Process events to extract location before the first comma
         const processedEvents = events.map(event => ({
             ...event,
             location: event.location.split(',')[0], // Extract location before the first comma

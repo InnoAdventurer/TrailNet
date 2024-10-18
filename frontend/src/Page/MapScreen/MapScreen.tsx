@@ -6,19 +6,45 @@ import './MapScreen.css';
 import { FiSearch, FiCrosshair, FiNavigation2 } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import ReactDOMServer from 'react-dom/server';
+import redMarkerIcon from '../../assets/Picture/MapPins/marker-icon-2x-red.png'; 
+import blueMarkerIcon from '../../assets/Picture/MapPins/marker-icon-2x-blue.png'; 
+import greenMarkerIcon from '../../assets/Picture/MapPins/marker-icon-2x-green.png'; 
 import axios from '../../utils/axiosInstance';
 import { ErrorContext } from '../../contexts/ErrorContext';
 import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Create a custom icon using react-icons
 const centerPinIcon = new L.DivIcon({
   html: ReactDOMServer.renderToString(<FiCrosshair size={24} color="#48AEE1" />),
-  className: 'custom-center-pin', // Optional: Add custom CSS class
-  iconSize: [35, 35],  // Size of the icon
-  iconAnchor: [17, 17] // Anchor to the center of the icon
+  className: 'custom-center-pin',
+  iconSize: [35, 35],
+  iconAnchor: [17, 17],
+});
+
+const redEventIcon = new L.Icon({
+  iconUrl: redMarkerIcon,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+const greenStartingPointIcon = new L.Icon({
+  iconUrl: greenMarkerIcon,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+const blueEventIcon = new L.Icon({
+  iconUrl: blueMarkerIcon,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
 });
 
 function MapScreen() {
@@ -30,79 +56,97 @@ function MapScreen() {
   const [lastClickedSuggestion, setLastClickedSuggestion] = useState<any>(null);
   const [latitude, setLatitude] = useState<number>(-34.4251);
   const [longitude, setLongitude] = useState<number>(150.8931);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([-34.4251, 150.8931]); // Map center state
+  const [startCoords, setStartCoords] = useState<[number, number]>([-34.4251, 150.8931]); // Initial start point
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null); // Track the selected event's ID
   const [useLiveLocation, setUseLiveLocation] = useState<boolean>(true);
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [distance, setDistance] = useState<number | null>(null);
-  const mapRef = useRef<L.Map | null>(null); // Create map reference
+  const [routeCoordinates, setRouteCoordinates] = useState<any[]>([]);
+
+  const mapRef = useRef<L.Map | null>(null);
+  const wasManualMove = useRef<boolean>(false); // Track manual map movements
+  const [popupOpen, setPopupOpen] = useState(false); // Popup open state
 
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debounceFetchLocationName = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Hook to handle map movement and refetch events/weather
+  // Map event handler to detect movements and set starting points
   const MapEventsHandler = () => {
-    const onMoveEnd = async (event: any) => {
-      const { lat, lng } = event.target.getCenter();
-      setLatitude(lat);
-      setLongitude(lng);
-      await fetchLocationName(lat, lng); // Fetch location on map movement
-    };
-  
     useMapEvents({
-      moveend: (event) => {
-        // Call the async function within the promise handler.
-        onMoveEnd(event).catch((error) =>
-          console.error('Error during map movement handling:', error)
-        );
+      movestart: () => {
+        wasManualMove.current = true;
+        setPopupOpen(false); // Close any open popups
+      },
+      moveend: () => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const { lat, lng } = map.getCenter();
+        setLatitude(lat);
+        setLongitude(lng);
+
+        if (wasManualMove.current) {
+          setTimeout(() => setStartCoords([lat, lng]), 500); // Update starting point after 0.5s
+          wasManualMove.current = false;
+        }
       },
     });
-  
+
     return null;
   };
 
-  const getUserLocation = () => {
+  const handleLiveLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          if (useLiveLocation) {
-            setLatitude(position.coords.latitude);
-            setLongitude(position.coords.longitude);
+          const { latitude, longitude } = position.coords;
+          setLatitude(latitude);
+          setLongitude(longitude);
+          setMapCenter([latitude, longitude]);
+
+          if (mapRef.current) {
+            mapRef.current.setView([latitude, longitude], mapRef.current.getZoom());
           }
         },
-        (error) => {
-          console.error('Error getting location:', error);
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              setError('Permission denied. Please enable location services.');
-              break;
-            case error.POSITION_UNAVAILABLE:
-              setError('Position unavailable. Please check your GPS settings.');
-              break;
-            case error.TIMEOUT:
-              setError('Location request timed out. Please try again.');
-              break;
-            default:
-              setError('An unknown error occurred. Please try again.');
-              break;
-          }
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+        () => setError('Unable to access live location.')
       );
     } else {
-      setError('Geolocation is not supported by this browser.');
+      setError('Geolocation not supported.');
     }
   };
 
+  const handleMarkerClick = (event: any) => {
+    setSelectedEventId(event.event_id);
+    setStartCoords([latitude, longitude]);
+
+    axios.post(`/api/map/calculate-distance`, {
+      startCoords: [latitude, longitude],
+      endCoords: [event.latitude, event.longitude],
+    })
+      .then((response) => setRouteCoordinates(response.data.routeCoordinates))
+      .catch(() => setError('Error calculating route.'));
+  };
+
+  // Fetch events
+  useEffect(() => {
+    axios.post(`/api/events/more`, { latitude, longitude })
+      .then((response) => setEvents(response.data.events))
+      .catch(() => setError('Error fetching events.'));
+  }, [latitude, longitude]);
+
   const fetchLocationName = async (lat: number, lon: number) => {
-    try {
-      const response = await axios.post(
-        `/api/map/reverse-geocode`,
-        { latitude: lat, longitude: lon },
-      );
-      setLocationName(response.data.location || 'Unknown Location');
-    } catch (error) {
-      console.error('Error fetching location name:', error);
-      setLocationName('Unknown Location');
-    }
+    if (debounceFetchLocationName.current) clearTimeout(debounceFetchLocationName.current);
+
+    debounceFetchLocationName.current = setTimeout(async () => {
+      try {
+        const response = await axios.post(`/api/map/reverse-geocode`, { latitude: lat, longitude: lon });
+        setLocationName(response.data.location || 'Unknown Location');
+      } catch {
+        setLocationName('Unknown Location');
+      }
+    }, 500);
   };
 
   const fetchWeather = async () => {
@@ -110,92 +154,26 @@ function MapScreen() {
       const response = await axios.get(`/api/weather/current`, {
         params: { lat: latitude, lon: longitude },
       });
-
       setWeather(response.data);
-    } catch (error) {
-      handleAxiosError(error, 'Error fetching weather data. Please try again.');
+    } catch {
+      setError('Error fetching weather data.');
     }
   };
 
+  // Center map and fetch location/weather when coordinates change
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const token = localStorage.getItem('authToken');
-        if (!token) throw new Error('No auth token found');
-  
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-
-        const response = await axios.post(`/api/events/more`, {
-          latitude,
-          longitude,
-        });
-        setEvents(response.data.events);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-        setError('Error fetching event info. Please try again.');
-      }
-    };
-    fetchEvents();
-  }, [latitude, longitude, setError]);
-
-  // Center the map when coordinates change
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setView([latitude, longitude], mapRef.current.getZoom()); // Update map view
-    }
+    if (mapRef.current) mapRef.current.setView([latitude, longitude], mapRef.current.getZoom());
     fetchLocationName(latitude, longitude);
     fetchWeather();
   }, [latitude, longitude]);
 
-  useEffect(() => {
-    fetchWeather();
-    fetchLocationName(latitude, longitude); // Fetch location on initial load
-  }, [latitude, longitude]);
-
-  const handleAxiosError = (error: any, defaultMessage: string) => {
-    console.error(error);
-    setError(defaultMessage);
-  };
-
-  const handleMarkerClick = async (event: any) => {
-    setSelectedEvent(event);
-    try {
-      const response = await axios.post(`/api/map/calculate-distance`, {
-        startCoords: [latitude, longitude],
-        endCoords: [event.latitude, event.longitude],
-      });
-      setDistance(response.data.distance);
-    } catch (err) {
-      const error = err as any;
-      if (error.response) {
-        if (error.response.status === 400) {
-          console.error('Distance calculation error:', error.response.data.error);
-          setDistance(null);
-          setError('Distance calculation failed. This location is not routable.');
-        } else {
-          console.error('Error calculating distance:', error);
-          setDistance(null);
-          setError('An error occurred while calculating the distance.');
-        }
-      } else {
-        // Handle unknown errors that are not Axios related
-        console.error('Unknown error occurred:', error);
-        setDistance(null);
-        setError('An unexpected error occurred.');
-      }
-    }
-  };
-
   const fetchSuggestions = async (query: string) => {
     if (query.length > 2) {
       try {
-        const response = await axios.get(`/api/map/search`, {
-          params: { query },
-        });
-        setSuggestions(response.data); // Ensure this gets updated
-      } catch (error) {
-        console.error('Error fetching suggestions:', error);
-        setError('Error fetching map suggestions. Please try again.');
+        const response = await axios.get(`/api/map/search`, { params: { query } });
+        setSuggestions(response.data);
+      } catch {
+        setError('Error fetching map suggestions.');
       }
     } else {
       setSuggestions([]);
@@ -205,19 +183,14 @@ function MapScreen() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-    
-    debounceTimeout.current = setTimeout(() => {
-      fetchSuggestions(e.target.value); // Ensure this gets called
-    }, 500);
+
+    debounceTimeout.current = setTimeout(() => fetchSuggestions(e.target.value), 500);
   };
 
   const handleSuggestionClick = (suggestion: any) => {
     setLatitude(parseFloat(suggestion.lat));
     setLongitude(parseFloat(suggestion.lon));
-    setUseLiveLocation(false);
-    setLastClickedSuggestion(suggestion);
     setSuggestions([]);
-    fetchLocationName(parseFloat(suggestion.lat), parseFloat(suggestion.lon)); // Fetch location on search
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -230,11 +203,6 @@ function MapScreen() {
     } else if (suggestions.length > 0) {
       handleSuggestionClick(suggestions[0]);
     }
-  };
-
-  const handleCenterMap = () => {
-    setUseLiveLocation(true);
-    getUserLocation();
   };
 
   const formatDate = (isoString: string) => 
@@ -250,7 +218,9 @@ function MapScreen() {
   return (
     <div className="mapscreen-container flex">
       <div className="header">
-        <Link to="/homepage"><div className="back"><IoIosArrowBack /></div></Link>
+        <Link to="/homepage">
+          <IoIosArrowBack />
+        </Link>
         <h2>Map</h2>
       </div>
       <div className="search-container">
@@ -275,7 +245,6 @@ function MapScreen() {
             ))}
           </ul>
         )}
-
       </div>
       <div className="map-container">
         <MapContainer
@@ -285,37 +254,46 @@ function MapScreen() {
           ref={mapRef}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {events.map((event, index) => (
+
+          {/* Start Point Marker */}
+          {selectedEventId && (
+            <Marker position={startCoords} icon={centerPinIcon}>
+              <Popup>
+                <b>Starting Point</b>
+                <div>Lat: {startCoords[0]} <br/> Lng: {startCoords[1]}</div>
+              </Popup>
+            </Marker>
+          )}
+
+          {/* Render Event Markers */}
+          {events.map((event) => (
             <Marker
-              key={event.id || index}
+              key={event.event_id}
               position={[event.latitude, event.longitude]}
-              eventHandlers={{
-                click: () => handleMarkerClick(event),
-              }}
+              icon={selectedEventId === event.event_id ? redEventIcon : blueEventIcon}
+              eventHandlers={{ click: () => handleMarkerClick(event) }}
             >
               <Popup>
-                <div>
-                  <h3>{event.event_name}</h3>
-                  <p>{event.description}</p>
-                </div>
+                <h3>{event.event_name}</h3>
               </Popup>
             </Marker>
           ))}
 
-          {/* Center marker showing the current GPS coordinates */}
-          <Marker position={[latitude, longitude]} icon={centerPinIcon}>
-            <Popup>
-              <div><b>Current Center</b></div>
-              <div>Lat: {latitude}, Lng: {longitude}</div>
-            </Popup>
-          </Marker>
+          {/* Render route as a polyline */}
+          {routeCoordinates.length > 0 && (
+            <Polyline positions={routeCoordinates} color="blue" />
+          )}
 
+          {/* Center Pin Icon */}
+          <Marker position={mapCenter} icon={greenStartingPointIcon} />
+
+          {/* Map Events Handler */}
           <MapEventsHandler />
 
         </MapContainer>
         
         <div className="center-button">
-          <button onClick={handleCenterMap}>
+          <button onClick={handleLiveLocation}>
             <FiNavigation2 size={24} />
           </button>
         </div>
@@ -326,7 +304,7 @@ function MapScreen() {
           <p><Link to={`/joineventpage3/${selectedEvent.event_id}`}>{selectedEvent.event_name}</Link></p>
           <p>Date: {formatDate(selectedEvent.event_date)}</p>
           <p>Time: {selectedEvent.start_time}</p>
-          {distance !== null && <p>Distance: {distance} meters</p>}
+          {distance !== null && <p>Walking distance: {distance} meters</p>}
         </div>
       )}
       

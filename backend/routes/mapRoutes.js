@@ -1,7 +1,7 @@
 // backend\routes\mapRoutes.js
 
 import { Router } from 'express';
-import { searchAddress, getCoordinatesForLocation, getLocationForCoordinates, calculateDistance } from '../controllers/mapController.js';
+import { searchAddress, getCoordinatesForLocation, getLocationForCoordinates, calculateRouteAndDistance } from '../controllers/mapController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = Router();
@@ -15,6 +15,6 @@ router.post('/get-coordinates', getCoordinatesForLocation);
 router.post('/reverse-geocode', getLocationForCoordinates);
 
 // Get foot walking distance between 2 GPS coordinates
-router.post('/calculate-distance', calculateDistance)
+router.post('/calculate-distance', calculateRouteAndDistance)
 
 export default router;
