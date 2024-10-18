@@ -21,25 +21,47 @@ function EmergencyScreen() {
 
   useEffect(() => {
     if (navigator.geolocation) {
-      const watchId = navigator.geolocation.watchPosition(
+      const options = {
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 0
+      };
+  
+      navigator.geolocation.getCurrentPosition(
         (position) => {
           setLatitude(position.coords.latitude);
           setLongitude(position.coords.longitude);
         },
         (error) => {
           console.error('Error getting location', error);
-          setError('Error getting location. Please check your GPS settings.');
+          console.error('Error code:', error.code);
+          console.error('Error message:', error.message);
+  
+          let errorMsg = '';
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMsg = 'Permission denied. Please allow location access.';
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMsg = 'Position unavailable. Please check your GPS settings.';
+              break;
+            case error.TIMEOUT:
+              errorMsg = 'Request timed out. Please try again.';
+              break;
+            default:
+              errorMsg = 'An unknown error occurred.';
+              break;
+          }
+          setError(`Error getting location: ${errorMsg}`);
         },
-        { enableHighAccuracy: true }
+        options
       );
-
-      // Clean up the watcher on component unmount
-      return () => navigator.geolocation.clearWatch(watchId);
     } else {
       console.error('Geolocation is not supported by this browser.');
       setError('Geolocation is not supported by this browser.');
     }
   }, []);
+  
 
   useEffect(() => {
     // Fetch emergency contact details on mount
