@@ -7,7 +7,8 @@ import {
     fetchHomePagePosts, 
     likePost, 
     unlikePost, 
-    getLikesForPost 
+    getLikesForPost,
+    deletePost
 } from '../controllers/postController.js';
 import authMiddleware from '../middlewares/authMiddleware.js'; // Import the auth middleware to ensure protected routes
 
@@ -26,5 +27,8 @@ router.get('/home-posts', authMiddleware, fetchHomePagePosts);
 router.post('/like', authMiddleware, likePost);
 router.post('/unlike', authMiddleware, unlikePost);
 router.get('/:post_id/likes', authMiddleware, getLikesForPost);
+
+// Delete a post
+router.delete('/delete/:post_id', authMiddleware, deletePost);
 
 export default router;

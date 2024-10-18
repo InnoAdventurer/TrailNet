@@ -24,6 +24,9 @@ const db = createPool({
         ca: sslCert,
     },
     timezone: 'Z', // Interpret timestamps in UTC by default
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
 });
 
 export default db;

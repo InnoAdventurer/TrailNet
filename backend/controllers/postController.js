@@ -269,3 +269,67 @@ export const getLikesForPost = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+// Delete a post
+export const deletePost = async (req, res) => {
+  const { post_id } = req.params;
+  const user_id = req.user.id;
+
+  let connection; // Declare the connection variable
+
+  try {
+    // Get a connection from the pool
+    connection = await db.getConnection();
+
+    // Start a transaction
+    await connection.beginTransaction();
+
+    // Check if the post exists and belongs to the user
+    const [post] = await connection.query('SELECT user_id FROM Posts WHERE post_id = ?', [post_id]);
+
+    if (post.length === 0) {
+      await connection.rollback();
+      connection.release();
+      return res.status(404).json({ message: 'Post not found.' });
+    }
+
+    if (post[0].user_id !== user_id) {
+      await connection.rollback();
+      connection.release();
+      return res.status(403).json({ message: 'You are not authorized to delete this post.' });
+    }
+
+    // Delete likes associated with comments on the post
+    await connection.query(
+      `DELETE Likes FROM Likes
+       INNER JOIN Comments ON Likes.comment_id = Comments.comment_id
+       WHERE Comments.post_id = ?`,
+      [post_id]
+    );
+
+    // Delete likes associated with the post
+    await connection.query('DELETE FROM Likes WHERE post_id = ?', [post_id]);
+
+    // Delete comments associated with the post
+    await connection.query('DELETE FROM Comments WHERE post_id = ?', [post_id]);
+
+    // Remove this step since Notifications table doesn't have post_id
+    // await connection.query('DELETE FROM Notifications WHERE post_id = ?', [post_id]);
+
+    // Finally, delete the post
+    await connection.query('DELETE FROM Posts WHERE post_id = ?', [post_id]);
+
+    // Commit the transaction
+    await connection.commit();
+    connection.release();
+
+    res.status(200).json({ message: 'Post and associated data deleted successfully.' });
+  } catch (error) {
+    if (connection) {
+      await connection.rollback();
+      connection.release();
+    }
+    console.error('Error deleting post:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

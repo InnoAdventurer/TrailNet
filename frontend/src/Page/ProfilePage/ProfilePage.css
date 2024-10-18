@@ -51,6 +51,8 @@
 .profilepage-container .post {
     display: flex;
     flex-direction: column;
+    position: relative;
+    padding: 10px;
 }
 
 .profilepage-container .post-picture {
@@ -81,4 +83,28 @@
 .profilepage-container .caption span {
     vertical-align: middle; /* Align the like count with the heart */
     font-size: 16px; /* Adjust size as needed */
+}
+
+/* Style for the post header */
+.profilepage-container .post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Style for the post date */
+.profilepage-container .post-date {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Style for the delete button */
+.profilepage-container .delete-button {
+  cursor: pointer;
+  font-size: 14px;
+  color: #888;
+}
+
+.profilepage-container .delete-button:hover {
+  color: #e74c3c; /* Change color on hover */
 }

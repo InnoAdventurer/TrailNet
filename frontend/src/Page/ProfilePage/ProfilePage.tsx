@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import './ProfilePage.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'; 
+import { ImCross } from "react-icons/im";
 import { Link } from 'react-router-dom';
 import axios from '../../utils/axiosInstance';
 import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
@@ -54,6 +55,7 @@ function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [posts, setPosts] = useState<any[]>([]);
   const [noPosts, setNoPosts] = useState<boolean>(false); // Track if no posts are available
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const fetchUserData = async () => {
     try {
@@ -107,6 +109,34 @@ function ProfilePage() {
   const { username, friendsCount, profile_picture } = userData || {};
   const profilePic = getProfilePicture(profile_picture || '');
 
+  // Add a function to handle post deletion
+  const deletePost = async (post_id: number) => {
+    const confirmed = window.confirm('Are you sure you want to delete this post?');
+    if (!confirmed) return;
+  
+    try {
+      await axios.delete(`/api/posts/delete/${post_id}`);
+      // Remove the deleted post from the state
+      setPosts(posts.filter(post => post.post_id !== post_id));
+      // Set the success message
+      setSuccessMessage('Post deleted successfully.');
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      setError('Failed to delete the post. Please try again.');
+    }
+  };
+  
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage(null);
+      }, 5000); // Clear after 5 seconds
+  
+      // Cleanup the timer if the component unmounts or successMessage changes
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
   return (
     <div className="profilepage-container flex">
       <TopNavBar />
@@ -125,6 +155,11 @@ function ProfilePage() {
               </>
             )}
             <Link to="/postphotopage"><button>New Post</button></Link>
+            {successMessage && (
+              <div className="success-message">
+                {successMessage}
+              </div>
+            )}
           </div>
         </div>
 
@@ -138,7 +173,13 @@ function ProfilePage() {
           ) : (
             posts.map((post) => (
               <div className="post" key={post.post_id}>
-                <div>{formatDate(post.created_at)}</div> {/* Format date */}
+                <div className="post-header">
+                  <div className="post-date">{formatDate(post.created_at)}</div>
+                  <ImCross
+                    className="delete-button"
+                    onClick={() => deletePost(post.post_id)}
+                  />
+                </div>
                 {post.image_blob ? (
                   <img src={post.image_blob} alt="post" className="post-picture" />
                 ) : (
