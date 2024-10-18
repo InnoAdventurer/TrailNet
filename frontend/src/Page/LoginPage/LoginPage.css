@@ -65,7 +65,7 @@
     transition: background-color 0.3s ease;
 }
 
-.forgot {
+.loginpage-container .forgot {
     width: 100%; 
     padding: 10px;
     border: none;

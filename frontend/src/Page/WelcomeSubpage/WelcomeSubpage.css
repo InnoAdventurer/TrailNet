@@ -12,7 +12,7 @@
 }
 
 /* Styling for the slogan */
-.welcomesubpage-slogan {
+.welcomesubpage-container .welcomesubpage-slogan {
     color: #052122;
     font-weight: bold;
     font-style: italic;
@@ -21,7 +21,7 @@
     text-align: center; /* Optional: Center-align text */
 }
 
-.welcomesubpage-slogan2 {
+.welcomesubpage-container .welcomesubpage-slogan2 {
     color: #052122;
     font-style: italic;
     font-family: Helvetica;
@@ -32,7 +32,7 @@
 }
 
 /* Styling for the buttons */
-.login-button {
+.welcomesubpage-container .login-button {
     background-color: #052122;
     color: #FFFFFF;
     border: none;
@@ -42,7 +42,7 @@
     margin-bottom: 5px;
 }
 
-.signup-button {
+.welcomesubpage-container .signup-button {
     background-color: #FFFFFF;
     border: none;
     width: 70vw;
@@ -51,7 +51,7 @@
 }
 
 /* Styling for the images section */
-.welcomesubpage-images {
+.welcomesubpage-container .welcomesubpage-images {
     display: flex;
     flex-direction: row; /* Arrange images horizontally */
     justify-content: center;
@@ -59,13 +59,13 @@
     margin: 20px 0; /* Add margin around the image group */
 }
 
-.welcomesubpage-image {
+.welcomesubpage-container .welcomesubpage-image {
     max-width: 100%; /* Ensure images scale responsively */
     height: auto;
 }
 
 /* Optional: Prevents scrolling issues */
-html, body {
+.welcomesubpage-container html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;

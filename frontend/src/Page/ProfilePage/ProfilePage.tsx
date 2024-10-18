@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import axios from '../../utils/axiosInstance';
 import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
 import image404 from '../../assets/Picture/image404.webp'; // Placeholder image
+import TopNavBar from "../../Components/TopNavBar/TopNavBar";
 
 // Import profile icons
 import icon1 from '../../assets/Picture/Icon/icon_1.png';
@@ -92,13 +93,7 @@ function ProfilePage() {
 
   return (
     <div className="profilepage-container flex">
-      <div className="header-container">
-        <div className="back">
-          <Link to="/homepage"><IoIosArrowBack /></Link>
-        </div>
-        <h2>Profile</h2>
-      </div>
-
+      <TopNavBar />
       <div className="main-content">
         <div className="profile-section">
           <img src={profilePic} alt="profilepic" className="profilepicture" />

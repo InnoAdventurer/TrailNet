@@ -9,6 +9,7 @@ import { IoCreateOutline } from "react-icons/io5";
 import BottomNavBar from '../../Components/BottomNavBar/BottomNavBar';
 import { Link } from 'react-router-dom';
 import axios from '../../utils/axiosInstance';
+import TopNavBar from "../../Components/TopNavBar/TopNavBar";
 
 // Import static images
 import Cycling_1 from '../../assets/Picture/Event/Cycling_1.webp';
@@ -70,22 +71,8 @@ function EventPage() {
 
   return (
     <div className="eventpage-container flex">
+       <TopNavBar />
       <div className="main-content">
-        <div className="search-container">
-          <Link to="/homepage">
-            <div className="back"><IoIosArrowBack /></div>
-          </Link>
-          <input 
-            type="text" 
-            placeholder="Search" 
-            className="search"
-            onFocus={() => setLoadingSearch(true)}
-            onBlur={() => setLoadingSearch(false)}
-          />
-          <FiSearch className="search-icon" />
-          {loadingSearch && <p>Searching...</p>}
-        </div>
-
         <div className="join">
           <div>
             <p>Discover Events to<br />meet new people!</p>

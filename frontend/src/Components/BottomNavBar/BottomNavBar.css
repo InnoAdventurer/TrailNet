@@ -32,7 +32,7 @@
 }
 
 /* Prevent content from being hidden behind the nav bar */
-.body-content {
+.bottomNavBar .body-content {
   padding-bottom: 60px; /* Add space for the BottomNavBar */
 }
   

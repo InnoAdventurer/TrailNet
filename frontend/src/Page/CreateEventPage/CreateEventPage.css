@@ -12,19 +12,19 @@
 }
 
 /* Back button styling */
-.back-button {
+.createeventpage-container .back-button {
   align-self: flex-start;
   margin-bottom: 20px;
   font-size: 24px;
 }
 
-.back-button a {
+.createeventpage-container .back-button a {
   text-decoration: none;
   color: #333;
 }
 
 /* Form styling */
-.create-event-form {
+.createeventpage-container .create-event-form {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -34,13 +34,13 @@
 }
 
 /* Form group styling */
-.form-group {
+.createeventpage-container .form-group {
   position: relative;
   margin-bottom: 20px;
 }
 
 /* Label styling */
-.form-group label {
+.createeventpage-container .form-group label {
   display: block;
   font-weight: bold;
   margin-bottom: 10px;
@@ -48,12 +48,12 @@
 }
 
 /* Options button styling */
-.options {
+.createeventpage-container .options {
   display: flex;
   justify-content: space-between;
 }
 
-.option-button {
+.createeventpage-container .option-button {
   padding: 10px 20px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -66,20 +66,20 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
-.option-button.selected {
+.createeventpage-container .option-button.selected {
   background-color: #48AEE1;
   color: white;
 }
 
-.option-button:hover {
+.createeventpage-container .option-button:hover {
   background-color: #48AEE1;
   color: white;
 }
 
 /* Date and time field styling */
-input[type="date"],
-input[type="time"],
-input[type="text"] {
+.createeventpage-container input[type="date"],
+.createeventpage-container input[type="time"],
+.createeventpage-container input[type="text"] {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -88,7 +88,7 @@ input[type="text"] {
 }
 
 /* Suggestions list styling */
-.suggestions-list {
+.createeventpage-container .suggestions-list {
   list-style-type: none;
   margin: 5px 0 0 0;
   padding: 0;
@@ -106,7 +106,7 @@ input[type="text"] {
 }
 
 /* Individual suggestion item */
-.suggestions-list li {
+.createeventpage-container .suggestions-list li {
   padding: 10px;
   cursor: pointer;
   white-space: nowrap; /* Prevents text from wrapping */
@@ -115,12 +115,12 @@ input[type="text"] {
 }
 
 /* Hover effect for suggestions */
-.suggestions-list li:hover {
+.createeventpage-container .suggestions-list li:hover {
   background-color: #e0e0e0;
 }
 
 /* Submit button styling */
-.submit-button {
+.createeventpage-container .submit-button {
   background-color: #48AEE1;
   color: white;
   border: none;
@@ -131,16 +131,16 @@ input[type="text"] {
   transition: background-color 0.3s ease;
 }
 
-.submit-button:hover {
+.createeventpage-container .submit-button:hover {
   background-color: #2C425A;
 }
 
-.error-message {
+.createeventpage-container .error-message {
   color: red;
   margin-bottom: 20px;
 }
 
-.success-message {
+.createeventpage-container .success-message {
   color: green;
   margin-top: 20px;
 }

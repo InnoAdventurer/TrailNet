@@ -21,6 +21,7 @@
   overflow-y: auto; /* Enables vertical scrolling */
   box-sizing: border-box; /* Ensures padding is included in height */
   margin-bottom: 60px; /* Adjust margin to account for bottomNavBar height */
+  margin-top: 60px;
 }
 
 /* Content section styling */
@@ -85,7 +86,7 @@
 }
 
 /* Follow button styles */
-.follow-button {
+.homepage-container .follow-button {
   padding: 5px 10px;
   background-color: #EFF5F7;
   color: #2C425A;
@@ -95,20 +96,37 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
-.follow-button.following {
+.homepage-container .follow-button.following {
   background-color: #48AEE1;
   color: white;
 }
 
 /* Ensure that heart icons are large enough and clickable */
-.caption svg {
+.homepage-container .caption svg {
   width: 24px;
   height: 24px;
   cursor: pointer; /* Ensure it's clickable */
   margin-right: 5px; /* Add spacing between icon and count */
 }
 
-.caption span {
+.homepage-container .caption span {
   vertical-align: middle; /* Align the like count with the heart */
   font-size: 16px; /* Adjust size as needed */
+}
+
+/* BottomNavBar styling */
+.homepage-container .bottom-nav-bar {
+  position: fixed;
+  bottom: 0; /* Stick to the bottom of the screen */
+  left: 0;
+  width: 100vw; /* Full width */
+  z-index: 1000; /* Ensure it stays on top */
+}
+
+.homepage-container .top-nav-bar {
+  position: fixed;
+  top: 0;  /* Stick to the top of the screen */
+  left: 0;
+  width: 100vw; /* Full width */
+  z-index: 1000; /* Ensure it stays on top */
 }

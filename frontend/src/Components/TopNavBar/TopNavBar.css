@@ -5,12 +5,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%; /* Ensures full width */
   padding: 10px;
   background-color: #ffffff;
   border-bottom: 1px solid #ddd;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative;
+  position: fixed; /* Keep it fixed at the top */
+  top: 0; /* Align it to the top */
+  left: 0; /* Ensure it spans across the width of the screen */
   z-index: 2;
+  box-sizing: border-box; /* Include padding and border in total width */
 }
 
 /* Icon Styling */
@@ -36,7 +40,7 @@
 }
 
 /* Logout Message Styling */
-.logout-message {
+.topnavbar-container .logout-message {
   position: absolute;
   top: 50px;
   left: 50%;
@@ -52,12 +56,12 @@
 
 /* Notification related styling */
 /* Notification Container */
-.notification-container {
+.topnavbar-container .notification-container {
   position: relative; /* Ensures the popup aligns with the icon */
 }
 
 /* Notification Popup */
-.notification-popup {
+.topnavbar-container .notification-popup {
   position: absolute;
   top: 50px;
   left: 50%;
@@ -75,30 +79,30 @@
 
 /* Ensure popup remains visible on smaller screens */
 @media (max-width: 400px) {
-  .notification-popup {
+  .topnavbar-container .notification-popup {
     width: 95vw;
     right: 5px;
   }
 }
 
 /* Notification List Styling */
-.notification-popup ul {
+.topnavbar-container .notification-popup ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.notification-popup li {
+.topnavbar-container .notification-popup li {
   padding: 10px;
   border-bottom: 1px solid #ddd;
 }
 
-.notification-popup li:last-child {
+.topnavbar-container .notification-popup li:last-child {
   border-bottom: none;
 }
 
 /* Styling when no notifications are available */
-.no-notifications {
+.topnavbar-container .no-notifications {
   text-align: center;
   color: gray;
   font-style: italic;
@@ -106,13 +110,13 @@
 }
 
 /* Wrapper to position the bell icon and red dot */
-.bell-icon-wrapper {
+.topnavbar-container .bell-icon-wrapper {
   position: relative;
   display: inline-block;
 }
 
 /* Red dot for unread notifications */
-.unread-dot {
+.topnavbar-container .unread-dot {
   position: absolute;
   bottom: 0;
   right: 0;
@@ -124,7 +128,7 @@
 }
 
 /* Unread notification dot */
-.unread-dot {
+.topnavbar-container .unread-dot {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -136,40 +140,40 @@
 }
 
 /* Close icon styling */
-.close-icon {
+.topnavbar-container .close-icon {
   margin-left: 10px;
   color: gray;
   cursor: pointer;
 }
 
-.close-icon:hover {
+.topnavbar-container .close-icon:hover {
   color: black;
 }
 
 /* Time Styling */
-.notification-time {
+.topnavbar-container .notification-time {
   color: gray;
   font-size: 8px;
   margin-left: 10px;
 }
 
 /* Gray out read notifications */
-.notification-popup li.read {
+.topnavbar-container .notification-popup li.read {
   background-color: #f0f0f0;
   color: gray;
 }
 
-.notification-popup li.read .notification-time {
+.topnavbar-container .notification-popup li.read .notification-time {
   color: lightgray;
 }
 
 /* Ensure the notification stays clickable */
-.notification-popup li {
+.topnavbar-container .notification-popup li {
   cursor: pointer;
   padding: 10px;
   border-bottom: 1px solid #ddd;
 }
 
-.notification-popup li:last-child {
+.topnavbar-container .notification-popup li:last-child {
   border-bottom: none;
 }

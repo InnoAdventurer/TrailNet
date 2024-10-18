@@ -8,7 +8,7 @@
 }
 
 /* Header container: Contains the back button and the title */
-.header-container {
+.settingprofile-container .header-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,7 +32,7 @@
 }
 
 /* Setting item container (icon and label) */
-.setting {
+.settingprofile-container .setting {
   display: flex;
   align-items: center;
   padding: 15px 0;
@@ -41,20 +41,20 @@
 }
 
 /* Label inside setting item */
-.setting div {
+.settingprofile-container .setting div {
   margin-left: 10px;
   font-size: 20px;
   color: #333;
 }
 
 /* Icon size for each setting item */
-.setting .icon {
+.settingprofile-container .setting .icon {
   font-size: 26px;
   color: #333; /* Default icon color */
 }
 
 /* Modal styling */
-.modal {
+.settingprofile-container .modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -67,7 +67,7 @@
 }
 
 /* Modal content box */
-.modal-content {
+.settingprofile-container .modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -76,7 +76,7 @@
 }
 
 /* Grid layout for profile picture selection */
-.icon-grid {
+.settingprofile-container .icon-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 icons per row */
   gap: 10px;
@@ -84,7 +84,7 @@
 }
 
 /* Individual profile picture icons */
-.profile-icon {
+.settingprofile-container .profile-icon {
   width: 50px; /* Adjusted size for better visibility */
   height: 50px;
   cursor: pointer;
@@ -93,12 +93,12 @@
 }
 
 /* Highlight selected profile icon */
-.profile-icon.selected {
+.settingprofile-container .profile-icon.selected {
   border-color: #48AEE1;
 }
 
 /* Input field styles inside modal (for full name, email) */
-.modal-input {
+.settingprofile-container .modal-input {
   width: 90%;
   padding: 10px;
   margin-top: 10px;
@@ -108,7 +108,7 @@
 }
 
 /* Button styles (OK and Cancel) */
-.btn {
+.settingprofile-container .btn {
   margin: 10px;
   padding: 10px 20px;
   background-color: #48AEE1;
@@ -119,19 +119,19 @@
   transition: background-color 0.3s ease;
 }
 
-.btn:hover {
+.settingprofile-container .btn:hover {
   background-color: #2C425A;
 }
 
 /* Success message styling */
-.success-message {
+.settingprofile-container .success-message {
   margin-top: 20px;
   color: green;
   font-size: 16px;
 }
 
 /* Error message styling */
-.error {
+.settingprofile-container .error {
   color: red;
   margin-top: 5px;
 }
