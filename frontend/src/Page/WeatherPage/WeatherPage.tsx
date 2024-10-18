@@ -7,6 +7,8 @@ import { useEffect, useState, useContext } from 'react';
 import axios from '../../utils/axiosInstance';
 import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
 import { ErrorContext } from '../../contexts/ErrorContext'; // Assuming you're using ErrorContext for error handling
+import TopNavBar from "../../Components/TopNavBar/TopNavBar";
+
 
 function WeatherPage() {
   const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Corrected to start from Sunday
@@ -95,13 +97,7 @@ function WeatherPage() {
 
   return (
     <div className="weatherpage-container">
-      <div className="header-container">
-        <div className="back">
-          <Link to="/homepage"><IoIosArrowBack /></Link>
-        </div>
-        <h2>Weather Forecast</h2>
-      </div>
-
+      <TopNavBar />
       <div className="vertical-weather-table">
         {forecast.length > 0 ? (
           forecast.slice(0, 5).map((day, index) => (

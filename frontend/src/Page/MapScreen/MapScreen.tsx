@@ -12,6 +12,7 @@ import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import TopNavBar from "../../Components/TopNavBar/TopNavBar";
 
 // Create a custom icon using react-icons
 const centerPinIcon = new L.DivIcon({
@@ -249,10 +250,7 @@ function MapScreen() {
 
   return (
     <div className="mapscreen-container flex">
-      <div className="header">
-        <Link to="/homepage"><div className="back"><IoIosArrowBack /></div></Link>
-        <h2>Map</h2>
-      </div>
+      <TopNavBar />
       <div className="search-container">
         <form onSubmit={handleSearch} className="search-form">
           <input

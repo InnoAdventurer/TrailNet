@@ -4,26 +4,6 @@
     padding: 20px;
 }
 
-.profilepage-container .header-container {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Centers the h2 */
-    margin-bottom: 10px; /* Adjust this for spacing below the header */
-}
-
-.profilepage-container .back {
-    position: absolute;
-    left: 10px; /* Add space from the left */
-    font-size: 24px; /* Adjust size as needed */
-    color: black; /* Force the color to black */
-}
-
-.profilepage-container h2 {
-    font-size: 24px;
-    margin: 0;
-    text-align: center; /* Center h2 text */
-}
-
 .profilepage-container .main-content button {
     padding: 5px;
     font-size: 15px;
@@ -34,6 +14,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px; /* Spacing between profile and post sections */
+    margin-top: 60px;
 }
 
 .profilepage-container .profile-section {
@@ -82,7 +63,7 @@
     font-size: 16px;
 }
 
-.no-posts-message {
+.profilepage-container .no-posts-message {
     text-align: center;
     margin-top: 20px;
     font-size: 16px;
@@ -90,14 +71,14 @@
 }
 
 /* Ensure that heart icons are large enough and clickable */
-.caption svg {
+.profilepage-container .caption svg {
     width: 24px;
     height: 24px;
     cursor: pointer; /* Ensure it's clickable */
     margin-right: 5px; /* Add spacing between icon and count */
 }
 
-.caption span {
+.profilepage-container .caption span {
     vertical-align: middle; /* Align the like count with the heart */
     font-size: 16px; /* Adjust size as needed */
 }

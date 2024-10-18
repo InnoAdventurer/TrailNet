@@ -7,34 +7,13 @@
   padding: 20px;
 }
 
-.weatherpage-container .header-container {
-  display: flex;
-  justify-content: center; /* Centers the content */
-  align-items: center;
-  width: 100%;
-  position: relative; /* Allows absolute positioning of the back arrow */
-  margin-bottom: 20px;
-}
-
-.weatherpage-container .back {
-  font-size: 24px;
-  position: absolute; /* Position it absolutely to the left */
-  left: 0;
-  cursor: pointer;
-}
-
-.weatherpage-container h2 {
-  font-size: 24px; /* Adjusted font size */
-  margin: 0;
-  text-align: center; /* Ensures the text is centered */
-}
-
 /* Adjust the table layout for shorter dates and longer weather info */
 .weatherpage-container .vertical-weather-table {
   display: flex;
   flex-direction: column;
   gap: 20px;
   width: 100%;
+  margin-top: 100px;
 }
 
 .weatherpage-container .forecast-row {

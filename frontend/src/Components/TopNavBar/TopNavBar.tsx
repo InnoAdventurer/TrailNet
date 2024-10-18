@@ -1,14 +1,22 @@
-// frontend/src/Components/TopNavBar/TopNavBar.tsx
-
 import React, { useState, useEffect, useRef } from 'react';
 import './TopNavBar.css';
 import { IoIosWarning, IoIosLogOut, IoMdClose } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import { GoBell } from "react-icons/go";
-import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../utils/axiosInstance';
 import { formatDistanceToNow } from 'date-fns';
 import { toDate } from 'date-fns-tz'; 
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
+const pageTitles: { [key: string]: string } = {
+  '/homepage': 'Home',
+  '/mapscreen': 'Map',
+  '/emergencyscreen': 'Emergency',
+  '/settingscreen': 'Settings',
+  '/eventpage': 'Event',
+  '/weatherpage': 'Weather',
+  '/profilepage': 'Profile'
+};
 
 interface Notification {
   notification_id: number;
@@ -24,7 +32,11 @@ function TopNavBar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutMessage, setShowLogoutMessage] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();  // Move useLocation here inside the component
   const markReadTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Ref to track timeout
+
+  const currentPath = location.pathname;
+  const pageTitle = pageTitles[currentPath] || 'Page';  // Get the dynamic title
 
   const fetchNotifications = async () => {
     try {
@@ -101,7 +113,7 @@ function TopNavBar() {
       <Link to="/settingscreen">
         <IoSettingsOutline className="icon" />
       </Link>
-      <h2>Home</h2>
+      <h2>{pageTitle}</h2> {/* Dynamic page title based on route */}
       <div className="notification-container">
         <div className="bell-icon-wrapper">
           <GoBell className="icon" onClick={handleBellClick} />
