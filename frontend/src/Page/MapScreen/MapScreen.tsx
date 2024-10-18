@@ -4,9 +4,10 @@ import { useEffect, useState, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './MapScreen.css';
 import { FiSearch, FiCrosshair, FiNavigation2 } from "react-icons/fi";
-import { IoIosArrowBack } from "react-icons/io";
 import ReactDOMServer from 'react-dom/server';
 import axios from '../../utils/axiosInstance';
+import redMarkerIcon from '../../assets/Picture/MapPins/marker-icon-2x-red.png'; 
+import blueMarkerIcon from '../../assets/Picture/MapPins/marker-icon-2x-blue.png'; 
 import { ErrorContext } from '../../contexts/ErrorContext';
 import BottomNavBar from "../../Components/BottomNavBar/BottomNavBar";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
@@ -20,6 +21,22 @@ const centerPinIcon = new L.DivIcon({
   className: 'custom-center-pin', // Optional: Add custom CSS class
   iconSize: [35, 35],  // Size of the icon
   iconAnchor: [17, 17] // Anchor to the center of the icon
+});
+
+const redEventIcon = new L.Icon({
+  iconUrl: redMarkerIcon,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+const blueEventIcon = new L.Icon({
+  iconUrl: blueMarkerIcon,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
 });
 
 function MapScreen() {
@@ -121,11 +138,6 @@ function MapScreen() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const token = localStorage.getItem('authToken');
-        if (!token) throw new Error('No auth token found');
-  
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-
         const response = await axios.post(`/api/events/more`, {
           latitude,
           longitude,
@@ -285,16 +297,14 @@ function MapScreen() {
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {events.map((event, index) => (
             <Marker
-              key={event.id || index}
+              key={event.event_id} // Use a unique key based on event_id
               position={[event.latitude, event.longitude]}
-              eventHandlers={{
-                click: () => handleMarkerClick(event),
-              }}
+              icon={selectedEvent?.event_id === event.event_id ? redEventIcon : blueEventIcon} // Conditional icon
+              eventHandlers={{ click: () => handleMarkerClick(event) }}
             >
               <Popup>
                 <div>
                   <h3>{event.event_name}</h3>
-                  <p>{event.description}</p>
                 </div>
               </Popup>
             </Marker>
