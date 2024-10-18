@@ -93,7 +93,7 @@
     overflow-x: auto; /* Allows horizontal scrolling */
     white-space: nowrap; /* Prevents event cards from breaking into new lines */
     width: 100%;
-    max-width: 350px; /* Limit the width to the fixed container */
+    max-width: 400px; /* Limit the width to the fixed container */
     padding-bottom: 10px; /* Optional: Add padding for better appearance */
 }
 

@@ -166,8 +166,7 @@ function JoinEventPage1() {
             <IoIosArrowBack />
           </Link>
         </div>
-        <input type="text" placeholder="Search" className="search" />
-        <FiSearch className="search-icon" />
+
       </div>
 
       <div className="discover-section">

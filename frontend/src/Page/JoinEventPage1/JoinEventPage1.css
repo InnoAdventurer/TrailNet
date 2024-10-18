@@ -13,7 +13,7 @@
 .joineventpage1-container .search-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   width: 100%;
   max-width: 350px;
   margin-bottom: 20px;
@@ -22,7 +22,6 @@
 .joineventpage1-container .search-container .back {
   font-size: 24px;
   color: #000;
-  margin-right: 10px; /* Space between the back arrow and search input */
 }
 
 .joineventpage1-container .search-container .search {
